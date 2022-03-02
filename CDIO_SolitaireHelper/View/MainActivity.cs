@@ -18,6 +18,9 @@ namespace SolitaireHelperAndroidApp
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Card card = new Card(Suit.HEARTS,FaceValue.KNIGHT);
+            Console.WriteLine("DEBUG"+card.ToString());
+            
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
