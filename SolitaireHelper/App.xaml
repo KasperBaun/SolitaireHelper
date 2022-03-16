@@ -8,8 +8,10 @@
     <Application.Resources>
         <ResourceDictionary>
             <Color x:Key="Primary">#A21818</Color>
+            <Color x:Key="TextPrimary">#000000</Color>
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="#FFFFFF"></Setter>
+                <Setter Property="FontFamily" Value="Roboto"></Setter>
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -20,7 +22,7 @@
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#FFFFFF" />
+                                    <Setter Property="BackgroundColor" Value="#000000" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>

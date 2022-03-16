@@ -22,41 +22,49 @@
         </Grid.RowDefinitions>
         <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
-                <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
+                <ContentView Padding="0,50,0,0" VerticalOptions="FillAndExpand">
                     <Image Source="card_icons.png" VerticalOptions="Center" HeightRequest="64" />
                 </ContentView>
             </StackLayout>
         </StackLayout>
+        
         <ScrollView Grid.Row="1">
-            <StackLayout Orientation="Vertical" Padding="30,24,30,24" Spacing="10" VerticalOptions="Center">
-
-                <Label Text="Welcome to Solitaire" FontSize="Title"/>
-                <Label Text="Helper" FontSize="Title"/>
-                <Label Text="Modern cardgame hacking solutions brought to you by group 3" FontSize="16" Padding="0,0,0,0"/>
-                <Label FontSize="16" Padding="0,24,0,0">
+            <StackLayout Orientation="Vertical" Padding="30,0,30,0" Spacing="10" VerticalOptions="Center">
+                <Label Text="Welcome to" FontSize="14" TextColor="{StaticResource TextPrimary}" XAlign="Center"/>
+                <Label FontSize="Title"  XAlign="Center">
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="Because why use your brain?" FontAttributes="Bold"/>
+                                <Span Text="Solitaire" TextColor="{StaticResource TextPrimary}"/>
+                                <Span Text="Helper" TextColor="{StaticResource Primary}"/>
                             </FormattedString.Spans>
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
+
+                <Label Text="Modern cardgame hacking solutions brought to you by group 3" FontSize="16" Padding="0,0,0,0" TextColor="{StaticResource TextPrimary}" XAlign="Center"/>
+                <Label Text="Because why use your brain?" FontSize="14" TextColor="{StaticResource TextPrimary}" XAlign="Center" />
                 
-                <Button Margin="5,25,5,5" Text="Play New Game"
+                <Button Margin="5,25,5,5" Text="Play new game"
                         Command="{Binding OpenWebCommand}"
                         BackgroundColor="{StaticResource Primary}"
-                        TextColor="White" />
+                        TextColor="White"
+                        CornerRadius="10"
+                        TextTransform="None"/>
                 
                 <Button Margin="5,5,5,5" Text="Learn how to play"
                         Command="{Binding OpenWebCommand}"
                         BackgroundColor="{StaticResource Primary}"
-                        TextColor="White" />
+                        TextColor="White"
+                        CornerRadius="10"
+                        TextTransform="None"/>
                 
                 <Button Margin="5,5,5,5" Text="See finished games"
                         Command="{Binding OpenWebCommand}"
                         BackgroundColor="{StaticResource Primary}"
-                        TextColor="White" />
+                        TextColor="White"
+                        CornerRadius="10"
+                        TextTransform="None"/>
                 
             </StackLayout>
         </ScrollView>
