@@ -6,7 +6,7 @@
              Title="{Binding Title}">
     
     <ContentPage.BindingContext>
-        <vm:AboutViewModel />
+        <vm:HomeViewModel />
     </ContentPage.BindingContext>
     
     <ContentPage.Resources>
@@ -59,7 +59,7 @@
                         CornerRadius="10"
                         TextTransform="None"/>
                 
-                <Button Margin="5,5,5,5" Text="See finished games"
+                <Button Margin="5,5,5,5" Text="See history"
                         Command="{Binding OpenWebCommand}"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White"

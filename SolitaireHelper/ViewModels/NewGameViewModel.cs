@@ -7,12 +7,12 @@ using Xamarin.Forms;
 
 namespace SolitaireHelper.ViewModels
 {
-    public class NewItemViewModel : BaseViewModel
+    public class NewGameViewModel : BaseViewModel
     {
         private string text;
         private string description;
 
-        public NewItemViewModel()
+        public NewGameViewModel()
         {
             SaveCommand = new Command(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
@@ -49,14 +49,14 @@ namespace SolitaireHelper.ViewModels
 
         private async void OnSave()
         {
-            Item newItem = new Item()
+            Game newItem = new Game()
             {
                 Id = Guid.NewGuid().ToString(),
                 Text = Text,
                 Description = Description
             };
 
-            await DataStore.AddItemAsync(newItem);
+            await DataStore.AddGameAsync(newItem);
 
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");

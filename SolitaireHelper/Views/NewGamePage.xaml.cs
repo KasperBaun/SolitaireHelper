@@ -8,14 +8,14 @@ using Xamarin.Forms.Xaml;
 
 namespace SolitaireHelper.Views
 {
-    public partial class NewItemPage : ContentPage
+    public partial class NewGamePage : ContentPage
     {
-        public Item Item { get; set; }
+        public Game game { get; set; }
 
-        public NewItemPage()
+        public NewGamePage()
         {
             InitializeComponent();
-            BindingContext = new NewItemViewModel();
+            BindingContext = new NewGameViewModel();
         }
     }
 }

@@ -6,10 +6,10 @@ using Xamarin.Forms;
 
 namespace SolitaireHelper.ViewModels
 {
-    [QueryProperty(nameof(ItemId), nameof(ItemId))]
-    public class ItemDetailViewModel : BaseViewModel
+    [QueryProperty(nameof(GameId), nameof(GameId))]
+    public class GameDetailViewModel : BaseViewModel
     {
-        private string itemId;
+        private string gameId;
         private string text;
         private string description;
         public string Id { get; set; }
@@ -26,31 +26,31 @@ namespace SolitaireHelper.ViewModels
             set => SetProperty(ref description, value);
         }
 
-        public string ItemId
+        public string GameId
         {
             get
             {
-                return itemId;
+                return gameId;
             }
             set
             {
-                itemId = value;
-                LoadItemId(value);
+                gameId = value;
+                LoadGameId(value);
             }
         }
 
-        public async void LoadItemId(string itemId)
+        public async void LoadGameId(string gameId)
         {
             try
             {
-                var item = await DataStore.GetItemAsync(itemId);
-                Id = item.Id;
-                Text = item.Text;
-                Description = item.Description;
+                var game = await DataStore.GetGameAsync(gameId);
+                Id = game.Id;
+                Text = game.Text;
+                Description = game.Description;
             }
             catch (Exception)
             {
-                Debug.WriteLine("Failed to Load Item");
+                Debug.WriteLine("Failed to Load Game");
             }
         }
     }

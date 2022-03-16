@@ -2,7 +2,7 @@
 
 namespace SolitaireHelper.Models
 {
-    public class Item
+    public class Game
     {
         public string Id { get; set; }
         public string Text { get; set; }

@@ -14,13 +14,13 @@ namespace SolitaireHelper.Views
 {
     public partial class ItemsPage : ContentPage
     {
-        ItemsViewModel _viewModel;
+        HistoryViewModel _viewModel;
 
         public ItemsPage()
         {
             InitializeComponent();
 
-            BindingContext = _viewModel = new ItemsViewModel();
+            BindingContext = _viewModel = new HistoryViewModel();
         }
 
         protected override void OnAppearing()
