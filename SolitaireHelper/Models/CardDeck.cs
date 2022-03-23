@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SolitaireHelper.Models;
-
-namespace SolitaireHelper.Models
+﻿namespace SolitaireHelper.Models
 {
-    internal enum SuitEnum { C, D, H, S};
+    internal enum SuitEnum { C, D, H, S };
 
     public class CardDeck
     {
@@ -27,10 +22,10 @@ namespace SolitaireHelper.Models
                 newCard.Suit = suits[i];
                 newCard.Rank = 'A';
                 cardDeck[i * 13] = newCard;
-                for (int j = 2; j <=9; j++)
+                for (int j = 2; j <= 9; j++)
                 {
                     newCard.Rank = (char)j;
-                    cardDeck[(i * 13) + j-1] = newCard;
+                    cardDeck[(i * 13) + j - 1] = newCard;
                 }
                 newCard.Rank = 'T';
                 cardDeck[i * 13 + 9] = newCard;

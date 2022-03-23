@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SolitaireHelper.Models
+﻿namespace SolitaireHelper.Models
 {
     public class Game
     {

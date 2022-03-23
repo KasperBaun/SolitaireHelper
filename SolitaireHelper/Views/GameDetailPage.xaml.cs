@@ -1,5 +1,4 @@
 ﻿using SolitaireHelper.ViewModels;
-using System.ComponentModel;
 using Xamarin.Forms;
 
 namespace SolitaireHelper.Views

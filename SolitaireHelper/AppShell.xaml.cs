@@ -1,7 +1,4 @@
-﻿using SolitaireHelper.ViewModels;
-using SolitaireHelper.Views;
-using System;
-using System.Collections.Generic;
+﻿using SolitaireHelper.Views;
 using Xamarin.Forms;
 
 namespace SolitaireHelper

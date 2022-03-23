@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="SolitaireHelper.ViewModels"
+             xmlns:vm="clr-namespace:SolitaireHelper.ViewModels"
              x:Class="SolitaireHelper.Views.NewGamePage"
              Shell.PresentationMode="ModalAnimated"
              Title="{Binding Title}"
-             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             ios:Page.UseSafeArea="true">
+             >
     
     <ContentPage.Content>
         
@@ -44,9 +43,9 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Image x:Name="PhotoImage"></Image>
+            <Image x:Name="PhotoImage" Source="{Binding PhotoPath}"></Image>
 
-            <Button x:Name="btnOpenCamera" Text="New picture" Clicked="BtnOpenCamera_Clicked" HorizontalOptions="FillAndExpand" CornerRadius="10"/>
+            <Button x:Name="btnOpenCamera" Text="New picture" Command="{Binding TakePictureCommand}"  HorizontalOptions="FillAndExpand" CornerRadius="10"/>
 
 
 
