@@ -31,17 +31,7 @@
                             TextColor="Black"
                             FontAttributes="Italic"
                             FontSize="Medium" />
-            <ListView>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <ContentView>
-                                <Label Text="Liste med sidste træk skal være her"/>
-                            </ContentView>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+         
 
             <Image x:Name="PhotoImage" Source="{Binding PhotoPath}"></Image>
 

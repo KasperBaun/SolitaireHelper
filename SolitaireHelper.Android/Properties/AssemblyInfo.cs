@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: UsesFeature(Android.Manifest.Permission.WriteExternalStorage)]
+[assembly: UsesFeature(Android.Manifest.Permission.ReadExternalStorage)]
 [assembly: UsesFeature(Android.Manifest.Permission.Camera)]
 [assembly: UsesFeature("android.hardware.camera", Required = true)]
 [assembly: UsesFeature("android.hardware.camera.autofocus", Required = true)]
@@ -31,4 +32,5 @@ using System.Runtime.InteropServices;
 // Add some common permissions, these can be removed if not needed
 [assembly: UsesPermission(Android.Manifest.Permission.Internet)]
 [assembly: UsesPermission(Android.Manifest.Permission.WriteExternalStorage)]
+[assembly: UsesPermission(Android.Manifest.Permission.ReadExternalStorage)]
 [assembly: UsesPermission(Android.Manifest.Permission.Camera)]

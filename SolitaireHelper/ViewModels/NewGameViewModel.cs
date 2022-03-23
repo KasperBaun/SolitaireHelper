@@ -67,7 +67,7 @@ namespace SolitaireHelper.ViewModels
             using (var newStream = File.OpenWrite(newFile))
                 await stream.CopyToAsync(newStream);
 
-            PhotoPath = newFile;
+            photoPath = newFile;
         }
 
         public string PhotoPath
@@ -114,8 +114,8 @@ namespace SolitaireHelper.ViewModels
         }
         private async void OnTakePicture(/*object sender, EventArgs e*/)
         {
-            Console.WriteLine("Virker det?");
             await TakePhotoAsync();
+            Console.WriteLine(PhotoPath);
 
         }
 
