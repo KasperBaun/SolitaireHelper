@@ -10,20 +10,20 @@ namespace SolitaireHelper.ViewModels
     public class GameDetailViewModel : BaseViewModel
     {
         private string gameId;
-        private string text;
-        private string description;
+        private string player;
+        private string date;
         public string Id { get; set; }
 
-        public string Text
+        public string Player
         {
-            get => text;
-            set => SetProperty(ref text, value);
+            get => player;
+            set => SetProperty(ref player, value);
         }
 
-        public string Description
+        public string Date
         {
-            get => description;
-            set => SetProperty(ref description, value);
+            get => date;
+            set => SetProperty(ref date, value);
         }
 
         public string GameId
@@ -45,8 +45,8 @@ namespace SolitaireHelper.ViewModels
             {
                 var game = await DataStore.GetGameAsync(gameId);
                 Id = game.Id;
-                Text = game.Text;
-                Description = game.Description;
+                Player = game.Player;
+                Date = game.Date;
             }
             catch (Exception)
             {

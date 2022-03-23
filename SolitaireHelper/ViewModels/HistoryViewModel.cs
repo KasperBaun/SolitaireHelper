@@ -24,8 +24,6 @@ namespace SolitaireHelper.ViewModels
             LoadGamesCommand = new Command(async () => await ExecuteLoadGamesCommand());
 
             GameTapped = new Command<Game>(OnGameSelected);
-
-            AddGameCommand = new Command(OnAddGame);
         }
 
         async Task ExecuteLoadGamesCommand()
@@ -65,11 +63,6 @@ namespace SolitaireHelper.ViewModels
                 SetProperty(ref _selectedGame, value);
                 OnGameSelected(value);
             }
-        }
-
-        private async void OnAddGame(object obj)
-        {
-            await Shell.Current.GoToAsync(nameof(NewGamePage));
         }
 
         async void OnGameSelected(Game game)

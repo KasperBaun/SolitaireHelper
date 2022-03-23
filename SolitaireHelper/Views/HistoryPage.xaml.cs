@@ -12,11 +12,11 @@ using Xamarin.Forms.Xaml;
 
 namespace SolitaireHelper.Views
 {
-    public partial class ItemsPage : ContentPage
+    public partial class HistoryPage : ContentPage
     {
         HistoryViewModel _viewModel;
 
-        public ItemsPage()
+        public HistoryPage()
         {
             InitializeComponent();
 

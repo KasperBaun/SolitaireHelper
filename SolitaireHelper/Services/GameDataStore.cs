@@ -14,12 +14,12 @@ namespace SolitaireHelper.Services
         {
             games = new List<Game>()
             {
-                new Game { Id = Guid.NewGuid().ToString(), Text = "First game", Description="This is a game description." },
-                new Game { Id = Guid.NewGuid().ToString(), Text = "Second game", Description="This is a game description." },
-                new Game { Id = Guid.NewGuid().ToString(), Text = "Third game", Description="This is a game description." },
-                new Game { Id = Guid.NewGuid().ToString(), Text = "Fourth game", Description="This is a game description." },
-                new Game { Id = Guid.NewGuid().ToString(), Text = "Fifth game", Description="This is a game description." },
-                new Game { Id = Guid.NewGuid().ToString(), Text = "Sixth game", Description="This is a game description." }
+                new Game { Id = Guid.NewGuid().ToString(), Player = "Kasper", Date = DateTime.Today.Date.ToShortDateString(), GameType = "7-kabale" },
+                new Game { Id = Guid.NewGuid().ToString(), Player = "Reza", Date = DateTime.Today.Date.ToShortDateString(), GameType = "7-kabale" },
+                new Game { Id = Guid.NewGuid().ToString(), Player = "Annika", Date = DateTime.Today.Date.ToShortDateString(), GameType = "7-kabale" },
+                new Game { Id = Guid.NewGuid().ToString(), Player = "Rikke", Date = DateTime.Today.Date.ToShortDateString(), GameType = "7-kabale" },
+                new Game { Id = Guid.NewGuid().ToString(), Player = "Daniel", Date = DateTime.Today.Date.ToShortDateString(), GameType = "7-kabale" },
+                new Game { Id = Guid.NewGuid().ToString(), Player = "Rikke", Date = DateTime.Today.Date.ToShortDateString(), GameType = "7-kabale" }
             };
         }
 

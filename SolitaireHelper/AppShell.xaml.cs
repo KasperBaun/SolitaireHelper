@@ -12,6 +12,9 @@ namespace SolitaireHelper
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(GameDetailPage), typeof(GameDetailPage));
+            Routing.RegisterRoute(nameof(HistoryPage), typeof(HistoryPage));
+            Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
+            Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(NewGamePage), typeof(NewGamePage));
         }
 
