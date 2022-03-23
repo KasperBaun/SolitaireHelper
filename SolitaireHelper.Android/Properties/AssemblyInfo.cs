@@ -15,6 +15,10 @@ using Android.App;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
+[assembly: UsesFeature(Android.Manifest.Permission.WriteExternalStorage)]
+[assembly: UsesFeature(Android.Manifest.Permission.Camera)]
+[assembly: UsesFeature("android.hardware.camera", Required = true)]
+[assembly: UsesFeature("android.hardware.camera.autofocus", Required = true)]
 
 // Version information for an assembly consists of the following four values:
 //

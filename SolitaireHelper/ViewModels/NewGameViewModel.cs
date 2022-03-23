@@ -1,33 +1,29 @@
 ﻿using SolitaireHelper.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
 using Xamarin.Forms;
+
 
 namespace SolitaireHelper.ViewModels
 {
     public class NewGameViewModel : BaseViewModel
     {
-        private string player;
-        private string date;
-        private string gameType;
+        private string player = "Kasper";
+        private string date = DateTime.Today.Date.ToShortDateString();
+        private string gameType = "7-Kabale";
+        private Game game;
 
         public NewGameViewModel()
         {
             Title = "New Game";
-            SaveCommand = new Command(OnSave, ValidateSave);
+            game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString() };
+
+            SaveCommand = new Command(OnSave);
             CancelCommand = new Command(OnCancel);
             this.PropertyChanged +=
                 (_, __) => SaveCommand.ChangeCanExecute();
 
         }
 
-        private bool ValidateSave()
-        {
-            return !String.IsNullOrWhiteSpace(player)
-                && !String.IsNullOrWhiteSpace(date);
-        }
 
         public string Player
         {
@@ -49,6 +45,7 @@ namespace SolitaireHelper.ViewModels
 
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }
+        public Command TakePictureCommand { get; }
 
         private async void OnCancel()
         {
@@ -58,15 +55,8 @@ namespace SolitaireHelper.ViewModels
 
         private async void OnSave()
         {
-            Game newItem = new Game()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Player = Player,
-                Date = Date,
-                GameType = GameType
-            };
 
-            await DataStore.AddGameAsync(newItem);
+            await DataStore.AddGameAsync(game);
 
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");

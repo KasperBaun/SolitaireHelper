@@ -14,11 +14,6 @@ namespace SolitaireHelper.Models
 
         //public bool IsBlack() { return Suit == Suit.SPADES || Suit == Suit.CLUBS; }
 
-        public string ToString()
-        {
-            return Suit.ToString() + " " ;
-        }
-
     
         }
 
