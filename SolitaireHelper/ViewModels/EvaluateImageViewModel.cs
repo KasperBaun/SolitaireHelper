@@ -5,30 +5,32 @@ using SolitaireHelper.Services;
 
 namespace SolitaireHelper.ViewModels
 {
-    [QueryProperty(nameof(Photo), nameof(Photo))]
+    [QueryProperty(nameof(Source), nameof(Source))]
     public class EvaluateImageViewModel : BaseViewModel
     {
         private ImageStore ImageStore { get; set; }
-        private ImageSource photo;
-        public ImageSource Photo
+        public Image Photo { get; set; } = new Image() { Source = "template.png" };
+
+
+        public string Source
         {
             get
             {
-                return photo;
+                return Source;
             }
             set
             {
-                photo = value;
+                Source = value;
                 LoadPhoto(value);
             }
         }
 
-        public async void LoadPhoto(ImageSource photo)
+        public async void LoadPhoto(string path)
         {
             try
             {
                 // Fetch photo
-                var image = await ImageStore.GetImageAsync(photo);
+                Photo = await ImageStore.GetImageAsync(path);
             }
             catch (Exception)
             {

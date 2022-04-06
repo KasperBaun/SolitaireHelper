@@ -70,8 +70,8 @@ namespace SolitaireHelper.ViewModels
 
             var savedPhotoPath = await SavePhotoFileAsync(photoData, Guid.NewGuid().ToString() + ".jpg");
             //Console.WriteLine(savedPhotoPath);
-            await ImageStore.AddImageAsync(savedPhotoPath);
-            await Shell.Current.GoToAsync($"{nameof(EvaluateImagePage)}?{nameof(EvaluateImageViewModel.Photo)}={savedPhotoPath}");
+            //await ImageStore.AddImageAsync(savedPhotoPath);
+            //await Shell.Current.GoToAsync($"{nameof(EvaluateImagePage)}?{nameof(EvaluateImageViewModel.Photo)}={savedPhotoPath}");
         }
 
         private async Task<string> SavePhotoFileAsync(byte[] photoData, string fileName)
