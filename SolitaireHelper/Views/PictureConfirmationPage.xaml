@@ -4,18 +4,15 @@
              xmlns:vm="clr-namespace:SolitaireHelper.ViewModels"
              x:Class="SolitaireHelper.Views.PictureConfirmationPage"
              Shell.PresentationMode="ModalAnimated"
+             Shell.NavBarIsVisible="False"
              Title="{Binding Title}"
              >
     <ContentPage.BindingContext>
         <vm:NewGameViewModel />
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <StackLayout Spacing="3" Padding="15">
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
-                <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
-                    <Image x:Name="SolitaireImage" Source="template.png"/>
-                </ContentView>
-            </StackLayout>
+        <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
+            <Button VerticalOptions="Center" Text="Login" Command="{Binding CancelCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

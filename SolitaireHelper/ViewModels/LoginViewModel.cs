@@ -9,6 +9,7 @@ namespace SolitaireHelper.ViewModels
 
         public LoginViewModel()
         {
+            Title = "Login";
             LoginCommand = new Command(OnLoginClicked);
         }
 

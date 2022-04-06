@@ -1,5 +1,7 @@
 ﻿using SolitaireHelper.Models;
+using SolitaireHelper.Views;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -15,10 +17,11 @@ namespace SolitaireHelper.ViewModels
         private string gameType = "7-Kabale";
         private Game game;
         private string photoPath;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public NewGameViewModel()
         {
-            Title = "Solitaire";
+            Title = "New Game";
             CardDeck deck = new CardDeck();
             game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString(), IsFinished = false, Deck= deck };
             //deck.PrintDeck();
@@ -37,7 +40,7 @@ namespace SolitaireHelper.ViewModels
                 var photo = await MediaPicker.CapturePhotoAsync();
                 await LoadPhotoAsync(photo);
                 Console.WriteLine($"CapturePhotoAsync COMPLETED: {photoPath}");
-                await Shell.Current.GoToAsync("PictureConfirmationPage");
+                //await Shell.Current.GoToAsync("PictureConfirmationPage");
 
             }
             catch (FeatureNotSupportedException fnsEx)
@@ -76,26 +79,46 @@ namespace SolitaireHelper.ViewModels
         public string PhotoPath
         {
             get => photoPath;
-            set => photoPath = value;
+            set
+            {
+                photoPath = value;
+                var args = new PropertyChangedEventArgs(nameof(PhotoPath));
+                PropertyChanged?.Invoke(this, args);
+            }
         }
 
 
         public string Player
         {
             get => player;
-            set => SetProperty(ref player, value);
+            set
+            {
+                player = value;
+                var args = new PropertyChangedEventArgs(nameof(Player));
+                PropertyChanged?.Invoke(this, args);
+            }
         }
 
         public string Date
         {
             get => date;
-            set => SetProperty(ref date, value);
+            set
+            {
+                date = value;
+                var args = new PropertyChangedEventArgs(nameof(Date));
+                PropertyChanged?.Invoke(this, args);
+            }
         }
 
         public string GameType
         {
             get => gameType;
-            set => SetProperty(ref gameType, value);
+            set
+            {
+                gameType = value;
+                var args = new PropertyChangedEventArgs(nameof(GameType));
+                PropertyChanged?.Invoke(this, args);
+            }
         }
 
         public Command SaveCommand { get; }
@@ -118,8 +141,7 @@ namespace SolitaireHelper.ViewModels
         private async void OnTakePicture(/*object sender, EventArgs e*/)
         {
             await TakePhotoAsync();
-            Console.WriteLine(PhotoPath);
-
+            await Shell.Current.GoToAsync($"{nameof(PictureConfirmationPage)}?{nameof(PictureConfirmationPage)}");
         }
 
 

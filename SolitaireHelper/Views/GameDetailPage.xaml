@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:viewmodels="clr-namespace:SolitaireHelper.ViewModels" x:DataType="viewmodels:GameDetailViewModel"
              x:Class="SolitaireHelper.Views.GameDetailPage"
              Title="{Binding Title}">
 
     <StackLayout Spacing="20" Padding="15">
-        <Label Text="Text:" FontSize="Medium" />
-        <Label Text="{Binding Text}" FontSize="Small"/>
-        <Label Text="Description:" FontSize="Medium" />
-        <Label Text="{Binding Description}" FontSize="Small"/>
+        <Label Text="Id:" FontSize="Medium" />
+        <Label Text="{Binding GameId}" FontSize="Small"/>
+        <Label Text="Player:" FontSize="Medium" />
+        <Label Text="{Binding Player}" FontSize="Small"/>
+        <Label Text="Date:" FontSize="Medium" />
+        <Label Text="{Binding Date}" FontSize="Small"/>
     </StackLayout>
     
 </ContentPage>

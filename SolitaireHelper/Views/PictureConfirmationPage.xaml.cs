@@ -6,7 +6,7 @@ namespace SolitaireHelper.Views
 {
     public partial class PictureConfirmationPage : ContentPage
     {
-        [XamlCompilation(XamlCompilationOptions.Compile)]
+  
         public PictureConfirmationPage()
         {
             InitializeComponent();
