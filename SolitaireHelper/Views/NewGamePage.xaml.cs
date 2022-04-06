@@ -1,9 +1,5 @@
-﻿using SolitaireHelper.Models;
-using SolitaireHelper.ViewModels;
+﻿using SolitaireHelper.ViewModels;
 using Xamarin.Forms;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using Xamarin.Essentials;
 
 
@@ -16,6 +12,21 @@ namespace SolitaireHelper.Views
         {
             InitializeComponent();
             BindingContext = new NewGameViewModel();
+        }
+
+        async void Button_Clicked(System.Object sender, System.EventArgs e)
+        {
+            var pickResult = await FilePicker.PickAsync(new PickOptions
+            {
+                FileTypes = FilePickerFileType.Images,
+                PickerTitle = "Pick an image"
+            });
+
+            if(pickResult != null)
+            {
+                var stream = await pickResult.OpenReadAsync();
+                resultImage.Source = ImageSource.FromStream(() => stream);
+            }
         }
     }
 }

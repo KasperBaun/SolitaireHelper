@@ -4,7 +4,6 @@ using Xamarin.Forms.Xaml;
 
 namespace SolitaireHelper.Views
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
         public LoginPage()

@@ -16,7 +16,7 @@ namespace SolitaireHelper.ViewModels
         private string date = DateTime.Today.Date.ToShortDateString();
         private string gameType = "7-Kabale";
         private Game game;
-        private string photoPath;
+        private ImageSource imageURI;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NewGameViewModel()
@@ -24,8 +24,6 @@ namespace SolitaireHelper.ViewModels
             Title = "New Game";
             CardDeck deck = new CardDeck();
             game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString(), IsFinished = false, Deck= deck };
-            //deck.PrintDeck();
-            //Console.WriteLine(deck.Deck.Length);
             SaveCommand = new Command(OnSave);
             CancelCommand = new Command(OnCancel);
             TakePictureCommand = new Command(OnTakePicture);
@@ -35,14 +33,13 @@ namespace SolitaireHelper.ViewModels
         private async void OnSave()
         {
             await DataStore.AddGameAsync(game);
-
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
         }
         private async void OnTakePicture(/*object sender, EventArgs e*/)
         {
-            await TakePhotoAsync();
-            await Shell.Current.GoToAsync($"{nameof(NewPicturePage)}");
+            //await TakePhotoAsync();
+            await Shell.Current.GoToAsync($"{nameof(CameraPage)}");
         }
 
         private async Task TakePhotoAsync()
@@ -51,7 +48,7 @@ namespace SolitaireHelper.ViewModels
             {
                 var photo = await MediaPicker.CapturePhotoAsync();
                 await LoadPhotoAsync(photo);
-                Console.WriteLine($"CapturePhotoAsync COMPLETED: {photoPath}");
+                Console.WriteLine($"CapturePhotoAsync COMPLETED: {imageURI}");
                 //await Shell.Current.GoToAsync("PictureConfirmationPage");
 
             }
@@ -76,7 +73,7 @@ namespace SolitaireHelper.ViewModels
             // Cancelled
             if (photo == null)
             {
-                photoPath = null;
+                imageURI = null;
                 return;
             }
             // Save the file into local storage
@@ -85,15 +82,15 @@ namespace SolitaireHelper.ViewModels
             using (var newStream = File.OpenWrite(newFile))
                 await stream.CopyToAsync(newStream);
 
-            photoPath = newFile;
+            imageURI = newFile;
         }
 
-        public string PhotoPath
+        public ImageSource PhotoPath
         {
-            get => photoPath;
+            get => imageURI;
             set
             {
-                photoPath = value;
+                imageURI = value;
                 var args = new PropertyChangedEventArgs(nameof(PhotoPath));
                 PropertyChanged?.Invoke(this, args);
             }

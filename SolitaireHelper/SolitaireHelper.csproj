@@ -6,16 +6,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\CameraPage - Copy.xaml.cs" />
     <Compile Remove="Views\PictureConfirmationPage.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Views\NewPicturePage.xaml.cs">
+    <EmbeddedResource Include="Views\EvaluateImagePage.xaml.cs">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CameraPage.xaml.cs">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
+	  <PackageReference Include="Xamarin.CommunityToolkit" Version="1.2.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
@@ -42,7 +48,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\NewPicturePage.xaml">
+    <EmbeddedResource Update="Views\EvaluateImagePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\CameraPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>

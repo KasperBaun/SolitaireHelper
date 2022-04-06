@@ -5,7 +5,7 @@ namespace SolitaireHelper.Views
 {
     public partial class HistoryPage : ContentPage
     {
-        HistoryViewModel _viewModel;
+        readonly HistoryViewModel _viewModel;
 
         public HistoryPage()
         {

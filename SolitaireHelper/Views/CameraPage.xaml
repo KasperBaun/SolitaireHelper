@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SolitaireHelper.ViewModels" xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Class="SolitaireHelper.Views.CameraPage"
+             Shell.NavBarIsVisible="False"
+             >
+<ContentPage.BindingContext>
+    <vm:CameraViewModel />
+</ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid>
+            <xct:CameraView
+                x:Name="cameraView"
+                CaptureMode="Photo"
+                MediaCaptureFailed="cameraView_MediaCaptureFailed"
+                MediaCaptured="cameraView_MediaCaptured"
+                OnAvailable="cameraView_OnAvailable" />
+
+            <Image
+                Margin="10"
+                Aspect="AspectFill"
+                HeightRequest="100"
+                HorizontalOptions="End"
+                Source="{Binding LastPhoto}"
+                VerticalOptions="Start"
+                WidthRequest="100" />
+
+            <Button
+                Margin="20"
+                Command="{Binding ShutterCommand, Source={x:Reference cameraView}}"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding CanTakePhoto}"
+                Text="Take photo"
+                VerticalOptions="End" />
+        </Grid>
+    </ContentPage.Content>
+
+</ContentPage>
