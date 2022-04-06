@@ -1,9 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Views\PictureConfirmationPage.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Views\PictureConfirmationPage.xaml.cs">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />  
@@ -23,5 +33,17 @@
     <Compile Update="Views\NewGamePage.xaml.cs">
       <DependentUpon>NewGamePage.xaml</DependentUpon>
     </Compile>
+	<Compile Update="Views\LoginPage.xaml.cs">
+		<DependentUpon>LoginPage.xaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\PictureConfirmationPage.xaml.cs">
+		<DependentUpon>PictureConfirmationPage.xaml</DependentUpon>
+	</Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\PictureConfirmationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

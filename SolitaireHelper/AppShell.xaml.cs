@@ -3,7 +3,7 @@ using Xamarin.Forms;
 
 namespace SolitaireHelper
 {
-    public partial class AppShell : Xamarin.Forms.Shell
+    public partial class AppShell : Shell
     {
         public AppShell()
         {
@@ -13,6 +13,7 @@ namespace SolitaireHelper
             Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(NewGamePage), typeof(NewGamePage));
+            Routing.RegisterRoute(nameof(PictureConfirmationPage), typeof(PictureConfirmationPage));
         }
 
     }

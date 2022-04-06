@@ -8,10 +8,13 @@
         public bool Visible { get; set; }
         //public bool IsRed() { return Suit == Suit.HEARTS || Suit == Suit.DIAMONDS; }
 
+        public override string ToString()
+        {
+            return "Card id: " + Id + ", Suit: " + Suit + ", Rank: " + Rank + ", Visible: " + Visible; 
+        }
         //public bool IsBlack() { return Suit == Suit.SPADES || Suit == Suit.CLUBS; }
-
-
     }
+
 
     public enum Suit
     {

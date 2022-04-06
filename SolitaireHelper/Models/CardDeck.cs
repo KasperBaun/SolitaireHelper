@@ -1,17 +1,19 @@
-﻿namespace SolitaireHelper.Models
+﻿using System;
+
+namespace SolitaireHelper.Models
 {
     internal enum SuitEnum { C, D, H, S };
 
     public class CardDeck
     {
-        private Card[] Deck { get; set; }
+        public Card[] Deck { get; set; }
 
         public CardDeck()
         {
             Deck = NewUnshuffledDeck();
         }
 
-        private Card[] NewUnshuffledDeck()
+        public Card[] NewUnshuffledDeck()
         {
             Card[] cardDeck = new Card[52];
             char[] suits = { 'C', 'D', 'H', 'S' };
@@ -36,13 +38,16 @@
                 newCard.Rank = 'K';
                 cardDeck[i * 13 + 12] = newCard;
             }
-
+         
             return cardDeck;
         }
 
         public void PrintDeck()
         {
-            // TODO
+            foreach (Card card in Deck)
+            {
+                Console.WriteLine(card.ToString());
+            }
         }
 
         public void ShuffleDeck()

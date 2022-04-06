@@ -18,15 +18,16 @@ namespace SolitaireHelper.ViewModels
 
         public NewGameViewModel()
         {
-            Title = "New Game";
-            game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString() };
-
+            Title = "Solitaire";
+            CardDeck deck = new CardDeck();
+            game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString(), IsFinished = false, Deck= deck };
+            //deck.PrintDeck();
+            Console.WriteLine(deck.Deck.Length);
             SaveCommand = new Command(OnSave);
             CancelCommand = new Command(OnCancel);
             TakePictureCommand = new Command(OnTakePicture);
             this.PropertyChanged +=
                 (_, __) => SaveCommand.ChangeCanExecute();
-
         }
 
         private async Task TakePhotoAsync()
@@ -36,6 +37,8 @@ namespace SolitaireHelper.ViewModels
                 var photo = await MediaPicker.CapturePhotoAsync();
                 await LoadPhotoAsync(photo);
                 Console.WriteLine($"CapturePhotoAsync COMPLETED: {photoPath}");
+                await Shell.Current.GoToAsync("PictureConfirmationPage");
+
             }
             catch (FeatureNotSupportedException fnsEx)
             {
