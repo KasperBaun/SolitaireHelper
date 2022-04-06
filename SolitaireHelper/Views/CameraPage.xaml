@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:SolitaireHelper.ViewModels" xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:vm="clr-namespace:SolitaireHelper.ViewModels" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              x:Class="SolitaireHelper.Views.CameraPage"
              Shell.NavBarIsVisible="False"
              >
@@ -10,15 +11,190 @@
 </ContentPage.BindingContext>
 
     <ContentPage.Content>
-        <Grid>
+        <RelativeLayout>
+            <Grid Rotation="90" AnchorX="0" AnchorY="0"
+                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
+                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            
             <xct:CameraView
+                Grid.ColumnSpan="8"
+                Grid.RowSpan="2"
                 x:Name="cameraView"
                 CaptureMode="Photo"
                 MediaCaptureFailed="cameraView_MediaCaptureFailed"
                 MediaCaptured="cameraView_MediaCaptured"
                 OnAvailable="cameraView_OnAvailable" />
+            
+            <!--First column-->    
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Text="Deck" />
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Row="1"
+                Text="Tableau 1" />
+                
+            <!--Second column-->    
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Text="Drawn cards" />
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="1"
+                Grid.Row="1"
+                Text="Tableau 2" />
 
-            <Image
+
+            <!---Third column-->
+            <!--<Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Center"
+                Grid.Column="2"
+                Text="Pile 1" />-->
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="2"
+                Grid.Row="1"
+                Text="Tableau 3" />
+
+             <!---Fourth column-->    
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="3"
+                Text="Pile 1" />
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="3"
+                Grid.Row="1"
+                Text="Tableau 4" />
+
+            <!---Fifth column-->
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="4"
+                Text="Pile 2" />
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="4"
+                Grid.Row="1"
+                Text="Tableau 5" />
+                
+            <!--Sixth column-->
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="5"
+                Text="Pile 3" />
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="5"
+                Grid.Row="1"
+                Text="Tableau 6" />
+                
+            <!--Seventh column-->
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="6"
+                Text="Pile 4" />
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="6"
+                Grid.Row="1"
+                Text="Tableau 7" />
+                
+            <!--Eigth column-->
+            <Label
+                TextColor="DarkRed"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Grid.Column="7"
+                Text="Empty" />
+            <Button
+                Grid.Column="7"
+                Grid.Row="1"
+                Command="{Binding ShutterCommand, Source={x:Reference cameraView}}"
+                HorizontalOptions="Fill"
+                IsEnabled="{Binding CanTakePhoto}"
+                Text="Take photo"
+                VerticalOptions="Fill" />
+
+
+
+
+
+
+
+
+                <Image
                 Margin="10"
                 Aspect="AspectFill"
                 HeightRequest="100"
@@ -27,14 +203,9 @@
                 VerticalOptions="Start"
                 WidthRequest="100" />
 
-            <Button
-                Margin="20"
-                Command="{Binding ShutterCommand, Source={x:Reference cameraView}}"
-                HorizontalOptions="Center"
-                IsEnabled="{Binding CanTakePhoto}"
-                Text="Take photo"
-                VerticalOptions="End" />
-        </Grid>
+            
+            </Grid>
+        </RelativeLayout>
     </ContentPage.Content>
 
 </ContentPage>

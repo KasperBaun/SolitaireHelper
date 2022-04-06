@@ -11,6 +11,7 @@ namespace SolitaireHelper.Views
         {
             InitializeComponent();
             BindingContext = viewModel = new CameraViewModel();
+
         }
 
         private void cameraView_OnAvailable(object sender, bool e)
