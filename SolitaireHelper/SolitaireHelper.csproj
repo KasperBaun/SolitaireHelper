@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Views\PictureConfirmationPage.xaml.cs">
+    <EmbeddedResource Include="Views\NewPicturePage.xaml.cs">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>
@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\PictureConfirmationPage.xaml">
+    <EmbeddedResource Update="Views\NewPicturePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>

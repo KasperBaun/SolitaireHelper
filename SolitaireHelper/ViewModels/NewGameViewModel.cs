@@ -25,12 +25,24 @@ namespace SolitaireHelper.ViewModels
             CardDeck deck = new CardDeck();
             game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString(), IsFinished = false, Deck= deck };
             //deck.PrintDeck();
-            Console.WriteLine(deck.Deck.Length);
+            //Console.WriteLine(deck.Deck.Length);
             SaveCommand = new Command(OnSave);
             CancelCommand = new Command(OnCancel);
             TakePictureCommand = new Command(OnTakePicture);
             this.PropertyChanged +=
                 (_, __) => SaveCommand.ChangeCanExecute();
+        }
+        private async void OnSave()
+        {
+            await DataStore.AddGameAsync(game);
+
+            // This will pop the current page off the navigation stack
+            await Shell.Current.GoToAsync("..");
+        }
+        private async void OnTakePicture(/*object sender, EventArgs e*/)
+        {
+            await TakePhotoAsync();
+            await Shell.Current.GoToAsync($"{nameof(NewPicturePage)}");
         }
 
         private async Task TakePhotoAsync()
@@ -131,18 +143,6 @@ namespace SolitaireHelper.ViewModels
             await Shell.Current.GoToAsync("..");
         }
 
-        private async void OnSave()
-        {
-            await DataStore.AddGameAsync(game);
-
-            // This will pop the current page off the navigation stack
-            await Shell.Current.GoToAsync("..");
-        }
-        private async void OnTakePicture(/*object sender, EventArgs e*/)
-        {
-            await TakePhotoAsync();
-            await Shell.Current.GoToAsync($"{nameof(PictureConfirmationPage)}?{nameof(PictureConfirmationPage)}");
-        }
 
 
     }

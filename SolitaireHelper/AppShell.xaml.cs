@@ -13,7 +13,7 @@ namespace SolitaireHelper
             Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(NewGamePage), typeof(NewGamePage));
-            Routing.RegisterRoute(nameof(PictureConfirmationPage), typeof(PictureConfirmationPage));
+            Routing.RegisterRoute(nameof(NewPicturePage), typeof(NewPicturePage));
         }
 
     }
