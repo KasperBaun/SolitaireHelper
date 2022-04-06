@@ -10,7 +10,7 @@ namespace SolitaireHelper.Views
         public PictureConfirmationPage()
         {
             InitializeComponent();
-            this.BindingContext = new LoginViewModel();
+            this.BindingContext = new NewGameViewModel();
         }
     }
 }
