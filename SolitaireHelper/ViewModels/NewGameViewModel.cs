@@ -22,8 +22,9 @@ namespace SolitaireHelper.ViewModels
         public NewGameViewModel()
         {
             Title = "New Game";
-            CardDeck deck = new CardDeck();
-            game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString(), IsFinished = false, Deck= deck };
+            game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString(), IsFinished = false };
+            game.Deck.ShuffleDeck();
+            game.Deck.PrintDeck();
             SaveCommand = new Command(OnSave);
             CancelCommand = new Command(OnCancel);
             TakePictureCommand = new Command(OnTakePicture);

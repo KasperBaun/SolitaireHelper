@@ -9,5 +9,9 @@
         public bool IsFinished { get; set; }
 
         public CardDeck Deck { get; set; } = new CardDeck();
+        public Game()
+        {
+            Deck = new CardDeck();
+        }
     }
 }
