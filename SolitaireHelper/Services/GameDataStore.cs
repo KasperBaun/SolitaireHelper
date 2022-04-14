@@ -1,7 +1,7 @@
-﻿using SolitaireHelper.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SolitaireHelperModels;
 using System.Threading.Tasks;
 
 namespace SolitaireHelper.Services

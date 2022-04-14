@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SolitaireHelper.Models
+namespace SolitaireHelperModels
 {
-    /* This class is used as a base to inherit from when creating the different piles used in the solitaire game.
-     * Tableaus 1-7, Stock, Talon and Foundations 1-4 inherit from this
+    /* This class is used as a base when creating the different piles used in the solitaire game.
+     * Tableaus 1-7, Stock, Talon and Foundations 1-4 are all Pile classes from this
      */
     public class Pile
     {

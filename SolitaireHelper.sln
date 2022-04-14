@@ -5,7 +5,11 @@ VisualStudioVersion = 17.2.32210.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireHelper.Android", "SolitaireHelper.Android\SolitaireHelper.Android.csproj", "{E66BEA73-3F4A-4262-950C-3A5958A40AF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireHelper", "SolitaireHelper\SolitaireHelper.csproj", "{FF5407F3-15E8-4B94-9F5F-2E43B33E33E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolitaireHelper", "SolitaireHelper\SolitaireHelper.csproj", "{FF5407F3-15E8-4B94-9F5F-2E43B33E33E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireHelper.nUnitTests", "SolitaireHelper.nUnitTests\SolitaireHelper.nUnitTests.csproj", "{6D9FFD24-B5F4-4FA6-A05E-5BB15D0C60B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireHelperModels", "SolitaireHelperModels\SolitaireHelperModels.csproj", "{A6031659-7B93-46C7-8075-5C41084F5020}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +29,14 @@ Global
 		{FF5407F3-15E8-4B94-9F5F-2E43B33E33E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF5407F3-15E8-4B94-9F5F-2E43B33E33E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF5407F3-15E8-4B94-9F5F-2E43B33E33E4}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{6D9FFD24-B5F4-4FA6-A05E-5BB15D0C60B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D9FFD24-B5F4-4FA6-A05E-5BB15D0C60B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D9FFD24-B5F4-4FA6-A05E-5BB15D0C60B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D9FFD24-B5F4-4FA6-A05E-5BB15D0C60B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6031659-7B93-46C7-8075-5C41084F5020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6031659-7B93-46C7-8075-5C41084F5020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6031659-7B93-46C7-8075-5C41084F5020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6031659-7B93-46C7-8075-5C41084F5020}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SolitaireHelper.Models
+namespace SolitaireHelperModels
 {
 
     public class CardDeck

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SolitaireHelper.Models
+namespace SolitaireHelperModels
 {
     public class Move
     {
@@ -33,36 +33,36 @@ namespace SolitaireHelper.Models
                 return;
             }
 
-            // Test if 2 can move to GroundPile
+            // Test if 2 can move to any of the Foundations
             if (Card.Rank == 2 && IsTableau(From) && IsFoundation(To)) {
                 Score = 85 + From.GetCards().Count;
                 return;
             }
 
-            // Test if king can move to Empty BuildPile
+            // Test if king can move to an empty Tableau
             if (Card.Rank == 13 && IsTableau(From) && IsTableau(To) && To.IsEmpty() && !From.IsEmpty()) {
                 Score = 75 + From.GetCards().Count;
                 return;
             }
-            // Test if card can move from BuildPile to GroundPile
+            // Test if card can move from Table to Foundation
             if (IsTableau(From) && IsFoundation(To)) {
                 Score = From.GetCards().Count + 40;
                 return;
             }
 
-            // Test if card can move from BuildPile to BuildPile
+            // Test if card can move from Tableau to Tableau
             if (Card.Rank != 13 && IsTableau(From) && IsTableau(To)) {
                 Score = From.GetCards().Count + 30;
                 return;
             }
 
-            // Test if card can move from BasePile to GroundPile
+            // Test if card can move from Stock to Tableau
             if (From.Type==0 && IsTableau(To)) {
                 Score = From.GetCards().Count + 20;
                 return;
             }
 
-            // Test if card can move from BasePile to BuildPile
+            // Test if card can move from Stock to any of the foundations
             if (From.Type==0 && IsFoundation(To)) {
                 Score = From.GetCards().Count + 10;
                 return;

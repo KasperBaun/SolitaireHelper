@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Xamarin.Forms;
+using SolitaireHelperModels;
 
 namespace SolitaireHelper.ViewModels
 {

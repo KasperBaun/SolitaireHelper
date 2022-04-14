@@ -1,11 +1,11 @@
-﻿using SolitaireHelper.Models;
-using SolitaireHelper.Views;
+﻿using SolitaireHelper.Views;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using SolitaireHelperModels;
 
 
 namespace SolitaireHelper.ViewModels
@@ -23,8 +23,10 @@ namespace SolitaireHelper.ViewModels
         {
             Title = "New Game";
             game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString(), IsFinished = false };
-            game.Deck.ShuffleDeck();
-            game.Deck.PrintDeck();
+            CardDeck CardDeck = new CardDeck();
+            CardDeck.PrintDeck();
+            //Table Table = new Table(CardDeck.Deck);
+            //Table.PrintDeck();
             SaveCommand = new Command(OnSave);
             CancelCommand = new Command(OnCancel);
             TakePictureCommand = new Command(OnTakePicture);

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
+
 namespace SolitaireHelper.Services
 {
     public interface IImageStore<Image>

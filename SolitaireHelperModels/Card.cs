@@ -1,4 +1,4 @@
-﻿namespace SolitaireHelper.Models
+﻿namespace SolitaireHelperModels
 {
     public class Card
     {
@@ -73,7 +73,6 @@
             }
         }
     }
-
 
     public enum Suits
     {

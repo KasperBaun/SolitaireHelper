@@ -1,4 +1,4 @@
-﻿namespace SolitaireHelper.Models
+﻿namespace SolitaireHelperModels
 {
     public class Game
     {
@@ -8,10 +8,7 @@
         public string GameType { get; set; }
         public bool IsFinished { get; set; }
 
-        public CardDeck Deck { get; set; } = new CardDeck();
-        public Game()
-        {
-            Deck = new CardDeck();
-        }
+        public Table Table { get; set; }
+        public Game(){}
     }
 }

@@ -1,4 +1,4 @@
-﻿using SolitaireHelper.Models;
+﻿using SolitaireHelperModels;
 using SolitaireHelper.Services;
 using System;
 using System.Collections.Generic;

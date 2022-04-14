@@ -4,7 +4,7 @@
              x:Class="SolitaireHelper.Views.HistoryPage"
              Title="{Binding Title}"
              xmlns:local="clr-namespace:SolitaireHelper.ViewModels"  
-             xmlns:model="clr-namespace:SolitaireHelper.Models" x:DataType="local:HistoryViewModel">
+             xmlns:model="clr-namespace:SolitaireHelperModels;assembly=SolitaireHelperModels" x:DataType="local:HistoryViewModel">
 
     <ContentPage.ToolbarItems>
         <!--<ToolbarItem Text="Add" Command="{Binding AddGameCommand}" />-->

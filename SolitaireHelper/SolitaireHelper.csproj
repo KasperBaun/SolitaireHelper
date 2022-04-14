@@ -21,9 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Xamarin.CommunityToolkit" Version="1.2.0" />
+	<PackageReference Include="Xamarin.CommunityToolkit" Version="1.2.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SolitaireHelperModels\SolitaireHelperModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
