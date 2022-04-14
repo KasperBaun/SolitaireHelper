@@ -10,6 +10,7 @@ namespace SolitaireHelper.Models
     public class Pile
     {
         protected List<Card> Cards { get; set; }
+        public int Type { get; set; }
 
         public Pile(int numberOfCards)
         {
@@ -20,11 +21,13 @@ namespace SolitaireHelper.Models
             }
         }
 
-        public void PushCard(Card card)
+        public void PushCards(List<Card> cards)
         {
-            Cards.Add(card);
+            foreach(Card card in cards)
+            {
+                Cards.Add(card);
+            }
         }
-
         public void PopCard(List<Card> cardsToRemove)
         {
             foreach(Card card in cardsToRemove)
@@ -36,6 +39,7 @@ namespace SolitaireHelper.Models
         {
             return Cards.FindLast(c => c.Rank != 0);
         }
+        public List<Card> GetCards() { return Cards; }
         public bool IsEqual(Card card)
         {
             return Cards[(Cards.Count-1)].IsEqual(card);
@@ -63,5 +67,22 @@ namespace SolitaireHelper.Models
         {
             return Cards.Count;
         }
+    }
+
+    public enum PileType
+    {
+        Stock = 0,
+        T1 = 1,
+        T2 = 2,
+        T3 = 3,
+        T4 = 4,
+        T5 = 5,
+        T6 = 6,
+        T7 = 7,
+        F1 = 8,
+        F2 = 9,
+        F3 = 10,
+        F4 = 11,
+        Talon = 12
     }
 }

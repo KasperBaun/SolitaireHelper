@@ -15,17 +15,38 @@ namespace SolitaireHelper.Models
 
         public Table()
         {
-            for(int i=0; i<7; i++)
+            for(int i=1; i<8; i++)
             {
                 Pile pile = new Pile(0);
+                pile.Type = i;
                 Tableaus.Add(pile);
                 if (i < 4)
                 {
+                    pile.Type = i + 7;
                     Foundations.Add(pile);
                 }
             }
-            Talon = new Pile(0);
             Stock = new Pile(0);
+            Stock.Type = 0;
+            Talon = new Pile(0);
+            Talon.Type = 12;
+        }
+
+        public void Move(Move move, Card card)
+        {
+            if(LastMoveList.Count > 5)
+            {
+                LastMoveList.RemoveAt(0);
+            }
+            LastMoveList.Add(move);
+            if(move.Card == null || move.GetScore() == -1 || move.GetScore() == 5)
+            {
+                Talon.PushCard(card);
+            }
+            else
+            {
+                move.
+            }
         }
 
     }
