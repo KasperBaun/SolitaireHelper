@@ -17,7 +17,7 @@ namespace SolitaireHelperModels
             Cards = new List<Card>();
             for(int i = 1; i <= numberOfCards; i++)
             {
-                Cards.Add(new Card());
+                //Cards.Add(new Card());
             }
         }
 

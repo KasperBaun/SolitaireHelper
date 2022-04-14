@@ -14,6 +14,16 @@ namespace SolitaireHelperModels
         public List<Card> NewUnshuffledDeck()
         {
             List<Card> cardDeck = new List<Card>();
+            for (int j = 1; j <= 4; j++)
+            {
+                for (int i = 1; i <= 13; i++)
+                {
+                    Console.Write("i:" + i.ToString() +  " j:" +  j.ToString() + "\n");
+                    Card card = new Card(suit: j, rank: i, visible: false);
+                    cardDeck.Add(card);
+                }
+            }
+            /*
             for (int i = (int)Suits.HEARTS; i <= (int)Suits.SPADES; i++)
             {
                 Card newCard = new Card()
@@ -61,8 +71,8 @@ namespace SolitaireHelperModels
                     Visible = false
                 };
                 cardDeck.Add(king);
-            }
-         
+            } */
+
             return cardDeck;
         }
         public void ShuffleDeck()
@@ -80,9 +90,9 @@ namespace SolitaireHelperModels
         }
         public void PrintDeck()
         {
-            foreach (Card card in Deck)
+            for (int i = 0; i < Deck.Count; i++)
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(Deck.ToArray()[i].ToString());
             }
         }
     }

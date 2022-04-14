@@ -6,9 +6,16 @@
         public int Rank { get; set; }
         public bool Visible { get; set; }
 
+        public Card(int suit, int rank, bool visible)
+        {
+            Suit = suit;
+            Rank = rank;
+            Visible = visible;
+        }
+
         public override string ToString()
         {
-            return "Card: " + SuitAsString() + RankAsString() + ", Visible: " + Visible; 
+            return "Card: " + SuitAsString(Suit) + RankAsString(Rank) + ", Visible: " + Visible; 
         }
         public bool IsBlack() {
             return Suit == (int)Suits.SPADES || Suit == (int)Suits.CLUBS;
@@ -22,9 +29,9 @@
             return Suit.Equals(card.Suit) && Rank.Equals(card.Rank);
         }
         
-        public string SuitAsString()
+        public string SuitAsString(int suit)
         { 
-            switch (Suit)
+            switch (suit)
             {
                 case 1:
                     return "Hearts";
@@ -38,9 +45,9 @@
                     return "Something went wrong";
             }
         }
-        public string RankAsString()
+        public string RankAsString(int rank)
         {
-            switch (Suit)
+            switch (rank)
             {
                 case 1:
                     return "Ace";

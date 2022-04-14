@@ -7,9 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireHelper.Android", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolitaireHelper", "SolitaireHelper\SolitaireHelper.csproj", "{FF5407F3-15E8-4B94-9F5F-2E43B33E33E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireHelper.nUnitTests", "SolitaireHelper.nUnitTests\SolitaireHelper.nUnitTests.csproj", "{6D9FFD24-B5F4-4FA6-A05E-5BB15D0C60B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolitaireHelper.nUnitTests", "SolitaireHelper.nUnitTests\SolitaireHelper.nUnitTests.csproj", "{6D9FFD24-B5F4-4FA6-A05E-5BB15D0C60B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireHelperModels", "SolitaireHelperModels\SolitaireHelperModels.csproj", "{A6031659-7B93-46C7-8075-5C41084F5020}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolitaireHelperModels", "SolitaireHelperModels\SolitaireHelperModels.csproj", "{A6031659-7B93-46C7-8075-5C41084F5020}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireHelperConsole", "SolitaireHelperConsole\SolitaireHelperConsole.csproj", "{3A8B2885-BB32-48C2-BC5B-E2A7EBE57B94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{A6031659-7B93-46C7-8075-5C41084F5020}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6031659-7B93-46C7-8075-5C41084F5020}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6031659-7B93-46C7-8075-5C41084F5020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A8B2885-BB32-48C2-BC5B-E2A7EBE57B94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A8B2885-BB32-48C2-BC5B-E2A7EBE57B94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A8B2885-BB32-48C2-BC5B-E2A7EBE57B94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A8B2885-BB32-48C2-BC5B-E2A7EBE57B94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
