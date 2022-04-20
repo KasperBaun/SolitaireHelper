@@ -14,6 +14,8 @@ namespace SolitaireHelperModels
 
         public Table(Pile stock, Pile talon, Pile T1, Pile T2, Pile T3, Pile T4, Pile T5, Pile T6, Pile T7, Pile F1, Pile F2, Pile F3, Pile F4)
         {
+            Tableaus = new List<Pile>();
+            Foundations = new List<Pile>();
             Stock = stock;
             Talon = talon;
             Tableaus.Add(T1);
@@ -33,6 +35,43 @@ namespace SolitaireHelperModels
         {
             Console.WriteLine("Talon: \n");
             foreach(Card card in Talon.GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("T1: \n");
+            foreach (Card card in Tableaus[0].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("T2: \n");
+            foreach (Card card in Tableaus[1].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+            Console.WriteLine("T3: \n");
+            foreach (Card card in Tableaus[2].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+            Console.WriteLine("T4: \n");
+            foreach (Card card in Tableaus[3].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+            Console.WriteLine("T5: \n");
+            foreach (Card card in Tableaus[4].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+            Console.WriteLine("T6: \n");
+            foreach (Card card in Tableaus[5].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+            Console.WriteLine("T7: \n");
+            foreach (Card card in Tableaus[6].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }

@@ -34,9 +34,10 @@ namespace SolitaireHelperModels
             Pile T6 = new Pile(); T6.PushCards(CardDeck.Deck.GetRange(15, 6));
             Pile T7 = new Pile(); T7.PushCards(CardDeck.Deck.GetRange(21, 7));
             Pile Talon = new Pile(); Talon.PushCards(CardDeck.Deck.GetRange(28, 3));
-            Pile Stock = new Pile(); Stock.PushCards(CardDeck.Deck.GetRange(31, 52));
-            Table = new Table(T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4, Talon, Stock );
+            Pile Stock = new Pile(); Stock.PushCards(CardDeck.Deck.GetRange(31, 21));
+            Table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
 
+            Table.PrintTable();
             return 0;
         }
     }
