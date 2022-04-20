@@ -68,6 +68,35 @@ namespace SolitaireHelperModels
             List<Card> ClosedCards = Cards.FindAll(c => c.Visible == false);
             return ClosedCards.Count;
         }
+
+        public bool IsMoveToFoundationPossible(Card toCard)
+        {
+            //Checks if card is ace             
+            if(IsEmpty() && toCard.Rank == 1)
+            {
+                return true;
+            }
+
+            //Checks if other cards can be moved to foundation
+            if (!IsEmpty() && GetTopCard().Suit == toCard.Suit && GetTopCard().Rank == toCard.Rank - 1)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsMoveToTableauPossible(Card toCard)
+        {
+            //Checks if card can be moved to another pile
+            if (!IsEmpty() && (GetTopCard().IsRed() && toCard.IsBlack()) || (GetTopCard().IsBlack() && toCard.IsRed()))
+            {
+                if (GetTopCard().Rank == toCard.Rank + 1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     public enum PileType
