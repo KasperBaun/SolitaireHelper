@@ -15,7 +15,7 @@
 
         public override string ToString()
         {
-            return "Card: " + SuitAsString(Suit) + RankAsString(Rank) + ", Visible: " + Visible; 
+            return "Card: " + RankAsString(Rank) +" of " + SuitAsString(Suit) + ", Visible: " + Visible; 
         }
         public bool IsBlack() {
             return Suit == (int)Suits.SPADES || Suit == (int)Suits.CLUBS;
