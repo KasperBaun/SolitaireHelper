@@ -12,13 +12,9 @@ namespace SolitaireHelperModels
         protected List<Card> Cards { get; set; }
         public int Type { get; set; }
 
-        public Pile(int numberOfCards)
+        public Pile()
         {
             Cards = new List<Card>();
-            for(int i = 1; i <= numberOfCards; i++)
-            {
-                //Cards.Add(new Card());
-            }
         }
 
         public void PushCards(List<Card> cards)
@@ -28,7 +24,7 @@ namespace SolitaireHelperModels
                 Cards.Add(card);
             }
         }
-        public void PopCard(List<Card> cardsToRemove)
+        public void PopCards(List<Card> cardsToRemove)
         {
             foreach(Card card in cardsToRemove)
             {
@@ -63,9 +59,14 @@ namespace SolitaireHelperModels
         {
             return Cards.Count == 0;
         }
-        public int Size()
+        public int GetNumberOfCards()
         {
             return Cards.Count;
+        }
+        public int GetNumberOfClosedCards()
+        {
+            List<Card> ClosedCards = Cards.FindAll(c => c.Visible == false);
+            return ClosedCards.Count;
         }
     }
 

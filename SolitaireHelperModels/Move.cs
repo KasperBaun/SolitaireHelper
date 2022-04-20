@@ -21,9 +21,9 @@ namespace SolitaireHelperModels
 
         private void CalculateScore()
         {
-            if (Card == null)
+            if (Card.Visible == false)
             {
-                Score = 5;
+                Score = 0;
                 return ;
             }
 
@@ -119,7 +119,7 @@ namespace SolitaireHelperModels
                     CardsToMove.Add(card);
                 }
             }
-            From.PopCard(CardsToMove);
+            From.PopCards(CardsToMove);
             To.PushCards(CardsToMove);
         }
         public int GetScore()

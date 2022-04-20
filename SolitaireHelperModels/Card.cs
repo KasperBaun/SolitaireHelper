@@ -18,11 +18,11 @@
             return "Card: " + RankAsString(Rank) +" of " + SuitAsString(Suit) + ", Visible: " + Visible; 
         }
         public bool IsBlack() {
-            return Suit == (int)Suits.SPADES || Suit == (int)Suits.CLUBS;
+            return Suit == 2 || Suit == 4;
         }
         public bool IsRed()
         {
-            return Suit == (int)Suits.HEARTS || Suit == (int)Suits.DIAMONDS;
+            return Suit == 1 || Suit == 3;
         }
         public bool IsEqual(Card card)
         {
@@ -79,30 +79,5 @@
                     return "Something went wrong";
             }
         }
-    }
-
-    public enum Suits
-    {
-        HEARTS = 1,
-        CLUBS = 2,
-        DIAMONDS = 3,
-        SPADES = 4
-    }
-    public enum FaceValue
-    {
-        NULL = 0,
-        ONE = 1,
-        TWO = 2,
-        THREE = 3,
-        FOUR = 4,
-        FIVE = 5,
-        SIX = 6,
-        SEVEN = 7,
-        EIGHT = 8,
-        NINE = 9,
-        TEN = 10,
-        KNIGHT = 11,
-        QUEEN = 12,
-        KING = 13
-    }
+    }    
 }
