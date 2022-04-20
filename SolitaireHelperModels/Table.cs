@@ -33,45 +33,50 @@ namespace SolitaireHelperModels
 
         public void PrintTable()
         {
-            Console.WriteLine("Talon: \n");
+            Console.WriteLine("Talon:");
             foreach(Card card in Talon.GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
 
-            Console.WriteLine("T1: \n");
+            Console.WriteLine("T1:");
             foreach (Card card in Tableaus[0].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
 
-            Console.WriteLine("T2: \n");
+            Console.WriteLine("T2:");
             foreach (Card card in Tableaus[1].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("T3: \n");
+            Console.WriteLine("T3:");
             foreach (Card card in Tableaus[2].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("T4: \n");
+            Console.WriteLine("T4:");
             foreach (Card card in Tableaus[3].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("T5: \n");
+            Console.WriteLine("T5:");
             foreach (Card card in Tableaus[4].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("T6: \n");
+            Console.WriteLine("T6:");
             foreach (Card card in Tableaus[5].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("T7: \n");
+            Console.WriteLine("T7:");
             foreach (Card card in Tableaus[6].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+            Console.WriteLine("Stock");
+            foreach (Card card in Stock.GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
@@ -81,13 +86,13 @@ namespace SolitaireHelperModels
             List<Move> moves = new List<Move>();
             
             //Checks all cards for possible moves if the pile is not empty and add them to the list of possible moves. 
-            if(!from.IsEmpty() && from.GetTopCard().Visible)
+            if(from.GetCards().Count>=1 && from.GetTopCard().Visible)
             {
                 foreach(Card card in from.GetCards())
                 {
                     foreach(Pile pile in Tableaus)
                     {
-                        if (!pile.IsEmpty() && pile.IsMovePossible(card))
+                        if (pile.GetCards().Count>=1 && pile.IsMovePossible(card))
                         {
                             Move move = new Move(from, pile, card);
                             moves.Add(move);
@@ -96,7 +101,7 @@ namespace SolitaireHelperModels
 
                     foreach (Pile pile in Foundations)
                     {
-                        if (!pile.IsEmpty() && pile.IsMovePossible(card))
+                        if (pile.GetCards().Count >= 1 && pile.IsMovePossible(card))
                         {
                             Move move = new Move(from, pile, card);
                             moves.Add(move);

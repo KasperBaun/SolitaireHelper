@@ -36,16 +36,18 @@ namespace SolitaireHelperModels
             Pile Stock = new Pile(); Stock.PushCards(CardDeck.Deck.GetRange(31, 21));
             Table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
             Table.PrintTable();
-            while(!GameIsFinished)
+            AnalyzeTable();
+            /*while(!GameIsFinished)
             {
                 AnalyzeTable();
-            }
+            }*/
         }
 
         private void AnalyzeTable()
         {
             List<Move> possibleMoves = new List<Move>();
             possibleMoves = Table.GetAllPossibleMoves();
+            Console.WriteLine("Possible moves: " + possibleMoves.Count);
             possibleMoves.Sort((a, b) => a.GetScore().CompareTo(b.GetScore()));
             if(possibleMoves.Count > 0)
             {
