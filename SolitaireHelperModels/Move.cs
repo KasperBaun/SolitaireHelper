@@ -139,6 +139,10 @@ namespace SolitaireHelperModels
             }
             return false;
         }
+        public string ToString()
+        {
+            return "Score: "+ Score + " Move to: " + To.ToString() + "from: " + From.ToString() + "with card: " + Card.ToString();
+        }
 
     }
 }
