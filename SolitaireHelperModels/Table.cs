@@ -37,5 +37,54 @@ namespace SolitaireHelperModels
                 Console.WriteLine(card.ToString());
             }
         }
+
+        public List<Move> GetPossibleMove (Pile from)
+        {
+            List<Move> moves = new List<Move>();
+            
+            //Checks all cards for possible moves if the pile is not empty and add them to the list of possible moves. 
+            if(!from.IsEmpty() && from.GetTopCard().Visible)
+            {
+                foreach(Card card in from.GetCards())
+                {
+                    foreach(Pile pile in Tableaus)
+                    {
+                        if (!pile.IsEmpty() && pile.IsMovePossible(card))
+                        {
+                            Move move = new Move(from, pile, card);
+                            moves.Add(move);
+                        }
+                    }
+
+                    foreach (Pile pile in Foundations)
+                    {
+                        if (!pile.IsEmpty() && pile.IsMovePossible(card))
+                        {
+                            Move move = new Move(from, pile, card);
+                            moves.Add(move);
+                        }
+                    }
+                }
+            }
+                return moves;
+        }
+
+        public List<Move> GetAllPossibleMoves()
+        {
+            List<Move> allMoves = new List<Move> ();
+            foreach(Pile pile in Foundations)
+            {
+                allMoves.AddRange(GetPossibleMove(pile));
+            }
+
+            foreach (Pile pile in Tableaus)
+            {
+                allMoves.AddRange(GetPossibleMove(pile));
+            }
+
+            allMoves.AddRange(GetPossibleMove(Talon));
+
+            return allMoves;
+        }
     }
 }

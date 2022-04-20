@@ -97,6 +97,20 @@ namespace SolitaireHelperModels
             }
             return false;
         }
+
+        public bool IsMovePossible(Card toCard)
+        {
+            if(Type == 8 || Type == 9 || Type == 10 || Type == 11 )
+            {
+                return IsMoveToFoundationPossible(toCard);
+
+            }
+            if (Type == 1 || Type == 2 || Type == 3 || Type == 4 || Type == 5 || Type == 6 || Type == 7)
+            {
+                return IsMoveToTableauPossible(toCard);
+            }
+            return false;
+        }
     }
 
     public enum PileType
