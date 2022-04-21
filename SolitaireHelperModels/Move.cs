@@ -139,9 +139,11 @@ namespace SolitaireHelperModels
             }
             return false;
         }
-        public string ToString()
+        public override string ToString()
         {
-            return "Score: "+ Score + " Move to: " + To.ToString() + "from: " + From.ToString() + "with card: " + Card.ToString();
+            Card toCard = To.GetTopCard();
+            string toCardString = toCard.SuitAsChar()+toCard.RankAsChar();
+            return "Move " + Card.SuitAsChar() + Card.RankAsChar() + " from " + From.PileToString() +  " --> " + toCardString + " in " + To.PileToString() + " - Score: " + "[" + Score + "]";
         }
 
     }

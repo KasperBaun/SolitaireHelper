@@ -1,4 +1,4 @@
 ﻿using SolitaireHelperModels;
 
-GameTest gameTest = new GameTest();
+GameTest gameTest = new();
 gameTest.RunGame();

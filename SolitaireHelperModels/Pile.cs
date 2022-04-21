@@ -69,7 +69,7 @@ namespace SolitaireHelperModels
             return ClosedCards.Count;
         }
 
-        public bool IsMoveToFoundationPossible(Card toCard)
+        private bool IsMoveToFoundationPossible(Card toCard)
         {
             //Checks if card is ace             
             if(IsEmpty() && toCard.Rank == 1 && SuitToType(toCard.Suit) == Type)
@@ -78,17 +78,22 @@ namespace SolitaireHelperModels
             }
 
             //Checks if other cards can be moved to foundation
-            if (!IsEmpty() && GetTopCard().Suit == toCard.Suit && GetTopCard().Rank == toCard.Rank - 1)
+            if (!IsEmpty() && GetTopCard().Visible && GetTopCard().Suit == toCard.Suit && GetTopCard().Rank == toCard.Rank - 1)
             {
                 return true;
             }
             return false;
         }
 
-        public bool IsMoveToTableauPossible(Card toCard)
+        private bool IsMoveToTableauPossible(Card toCard)
         {
-            //Checks if card can be moved to another pile
-            if (!IsEmpty() && GetTopCard().IsRed() && toCard.IsBlack() || (GetTopCard().IsBlack() && toCard.IsRed()))
+            /* Checks if toCard can be moved to top of this pile
+             * Checks done:
+             * - Tableau-pile should not be empty
+             * - Topcard should be visible
+             * - Topcard should have a color different than toCard
+             */
+            if (!IsEmpty() && GetTopCard().Visible && GetTopCard().IsRed() && toCard.IsBlack() || (GetTopCard().IsBlack() && toCard.IsRed()))
             {
                 if (toCard.Rank == GetTopCard().Rank - 1)
                 {
@@ -100,11 +105,13 @@ namespace SolitaireHelperModels
 
         public bool IsMovePossible(Card toCard)
         {
+            // Call this function if this pile is a foundation-pile
             if(Type == 8 || Type == 9 || Type == 10 || Type == 11 )
             {
                 return IsMoveToFoundationPossible(toCard);
 
             }
+            // Call this function if this pile is a tableau-pile
             if (Type == 1 || Type == 2 || Type == 3 || Type == 4 || Type == 5 || Type == 6 || Type == 7)
             {
                 return IsMoveToTableauPossible(toCard);
@@ -120,6 +127,30 @@ namespace SolitaireHelperModels
                 case 3: return 10;
                 case 4: return 11;
                 default: return 0;
+            }
+        }
+        public string PileToString()
+        {
+            return PileTypeToString();
+        }
+        private string PileTypeToString()
+        {
+            switch (Type)
+            {
+                case 0:     return "Stock";
+                case 1:     return "T1";
+                case 2:     return "T2";
+                case 3:     return "T3";
+                case 4:     return "T4";
+                case 5:     return "T5";
+                case 6:     return "T6";
+                case 7:     return "T7";
+                case 8:     return "F1";
+                case 9:     return "F2";
+                case 10:    return "F3";
+                case 11:    return "F4";
+                case 12:    return "Talon";
+                default:    return null;
             }
         }
     }

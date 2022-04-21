@@ -54,7 +54,14 @@ namespace SolitaireHelperModels
             if(possibleMoves.Count > 0)
             {
                 Move highestMove = Table.GetBestMove(possibleMoves);
-                Console.WriteLine(highestMove.ToString());
+                if(highestMove != null)
+                {
+                    Console.WriteLine("Best move\n" + highestMove.ToString());
+                }
+                else
+                {
+                    Console.WriteLine("ERROR!");
+                }
             }
             else
             {

@@ -36,25 +36,28 @@ namespace SolitaireHelperModels
             List<Move> moves = new List<Move>();
             
             //Checks all cards for possible moves if the pile is not empty and add them to the list of possible moves. 
-            if(from.GetCards().Count>=1 && from.GetTopCard().Visible)
+            if(from.GetCards().Count>=1)
             {
                 foreach(Card card in from.GetCards())
                 {
-                    foreach(Pile pile in Tableaus)
+                    if(card.Visible == true)
                     {
-                        if (pile.IsMovePossible(card))
+                        foreach(Pile pile in Tableaus)
                         {
-                            Move move = new Move(from, pile, card);
-                            moves.Add(move);
+                            if (pile.IsMovePossible(card))
+                            {
+                                Move move = new Move(from, pile, card);
+                                moves.Add(move);
+                            }
                         }
-                    }
 
-                    foreach (Pile pile in Foundations)
-                    {
-                        if (pile.IsMovePossible(card))
+                        foreach (Pile pile in Foundations)
                         {
-                            Move move = new Move(from, pile, card);
-                            moves.Add(move);
+                            if (pile.IsMovePossible(card))
+                            {
+                                Move move = new Move(from, pile, card);
+                                moves.Add(move);
+                            }
                         }
                     }
                 }

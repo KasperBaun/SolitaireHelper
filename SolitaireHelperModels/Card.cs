@@ -15,7 +15,7 @@
 
         public override string ToString()
         {
-            return "Card: " + RankAsString(Rank) +" of " + SuitAsString(Suit) + ", Visible: " + Visible; 
+            return "Card: " + RankAsString() +" of " + SuitAsString() + ", Visible: " + Visible; 
         }
         public bool IsBlack() {
             return Suit == 2 || Suit == 4;
@@ -29,9 +29,9 @@
             return Suit.Equals(card.Suit) && Rank.Equals(card.Rank);
         }
         
-        public string SuitAsString(int suit)
+        public string SuitAsString()
         { 
-            switch (suit)
+            switch (Suit)
             {
                 case 1:
                     return "Hearts";
@@ -45,9 +45,9 @@
                     return "Something went wrong";
             }
         }
-        public string RankAsString(int rank)
+        public string RankAsString()
         {
-            switch (rank)
+            switch (Rank)
             {
                 case 1:
                     return "Ace";
@@ -75,6 +75,56 @@
                     return "Queen";
                 case 13:
                     return "King";
+                default:
+                    return "Something went wrong";
+            }
+        }
+        public string SuitAsChar()
+        {
+            switch (Suit)
+            {
+                case 1:
+                    return "H";
+                case 2:
+                    return "C";
+                case 3:
+                    return "D";
+                case 4:
+                    return "S";
+                default:
+                    return "Something went wrong";
+            }
+        }
+        public string RankAsChar()
+        {
+            switch (Rank)
+            {
+                case 1:
+                    return "A";
+                case 2:
+                    return "2";
+                case 3:
+                    return "3";
+                case 4:
+                    return "4";
+                case 5:
+                    return "5";
+                case 6:
+                    return "6";
+                case 7:
+                    return "7";
+                case 8:
+                    return "8";
+                case 9:
+                    return "9";
+                case 10:
+                    return "10";
+                case 11:
+                    return "K";
+                case 12:
+                    return "Q";
+                case 13:
+                    return "K";
                 default:
                     return "Something went wrong";
             }
