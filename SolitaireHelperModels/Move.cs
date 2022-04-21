@@ -141,9 +141,17 @@ namespace SolitaireHelperModels
         }
         public override string ToString()
         {
-            Card toCard = To.GetTopCard();
-            string toCardString = toCard.SuitAsChar()+toCard.RankAsChar();
-            return "Move " + Card.SuitAsChar() + Card.RankAsChar() + " from " + From.PileToString() +  " --> " + toCardString + " in " + To.PileToString() + " - Score: " + "[" + Score + "]";
+            // If the move is the first move to a foundation there is no GetTopCard() in Pile.
+            if(To.GetTopCard() == null)
+            {
+                return "Move " + Card.RankAsChar()+ Card.SuitAsChar() + " from " + From.PileToString() + " --> " + To.PileToString() + " - Score: " + "[" + Score + "]";
+            }
+            else
+            {
+                Card toCard = To.GetTopCard();
+                string toCardString = toCard.RankAsChar()+toCard.SuitAsChar();
+                return "Move " + Card.RankAsChar() + Card.SuitAsChar() + " from " + From.PileToString() +  " --> " + toCardString + " in " + To.PileToString() + " - Score: " + "[" + Score + "]";
+            }
         }
 
     }

@@ -39,8 +39,11 @@ namespace SolitaireHelperModels
             }
             Pile Stock = new Pile(){ Type = 0 }; Stock.PushCards(CardDeck.Deck.GetRange(31, 21));
             Table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
-            Table.PrintTable();
-            FindNextMove();
+            //Table.PrintTable();
+            for(int i = 0; i < 10; i++)
+            {
+                FindNextMove();
+            }
             /*while(!GameIsFinished)
             {
                 AnalyzeTable();
