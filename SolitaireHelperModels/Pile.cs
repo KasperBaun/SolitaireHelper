@@ -72,7 +72,7 @@ namespace SolitaireHelperModels
         public bool IsMoveToFoundationPossible(Card toCard)
         {
             //Checks if card is ace             
-            if(IsEmpty() && toCard.Rank == 1)
+            if(IsEmpty() && toCard.Rank == 1 && SuitToType(toCard.Suit) == Type)
             {
                 return true;
             }
@@ -88,9 +88,9 @@ namespace SolitaireHelperModels
         public bool IsMoveToTableauPossible(Card toCard)
         {
             //Checks if card can be moved to another pile
-            if (!IsEmpty() && (GetTopCard().IsRed() && toCard.IsBlack()) || (GetTopCard().IsBlack() && toCard.IsRed()))
+            if (!IsEmpty() && GetTopCard().IsRed() && toCard.IsBlack() || (GetTopCard().IsBlack() && toCard.IsRed()))
             {
-                if (GetTopCard().Rank == toCard.Rank + 1)
+                if (toCard.Rank == GetTopCard().Rank - 1)
                 {
                     return true;
                 }
@@ -110,6 +110,17 @@ namespace SolitaireHelperModels
                 return IsMoveToTableauPossible(toCard);
             }
             return false;
+        }
+        private int SuitToType(int suit)
+        {
+            switch (suit)
+            {
+                case 1: return 8;
+                case 2: return 9;
+                case 3: return 10;
+                case 4: return 11;
+                default: return 0;
+            }
         }
     }
 

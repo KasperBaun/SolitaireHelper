@@ -31,6 +31,103 @@ namespace SolitaireHelperModels
             Foundations.Add(F4);
         }
 
+        public List<Move> GetPossibleMovesInPile (Pile from)
+        {
+            List<Move> moves = new List<Move>();
+            
+            //Checks all cards for possible moves if the pile is not empty and add them to the list of possible moves. 
+            if(from.GetCards().Count>=1 && from.GetTopCard().Visible)
+            {
+                foreach(Card card in from.GetCards())
+                {
+                    foreach(Pile pile in Tableaus)
+                    {
+                        if (pile.IsMovePossible(card))
+                        {
+                            Move move = new Move(from, pile, card);
+                            moves.Add(move);
+                        }
+                    }
+
+                    foreach (Pile pile in Foundations)
+                    {
+                        if (pile.IsMovePossible(card))
+                        {
+                            Move move = new Move(from, pile, card);
+                            moves.Add(move);
+                        }
+                    }
+                }
+            }
+            return moves;
+        }
+        public List<Move> GetAllPossibleMoves()
+        {
+            List<Move> allMoves = new List<Move> ();
+            foreach(Pile pile in Foundations)
+            {
+                List<Move> moves = GetPossibleMovesInPile(pile);
+                allMoves.AddRange(moves);
+            }
+
+            foreach (Pile pile in Tableaus)
+            {
+                allMoves.AddRange(GetPossibleMovesInPile(pile));
+            }
+
+            allMoves.AddRange(GetPossibleMovesInPile(Talon));
+
+            return allMoves;
+        }
+        public Move GetBestMove(List<Move> allPossibleMoves)
+        {
+            Move bestMove = null;
+            if (allPossibleMoves.Count == 0)
+            {
+                return new Move(null, null, null);
+            }
+
+            foreach (Move move in allPossibleMoves)
+            {
+                bool addToList = true;
+                if(PreviousMovesList != null && PreviousMovesList.Count > 0)
+                {
+                    foreach (Move lastMove in PreviousMovesList)
+                    {
+                        if (move.IsReverseMove(lastMove))
+                        {
+                            addToList = false;
+                        }
+                    }
+                }
+                if (bestMove == null && addToList)
+                {
+                    bestMove = move;
+                }
+                else if (addToList && (move.GetScore() > bestMove.GetScore()))
+                {
+                    bestMove = move;
+                }
+
+            }
+            return bestMove;
+        }
+        public void MakeMove(Move move, Card card)
+        {
+            if (PreviousMovesList.Count > 5)
+            {
+                PreviousMovesList.RemoveAt(0);
+            }
+            if (move.Card == null || move.GetScore() == -1 || move.GetScore() == 5)
+            {
+                Talon.GetCards().Add(card);
+            }
+            else
+            {
+                PreviousMovesList.Add(move);
+                move.MoveCard();
+            }
+        }
         public void PrintTable()
         {
             Console.WriteLine("Talon:");
@@ -79,99 +176,6 @@ namespace SolitaireHelperModels
             foreach (Card card in Stock.GetCards())
             {
                 Console.WriteLine(card.ToString());
-            }
-        }
-        public List<Move> GetPossibleMove (Pile from)
-        {
-            List<Move> moves = new List<Move>();
-            
-            //Checks all cards for possible moves if the pile is not empty and add them to the list of possible moves. 
-            if(from.GetCards().Count>=1 && from.GetTopCard().Visible)
-            {
-                foreach(Card card in from.GetCards())
-                {
-                    foreach(Pile pile in Tableaus)
-                    {
-                        if (pile.GetCards().Count>=1 && pile.IsMovePossible(card))
-                        {
-                            Move move = new Move(from, pile, card);
-                            moves.Add(move);
-                        }
-                    }
-
-                    foreach (Pile pile in Foundations)
-                    {
-                        if (pile.GetCards().Count >= 1 && pile.IsMovePossible(card))
-                        {
-                            Move move = new Move(from, pile, card);
-                            moves.Add(move);
-                        }
-                    }
-                }
-            }
-                return moves;
-        }
-        public List<Move> GetAllPossibleMoves()
-        {
-            List<Move> allMoves = new List<Move> ();
-            foreach(Pile pile in Foundations)
-            {
-                allMoves.AddRange(GetPossibleMove(pile));
-            }
-
-            foreach (Pile pile in Tableaus)
-            {
-                allMoves.AddRange(GetPossibleMove(pile));
-            }
-
-            allMoves.AddRange(GetPossibleMove(Talon));
-
-            return allMoves;
-        }
-        public Move GetBestMove(List<Move> allPossibleMoves)
-        {
-            Move bestMove = null;
-            if (allPossibleMoves.Count == 0)
-            {
-                return new Move(null, null, null);
-            }
-
-            foreach (Move move in allPossibleMoves)
-            {
-                bool addToList = true;
-                foreach (Move lastMove in PreviousMovesList)
-                {
-                    if (move.IsReverseMove(lastMove))
-                    {
-                        addToList = false;
-                    }
-                }
-                if (bestMove == null && addToList)
-                {
-                    bestMove = move;
-                }
-                else if (addToList && (move.GetScore() > bestMove.GetScore()))
-                {
-                    bestMove = move;
-                }
-
-            }
-            return bestMove;
-        }
-        public void MakeMove(Move move, Card card)
-        {
-            if (PreviousMovesList.Count > 5)
-            {
-                PreviousMovesList.RemoveAt(0);
-            }
-            if (move.Card == null || move.GetScore() == -1 || move.GetScore() == 5)
-            {
-                Talon.GetCards().Add(card);
-            }
-            else
-            {
-                PreviousMovesList.Add(move);
-                move.MoveCard();
             }
         }
     }

@@ -21,38 +21,44 @@ namespace SolitaireHelperModels
             GameIsFinished = false;
             CardDeck CardDeck = new CardDeck();
             CardDeck.ShuffleDeck();
-            Pile F1 = new Pile();
-            Pile F2 = new Pile();
-            Pile F3 = new Pile();
-            Pile F4 = new Pile();
-            Pile T1 = new Pile(); T1.PushCards(CardDeck.Deck.GetRange(0, 1));
-            Pile T2 = new Pile(); T2.PushCards(CardDeck.Deck.GetRange(1, 2));
-            Pile T3 = new Pile(); T3.PushCards(CardDeck.Deck.GetRange(3, 3));
-            Pile T4 = new Pile(); T4.PushCards(CardDeck.Deck.GetRange(6, 4));
-            Pile T5 = new Pile(); T5.PushCards(CardDeck.Deck.GetRange(10, 5));
-            Pile T6 = new Pile(); T6.PushCards(CardDeck.Deck.GetRange(15, 6));
-            Pile T7 = new Pile(); T7.PushCards(CardDeck.Deck.GetRange(21, 7));
-            Pile Talon = new Pile(); Talon.PushCards(CardDeck.Deck.GetRange(28, 3));
-            Pile Stock = new Pile(); Stock.PushCards(CardDeck.Deck.GetRange(31, 21));
+            Pile F1 = new Pile(){ Type = 8 };
+            Pile F2 = new Pile(){ Type = 9 };
+            Pile F3 = new Pile(){ Type = 10 };
+            Pile F4 = new Pile(){ Type = 11 };
+            Pile T1 = new Pile(){ Type = 1 }; T1.PushCards(CardDeck.Deck.GetRange(0, 1)); T1.GetCards().FindLast(c => c.Rank != 0).Visible = true;
+            Pile T2 = new Pile(){ Type = 2 }; T2.PushCards(CardDeck.Deck.GetRange(1, 2)); T2.GetCards().FindLast(c => c.Rank != 0).Visible = true;
+            Pile T3 = new Pile(){ Type = 3 }; T3.PushCards(CardDeck.Deck.GetRange(3, 3)); T3.GetCards().FindLast(c => c.Rank != 0).Visible = true;
+            Pile T4 = new Pile(){ Type = 4 }; T4.PushCards(CardDeck.Deck.GetRange(6, 4)); T4.GetCards().FindLast(c => c.Rank != 0).Visible = true;
+            Pile T5 = new Pile(){ Type = 5 }; T5.PushCards(CardDeck.Deck.GetRange(10, 5)); T5.GetCards().FindLast(c => c.Rank != 0).Visible = true;
+            Pile T6 = new Pile(){ Type = 6 }; T6.PushCards(CardDeck.Deck.GetRange(15, 6)); T6.GetCards().FindLast(c => c.Rank != 0).Visible = true;
+            Pile T7 = new Pile(){ Type = 7 }; T7.PushCards(CardDeck.Deck.GetRange(21, 7)); T7.GetCards().FindLast(c => c.Rank != 0).Visible = true;
+            Pile Talon = new Pile(){ Type = 12 }; Talon.PushCards(CardDeck.Deck.GetRange(28, 3));
+            foreach (Card card in Talon.GetCards())
+            {
+                card.Visible = true;
+            }
+            Pile Stock = new Pile(){ Type = 0 }; Stock.PushCards(CardDeck.Deck.GetRange(31, 21));
             Table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
             Table.PrintTable();
-            AnalyzeTable();
+            FindNextMove();
             /*while(!GameIsFinished)
             {
                 AnalyzeTable();
             }*/
         }
 
-        private void AnalyzeTable()
+        private void FindNextMove()
         {
-            List<Move> possibleMoves = new List<Move>();
+            List<Move> possibleMoves;
             possibleMoves = Table.GetAllPossibleMoves();
-            Console.WriteLine("Possible moves: " + possibleMoves.Count);
-            possibleMoves.Sort((a, b) => a.GetScore().CompareTo(b.GetScore()));
             if(possibleMoves.Count > 0)
             {
-                Move highestMove = possibleMoves[possibleMoves.Count - 1];
+                Move highestMove = Table.GetBestMove(possibleMoves);
                 Console.WriteLine(highestMove.ToString());
+            }
+            else
+            {
+                Console.WriteLine("No possible moves!!!");
             }
         }
     }
