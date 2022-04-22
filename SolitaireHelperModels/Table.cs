@@ -6,11 +6,11 @@ namespace SolitaireHelperModels
 {
     public class Table
     {
-        public List<Pile> Tableaus { get; set; }
-        public List<Pile> Foundations { get; set; }
-        public Pile Talon { get; set; }   
-        public Pile Stock { get; set; }
-        private List<Move> PreviousMovesList { get; set; }
+        private List<Pile> Tableaus;
+        private List<Pile> Foundations;
+        private Pile Talon;
+        private Pile Stock;
+        private List<Move> PreviousMovesList;
 
         public Table(Pile stock, Pile talon, Pile T1, Pile T2, Pile T3, Pile T4, Pile T5, Pile T6, Pile T7, Pile F1, Pile F2, Pile F3, Pile F4)
         {
@@ -115,9 +115,27 @@ namespace SolitaireHelperModels
             }
             return bestMove;
         }
-        public void MakeMove(Move move)
+        public Table MakeMove(Move move)
         {
-            move.MoveCard();
+            List<Card> CardsToMove = new List<Card>();
+            foreach (Card c in move.From.GetCards())
+            {
+                if (c == move.Card)
+                {
+                    int cardIndex = move.From.GetCards().IndexOf(c);
+                    int listCount = move.From.GetCards().Count;
+                    CardsToMove.AddRange(move.From.GetCards().GetRange(cardIndex,(listCount - cardIndex)));
+                    // Check if the card beneath the moved card is not visible - if it is not visible, change it
+                    if(cardIndex != 0 && TypeToPile(move.From.Type).GetCards()[cardIndex-1] != null)
+                    {
+                        TypeToPile(move.From.Type).GetCards()[cardIndex - 1].Visible = true;
+                    }
+                }
+            }
+            
+            TypeToPile(move.From.Type).PopCards(CardsToMove);
+            TypeToPile(move.To.Type).PushCards(CardsToMove);
+            return this;
         }
         public bool IsTableEmpty()
         {
@@ -131,6 +149,45 @@ namespace SolitaireHelperModels
                 return true; 
             else 
                 return false;
+        }
+        public int CardsInStock()
+        {
+            return Stock.GetCards().Count;
+        }
+        public bool ChangeCardsInTalon()
+        {
+            if (CardsInStock() > 0)
+            {
+                List<Card> oldTalonCards = Talon.GetCards();
+                Talon.PopCards(oldTalonCards);
+                if (Stock.GetCards().Count >= 3)
+                {
+                    List<Card> newTalonCards = Stock.GetCards().GetRange(0, 3);
+                    foreach (Card card in newTalonCards)
+                    {
+                        card.Visible = true;
+                    }
+                    Talon.PushCards(newTalonCards);
+
+                }
+                else
+                {
+                    List<Card> newTalonCards = Stock.GetCards();
+                    foreach (Card card in newTalonCards)
+                    {
+                        card.Visible = true;
+                    }
+                    Talon.PushCards(newTalonCards);
+                }
+                foreach (Card card in oldTalonCards)
+                {
+                    card.Visible = false;
+                }
+                Stock.PushCards(oldTalonCards);
+                return true;
+            }
+            // No cards in stock remaining
+            return false;
         }
         // For debugging purposes
         public int CardsInTable()
@@ -194,6 +251,26 @@ namespace SolitaireHelperModels
             foreach (Card card in Stock.GetCards())
             {
                 Console.WriteLine(card.ToString());
+            }
+        }
+        private Pile TypeToPile(int type)
+        {
+            switch (type)
+            {
+                case 0: return Stock;
+                case 1: return Tableaus[0];
+                case 2: return Tableaus[1];
+                case 3: return Tableaus[2];
+                case 4: return Tableaus[3];
+                case 5: return Tableaus[4];
+                case 6: return Tableaus[5];
+                case 7: return Tableaus[6];
+                case 8: return Foundations[0];
+                case 9: return Foundations[1];
+                case 10: return Foundations[2];
+                case 11: return Foundations[3];
+                case 12: return Talon;
+                default: return null;
             }
         }
     }

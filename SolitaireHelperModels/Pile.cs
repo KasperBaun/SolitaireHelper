@@ -26,6 +26,10 @@ namespace SolitaireHelperModels
         }
         public void PopCards(List<Card> cardsToRemove)
         {
+            if(cardsToRemove == Cards)
+            {
+                cardsToRemove.Clear();
+            }
             foreach(Card card in cardsToRemove)
             {
                 Cards.Remove(card);
@@ -33,6 +37,10 @@ namespace SolitaireHelperModels
         }
         public Card GetTopCard()
         {
+            if(Cards.Count == 0)
+            {
+                return null;
+            }
             return Cards.FindLast(c => c.Rank != 0);
         }
         public List<Card> GetCards() { return Cards; }
@@ -89,6 +97,7 @@ namespace SolitaireHelperModels
 
         private bool IsMoveToTableauPossible(Card toCard)
         {
+            if(IsEmpty()) return true;
             /* Checks if toCard can be moved to top of this pile
              * Checks done:
              * - Tableau-pile should not be empty

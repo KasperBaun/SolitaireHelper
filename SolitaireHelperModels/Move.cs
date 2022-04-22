@@ -117,12 +117,16 @@ namespace SolitaireHelperModels
             {
                 if(card == Card)
                 {
-                    for(int i =  CardsInFromPile.IndexOf(card); i <= CardsInFromPile.Count; i++)
+                    int elementsToMove = CardsInFromPile.Count - CardsInFromPile.IndexOf(card);
+                    for(int i = CardsInFromPile.IndexOf(card); i <= elementsToMove; i++)
                     {
-                        int index;
-                        if(i == 0) { index = 0; }
-                        else { index = i - 1; };
-                        CardsToMove.Add(CardsInFromPile[index]);
+                        CardsToMove.Add(CardsInFromPile[i]);
+                    }
+                    int cardIndex = From.GetCards().IndexOf(Card);
+                    // Check if the card beneath the moved card is not visible - if it is not visible, change it
+                    if (From.GetCards()[cardIndex-1].Visible == false)
+                    {
+                        From.GetCards()[cardIndex - 1].Visible = true;
                     }
                 }
             }

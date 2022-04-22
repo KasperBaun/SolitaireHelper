@@ -21,28 +21,29 @@ namespace SolitaireHelperModels
             return PlayGame(Table);
         }
 
-        public bool PlayGame(Table table)
+        public bool PlayGame(Table currentTable)
         {
             while (!GameIsFinished)
             {
-                Move moveFound = FindNextMove(table);
-                if(moveFound.Card == null || moveFound.From == null || moveFound.To == null && !table.IsTableEmpty())
+                Move moveFound = FindNextMove(currentTable);
+                if(moveFound.Card == null || moveFound.From == null || moveFound.To == null && !currentTable.IsTableEmpty())
                 {
                     Console.WriteLine("No possible moves. Solitaire cannot be solved");
                     GameIsFinished = true;
                     return false;
                 }
                 Console.WriteLine(moveFound.ToString());
-                table.MakeMove(moveFound);
-                Console.WriteLine("Cards in table: {0}\n",table.CardsInTable());  
-                continue;
+                Table table = currentTable.MakeMove(moveFound);
+                //Console.WriteLine("Cards in table: {0}\n", currentTable.CardsInTable());  
+                PlayGame(table);
             }
-            if(table.IsTableEmpty())
+            if(currentTable.IsTableEmpty())
                 return true;
             else
             {
-                throw new Exception("Error @Game.cs -> PlayGame() - table.IsTableEmpty() == false with no GameIsFinished == true");
+                return false;
             }
+            throw new Exception("Error @Game.cs -> PlayGame() - table.IsTableEmpty() == false with no GameIsFinished == true");
         }
         private Move FindNextMove(Table table)
         {
@@ -61,45 +62,10 @@ namespace SolitaireHelperModels
             }
             else
             {
-                ChangeCardsInTalon(table);
+                table.ChangeCardsInTalon();
                 FindNextMove(table);
             }
             return null;
-        }
-        private bool ChangeCardsInTalon(Table table)
-        {
-            if(table.Stock.GetCards().Count > 0)
-            {
-                List<Card> oldTalonCards = table.Talon.GetCards();
-                table.Talon.PopCards(oldTalonCards);
-                if (table.Stock.GetCards().Count >= 3)
-                {
-                    List<Card> newTalonCards = table.Stock.GetCards().GetRange(0, 3);
-                    foreach(Card card in newTalonCards)
-                    {
-                        card.Visible = true;
-                    }
-                    table.Talon.PushCards(newTalonCards);
-
-                }
-                else
-                {
-                    List<Card> newTalonCards = table.Stock.GetCards();
-                    foreach (Card card in newTalonCards)
-                    {
-                        card.Visible = true;
-                    }
-                    table.Talon.PushCards(newTalonCards);
-                }
-                foreach(Card card in oldTalonCards)
-                {
-                    card.Visible = false;
-                }
-                table.Stock.PushCards(oldTalonCards);
-                return true;
-            }
-            // No cards in stock remaining
-            return false;
         }
         private Table NewTable()
         {
