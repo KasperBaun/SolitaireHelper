@@ -78,7 +78,15 @@ namespace SolitaireHelperModels
             List<Card> ClosedCards = Cards.FindAll(c => c.Visible == false);
             return ClosedCards.Count;
         }
-
+        public void PrintPile()
+        {
+            Console.WriteLine(PileTypeToString());
+            foreach(Card card in Cards)
+            {
+                Console.WriteLine(card.ToString());
+            }
+            Console.WriteLine();
+        }
         private bool IsMoveToFoundationPossible(Card toCard)
         {
             //Checks if card is ace             
@@ -94,7 +102,7 @@ namespace SolitaireHelperModels
             }
             return false;
         }
-
+        
         private bool IsMoveToTableauPossible(Card toCard)
         {
             if(IsEmpty()) return true;

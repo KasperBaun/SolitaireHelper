@@ -14,14 +14,14 @@ namespace SolitaireHelperModels
 
         public Game(){ }
 
-        public bool TestGame()
+        public int TestGame()
         {
             GameIsFinished = false;
             Table = NewTable();
             return PlayGame(Table);
         }
 
-        public bool PlayGame(Table currentTable)
+        public int PlayGame(Table currentTable)
         {
             while (!GameIsFinished)
             {
@@ -30,18 +30,20 @@ namespace SolitaireHelperModels
                 {
                     Console.WriteLine("No possible moves. Solitaire cannot be solved");
                     GameIsFinished = true;
-                    return false;
+                    return 0;
                 }
                 Console.WriteLine(moveFound.ToString());
-                Table table = currentTable.MakeMove(moveFound);
+                currentTable.MakeMove(moveFound);
+                //Table table = currentTable.MakeMove(moveFound);
                 //Console.WriteLine("Cards in table: {0}\n", currentTable.CardsInTable());  
-                PlayGame(table);
+                //PlayGame(table);
+                continue;
             }
             if(currentTable.IsTableEmpty())
-                return true;
+                return 1;
             else
             {
-                return false;
+                return 0;
             }
             throw new Exception("Error @Game.cs -> PlayGame() - table.IsTableEmpty() == false with no GameIsFinished == true");
         }
@@ -60,11 +62,8 @@ namespace SolitaireHelperModels
                     throw new Exception("ERROR @ Game.cs -> FindNextMove(): possibleMoves.Count <= 0!");
                 }
             }
-            else
-            {
-                table.ChangeCardsInTalon();
-                FindNextMove(table);
-            }
+            table.ChangeCardsInTalon();
+            FindNextMove(table);
             return null;
         }
         private Table NewTable()

@@ -15,14 +15,13 @@ namespace SolitaireHelperModels
             {
                 Won += RunGame();
             }
-            Console.WriteLine("Test finished! \n", "Games played: {0}\n", AmountOfTests, "Games won: {1}\n", Won, "Win ratio: {2}\n", (Won / AmountOfTests));
+            Console.WriteLine("Test finished! \nGames played: {0}\nGames won: {1}\nWin ratio: {2}%\n", AmountOfTests, Won, (Won / AmountOfTests)*100);
         }
 
         public int RunGame()
         {
             Game game = new Game();
-            game.TestGame();
-            return 0;
+            return game.TestGame();
         }
     }
 }

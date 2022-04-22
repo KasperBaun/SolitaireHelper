@@ -159,7 +159,7 @@ namespace SolitaireHelperModels
             if (CardsInStock() > 0)
             {
                 List<Card> oldTalonCards = Talon.GetCards();
-                Talon.PopCards(oldTalonCards);
+                Talon.GetCards().Clear();
                 if (Stock.GetCards().Count >= 3)
                 {
                     List<Card> newTalonCards = Stock.GetCards().GetRange(0, 3);
@@ -184,6 +184,7 @@ namespace SolitaireHelperModels
                     card.Visible = false;
                 }
                 Stock.PushCards(oldTalonCards);
+                //Talon.PrintPile();
                 return true;
             }
             // No cards in stock remaining
