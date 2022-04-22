@@ -115,21 +115,36 @@ namespace SolitaireHelperModels
             }
             return bestMove;
         }
-        public void MakeMove(Move move, Card card)
+        public void MakeMove(Move move)
         {
-            if (PreviousMovesList.Count > 5)
+            move.MoveCard();
+        }
+        public bool IsTableEmpty()
+        {
+            int cardsInFoundations = 0;
+            foreach(Pile pile in Foundations)
             {
-                PreviousMovesList.RemoveAt(0);
+                cardsInFoundations += pile.GetCards().Count;
             }
-            if (move.Card == null || move.GetScore() == -1 || move.GetScore() == 5)
+            
+            if(cardsInFoundations == 52) 
+                return true; 
+            else 
+                return false;
+        }
+        // For debugging purposes
+        public int CardsInTable()
+        {
+            int cards = 0;
+            foreach (Pile pile in Foundations)
             {
-                Talon.GetCards().Add(card);
+                cards += pile.GetNumberOfCards();
             }
-            else
+            foreach (Pile pile in Tableaus)
             {
-                PreviousMovesList.Add(move);
-                move.MoveCard();
+                cards += pile.GetNumberOfCards();
             }
+            return cards+ Talon.GetNumberOfCards() + Stock.GetNumberOfCards();
         }
         public void PrintTable()
         {

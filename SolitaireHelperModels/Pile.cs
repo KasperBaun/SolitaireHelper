@@ -57,7 +57,9 @@ namespace SolitaireHelperModels
         }
         public bool IsEmpty()
         {
-            return Cards.Count == 0;
+            if (Cards.Count == 0) return true;
+            if (Cards == null) return true;
+            return false;
         }
         public int GetNumberOfCards()
         {

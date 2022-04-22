@@ -112,11 +112,18 @@ namespace SolitaireHelperModels
         public void MoveCard()
         {
             List<Card> CardsToMove = new List<Card>();
-            foreach(Card card in From.GetCards())
+            List<Card> CardsInFromPile = From.GetCards();
+            foreach(Card card in CardsInFromPile)
             {
                 if(card == Card)
                 {
-                    CardsToMove.Add(card);
+                    for(int i =  CardsInFromPile.IndexOf(card); i <= CardsInFromPile.Count; i++)
+                    {
+                        int index;
+                        if(i == 0) { index = 0; }
+                        else { index = i - 1; };
+                        CardsToMove.Add(CardsInFromPile[index]);
+                    }
                 }
             }
             From.PopCards(CardsToMove);
