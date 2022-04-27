@@ -26,7 +26,7 @@
         }
         public bool IsEqual(Card card)
         {
-            return Suit.Equals(card.Suit) && Rank.Equals(card.Rank);
+            return Suit == card.Suit && Rank == card.Rank;
         }
         
         public string SuitAsString()

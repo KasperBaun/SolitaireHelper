@@ -29,6 +29,7 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
+            PreviousMovesList = new List<Move>();
         }
 
         public List<Move> GetPossibleMovesInPile (Pile from)
@@ -80,6 +81,15 @@ namespace SolitaireHelperModels
 
             allMoves.AddRange(GetPossibleMovesInPile(Talon));
 
+            if (PreviousMovesList != null && PreviousMovesList.Count > 0)
+            {
+                foreach(Move move in allMoves)
+                {
+                    if(MoveIsInfiniteLoop(move))
+                        allMoves.Remove(move);
+                }
+            }
+
             return allMoves;
         }
         public Move GetBestMove(List<Move> allPossibleMoves)
@@ -93,16 +103,7 @@ namespace SolitaireHelperModels
             foreach (Move move in allPossibleMoves)
             {
                 bool addToList = true;
-                if(PreviousMovesList != null && PreviousMovesList.Count > 0)
-                {
-                    foreach (Move lastMove in PreviousMovesList)
-                    {
-                        if (move.IsReverseMove(lastMove))
-                        {
-                            addToList = false;
-                        }
-                    }
-                }
+                
                 if (bestMove == null && addToList)
                 {
                     bestMove = move;
@@ -135,7 +136,19 @@ namespace SolitaireHelperModels
             
             TypeToPile(move.From.Type).PopCards(CardsToMove);
             TypeToPile(move.To.Type).PushCards(CardsToMove);
+            PreviousMovesList.Add(move);
             return this;
+        }
+        public bool MoveIsInfiniteLoop(Move move)
+        {
+            if(PreviousMovesList.Contains(move))
+                return true;
+            else
+            {
+                if(PreviousMovesList.Count >= 5)
+                    PreviousMovesList.RemoveAt(0);
+                return false;
+            }
         }
         public bool IsTableEmpty()
         {

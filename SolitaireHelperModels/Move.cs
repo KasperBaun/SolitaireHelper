@@ -137,19 +137,7 @@ namespace SolitaireHelperModels
         {
             return Score;
         }
-        // Test if this move has been done recently (a way to avoid infinite-loops between 2 legal moves)
-        public bool IsReverseMove(Move oldMove)
-        {
-            if(oldMove == null) { return false; }
-
-            Card to = To.GetTopCard();
-            Card from = From.GetTopCard();
-            if(oldMove.From.IsEqual(to) && oldMove.To.IsEqual(from)  && oldMove.Card == Card)
-            {
-                return true;
-            }
-            return false;
-        }
+  
         public override string ToString()
         {
             // If the move is the first move to a foundation there is no GetTopCard() in Pile.

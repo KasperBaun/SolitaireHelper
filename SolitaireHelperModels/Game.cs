@@ -30,8 +30,11 @@ namespace SolitaireHelperModels
                 {
                     Console.WriteLine("No possible moves. Solitaire cannot be solved");
                     GameIsFinished = true;
-                    return 0;
+                    break;
                 }
+                // TODO: Find better name for this method.
+                //if (currentTable.MoveIsInfiniteLoop(moveFound)) 
+                //    continue;
                 Console.WriteLine(moveFound.ToString());
                 currentTable.MakeMove(moveFound);
                 //Table table = currentTable.MakeMove(moveFound);
@@ -39,7 +42,7 @@ namespace SolitaireHelperModels
                 //PlayGame(table);
                 continue;
             }
-            if(currentTable.IsTableEmpty())
+            if(GameIsFinished && currentTable.IsTableEmpty())
                 return 1;
             else
             {
@@ -62,6 +65,7 @@ namespace SolitaireHelperModels
                     throw new Exception("ERROR @ Game.cs -> FindNextMove(): possibleMoves.Count <= 0!");
                 }
             }
+            // TODO: Check that talon flips the cards correctly.
             table.ChangeCardsInTalon();
             FindNextMove(table);
             return null;
