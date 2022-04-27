@@ -47,7 +47,7 @@ namespace SolitaireHelperModels
                         {
                             if (pile.IsMovePossible(card))
                             {
-                                Move move = new Move(from, pile, card);
+                                Move move = new Move(from.Clone(), pile.Clone(), card.Clone());
                                 moves.Add(move);
                             }
                         }
@@ -118,6 +118,7 @@ namespace SolitaireHelperModels
         }
         public Table MakeMove(Move move)
         {
+            PreviousMovesList.Add(move);    
             List<Card> CardsToMove = new List<Card>();
             foreach (Card c in move.From.GetCards())
             {
@@ -136,7 +137,6 @@ namespace SolitaireHelperModels
             
             TypeToPile(move.From.Type).PopCards(CardsToMove);
             TypeToPile(move.To.Type).PushCards(CardsToMove);
-            PreviousMovesList.Add(move);
             return this;
         }
         public bool MoveIsInfiniteLoop(Move move)

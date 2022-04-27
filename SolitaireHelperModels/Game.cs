@@ -16,6 +16,7 @@ namespace SolitaireHelperModels
 
         public int TestGame()
         {
+            Console.WriteLine("New Test Game \n");
             GameIsFinished = false;
             Table = NewTable();
             return PlayGame(Table);
@@ -28,7 +29,7 @@ namespace SolitaireHelperModels
                 Move moveFound = FindNextMove(currentTable);
                 if(moveFound.Card == null || moveFound.From == null || moveFound.To == null && !currentTable.IsTableEmpty())
                 {
-                    Console.WriteLine("No possible moves. Solitaire cannot be solved");
+                    Console.WriteLine("No possible moves. Solitaire cannot be solved\n");
                     GameIsFinished = true;
                     break;
                 }

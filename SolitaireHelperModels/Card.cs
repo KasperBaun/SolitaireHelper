@@ -13,6 +13,11 @@
             Visible = visible;
         }
 
+        public Card Clone()
+        {
+            return MemberwiseClone() as Card;   
+        }
+
         public override string ToString()
         {
             return "Card: " + RankAsString() +" of " + SuitAsString() + ", Visible: " + Visible; 
@@ -120,7 +125,7 @@
                 case 10:
                     return "10";
                 case 11:
-                    return "K";
+                    return "J";
                 case 12:
                     return "Q";
                 case 13:

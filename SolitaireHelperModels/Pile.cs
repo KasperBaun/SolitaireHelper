@@ -63,6 +63,11 @@ namespace SolitaireHelperModels
             }
             return "Something went wrong";
         }
+
+        public Pile Clone()
+        {
+            return MemberwiseClone() as Pile;
+        }
         public bool IsEmpty()
         {
             if (Cards.Count == 0) return true;
