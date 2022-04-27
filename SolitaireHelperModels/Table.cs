@@ -37,7 +37,7 @@ namespace SolitaireHelperModels
             List<Move> moves = new List<Move>();
             
             //Checks all cards for possible moves if the pile is not empty and add them to the list of possible moves. 
-            if(from.GetCards().Count>=1)
+            if(!from.IsEmpty())
             {
                 foreach(Card card in from.GetCards())
                 {
@@ -47,7 +47,7 @@ namespace SolitaireHelperModels
                         {
                             if (pile.IsMovePossible(card))
                             {
-                                Move move = new Move(from.Clone(), pile.Clone(), card.Clone());
+                                Move move = new Move(from, pile, card);
                                 moves.Add(move);
                             }
                         }
@@ -70,17 +70,37 @@ namespace SolitaireHelperModels
             List<Move> allMoves = new List<Move> ();
             foreach(Pile pile in Foundations)
             {
-                List<Move> moves = GetPossibleMovesInPile(pile);
-                allMoves.AddRange(moves);
+                if (pile.IsEmpty())
+                {
+                    continue;
+                }
+                else
+                {
+                    List<Move> pileMoves = GetPossibleMovesInPile(pile);
+                    allMoves.AddRange(pileMoves);
+                }
             }
 
             foreach (Pile pile in Tableaus)
             {
-                allMoves.AddRange(GetPossibleMovesInPile(pile));
+                if (pile.IsEmpty())
+                {
+                    continue;
+                }
+                else
+                {
+                    List<Move> pileMoves = GetPossibleMovesInPile(pile);
+                    allMoves.AddRange(pileMoves);
+                }
             }
+            List<Move> talonMoves = GetPossibleMovesInPile(Talon);
+            allMoves.AddRange(talonMoves);
 
-            allMoves.AddRange(GetPossibleMovesInPile(Talon));
+            allMoves.RemoveAll(move => move.GetCard() == null || move.GetTo() == null || move.GetFrom() == null);
 
+            allMoves.RemoveAll(move => MoveIsInfiniteLoop(move));
+
+            /*
             if (PreviousMovesList != null && PreviousMovesList.Count > 0)
             {
                 foreach(Move move in allMoves)
@@ -89,6 +109,7 @@ namespace SolitaireHelperModels
                         allMoves.Remove(move);
                 }
             }
+            */
 
             return allMoves;
         }
@@ -116,39 +137,41 @@ namespace SolitaireHelperModels
             }
             return bestMove;
         }
-        public Table MakeMove(Move move)
+        public void MakeMove(Move move)
         {
             PreviousMovesList.Add(move);    
             List<Card> CardsToMove = new List<Card>();
-            foreach (Card c in move.From.GetCards())
+            foreach (Card c in move.GetFrom().GetCards())
             {
-                if (c == move.Card)
+                if (c.Rank == move.GetCard().Rank && c.Suit == move.GetCard().Suit)
                 {
-                    int cardIndex = move.From.GetCards().IndexOf(c);
-                    int listCount = move.From.GetCards().Count;
-                    CardsToMove.AddRange(move.From.GetCards().GetRange(cardIndex,(listCount - cardIndex)));
+                    int cardIndex = move.GetFrom().GetCards().IndexOf(c);
+                    int listCount = move.GetFrom().GetCards().Count;
+                    CardsToMove.AddRange(move.GetFrom().GetCards().GetRange(cardIndex,(listCount - cardIndex)));
                     // Check if the card beneath the moved card is not visible - if it is not visible, change it
-                    if(cardIndex != 0 && TypeToPile(move.From.Type).GetCards()[cardIndex-1] != null)
+                    if(cardIndex != 0 && TypeToPile(move.GetFrom().Type).GetCards()[cardIndex-1] != null)
                     {
-                        TypeToPile(move.From.Type).GetCards()[cardIndex - 1].Visible = true;
+                        TypeToPile(move.GetFrom().Type).GetCards()[cardIndex - 1].Visible = true;
                     }
                 }
             }
             
-            TypeToPile(move.From.Type).PopCards(CardsToMove);
-            TypeToPile(move.To.Type).PushCards(CardsToMove);
-            return this;
+            TypeToPile(move.GetFrom().Type).PopCards(CardsToMove);
+            TypeToPile(move.GetTo().Type).PushCards(CardsToMove);
+            return;
         }
         public bool MoveIsInfiniteLoop(Move move)
         {
-            if(PreviousMovesList.Contains(move))
-                return true;
-            else
+            foreach(Move m in PreviousMovesList)
             {
-                if(PreviousMovesList.Count >= 5)
-                    PreviousMovesList.RemoveAt(0);
-                return false;
+                if(m.GetCard().Rank == move.GetCard().Rank && m.GetCard().Suit == move.GetCard().Suit && m.GetFrom().Type == move.GetFrom().Type && m.GetTo().Type == move.GetTo().Type)
+                {
+                    return true;
+                }
             }
+            if(PreviousMovesList.Count >= 5)
+                PreviousMovesList.RemoveAt(0);
+            return false;
         }
         public bool IsTableEmpty()
         {
@@ -271,9 +294,9 @@ namespace SolitaireHelperModels
         {
             switch (type)
             {
-                case 0: return Stock;
-                case 1: return Tableaus[0];
-                case 2: return Tableaus[1];
+                case 0: return this.Stock;
+                case 1: return this.Tableaus[0];
+                case 2: return this.Tableaus[1];
                 case 3: return Tableaus[2];
                 case 4: return Tableaus[3];
                 case 5: return Tableaus[4];

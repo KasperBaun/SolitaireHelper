@@ -27,7 +27,7 @@ namespace SolitaireHelperModels
             while (!GameIsFinished)
             {
                 Move moveFound = FindNextMove(currentTable);
-                if(moveFound.Card == null || moveFound.From == null || moveFound.To == null && !currentTable.IsTableEmpty())
+                if(moveFound.GetCard() == null || moveFound.GetFrom() == null || moveFound.GetTo() == null && !currentTable.IsTableEmpty())
                 {
                     Console.WriteLine("No possible moves. Solitaire cannot be solved\n");
                     GameIsFinished = true;
@@ -40,7 +40,7 @@ namespace SolitaireHelperModels
                 currentTable.MakeMove(moveFound);
                 //Table table = currentTable.MakeMove(moveFound);
                 //Console.WriteLine("Cards in table: {0}\n", currentTable.CardsInTable());  
-                //PlayGame(table);
+                //PlayGame(currentTable);
                 continue;
             }
             if(GameIsFinished && currentTable.IsTableEmpty())

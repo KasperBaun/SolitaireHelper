@@ -37,11 +37,14 @@ namespace SolitaireHelperModels
         }
         public Card GetTopCard()
         {
-            if(Cards.Count == 0)
+            if(Cards.Count == 0 || Cards ==  null)
             {
                 return null;
             }
-            return Cards.FindLast(c => c.Rank != 0);
+            else
+            {
+                return Cards[Cards.Count - 1];
+            }
         }
         public List<Card> GetCards() { return Cards; }
         public bool IsEqual(Card card)
@@ -64,24 +67,14 @@ namespace SolitaireHelperModels
             return "Something went wrong";
         }
 
-        public Pile Clone()
-        {
-            return MemberwiseClone() as Pile;
-        }
         public bool IsEmpty()
         {
-            if (Cards.Count == 0) return true;
-            if (Cards == null) return true;
+            if (Cards.Count == 0|| Cards == null) return true;
             return false;
         }
         public int GetNumberOfCards()
         {
             return Cards.Count;
-        }
-        public int GetNumberOfClosedCards()
-        {
-            List<Card> ClosedCards = Cards.FindAll(c => c.Visible == false);
-            return ClosedCards.Count;
         }
         public void PrintPile()
         {
@@ -110,13 +103,17 @@ namespace SolitaireHelperModels
         
         private bool IsMoveToTableauPossible(Card toCard)
         {
-            if(IsEmpty()) return true;
+            if(IsEmpty() && toCard.Rank == 13) return true;
             /* Checks if toCard can be moved to top of this pile
              * Checks done:
              * - Tableau-pile should not be empty
              * - Topcard should be visible
              * - Topcard should have a color different than toCard
              */
+            if(GetTopCard() == null && toCard.Rank != 13)
+            {
+                return false;
+            }
             if (!IsEmpty() && GetTopCard().Visible && GetTopCard().IsRed() && toCard.IsBlack() || (GetTopCard().IsBlack() && toCard.IsRed()))
             {
                 if (toCard.Rank == GetTopCard().Rank - 1)

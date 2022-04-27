@@ -6,22 +6,36 @@ namespace SolitaireHelperModels
 {
     public class Move
     {
-        public Pile From { get; set; }
-        public Pile To { get; set; }
-        public Card Card { get; set; }
-        protected int Score { get; set; }
+        private Pile From;
+        private Pile To;
+        private Card Card;
+        protected int Score;
 
         public Move(Pile from, Pile to, Card card)
         {
-            From = from;
-            To = to;
-            Card = card;
+            Pile fromPile = new Pile();
+            fromPile.Type = from.Type;
+            if(from.GetCards() != null && from.GetCards().Count > 0)
+            {
+                fromPile.PushCards(from.GetCards());
+            }
+            From = fromPile;
+
+            Pile toPile = new Pile();
+            toPile.Type = to.Type;
+            if(to.GetCards() != null && to.GetCards().Count > 0)
+            {
+                toPile.PushCards(to.GetCards());
+            }
+            To = toPile;
+
+            Card newCard = new Card(card.Suit, card.Rank, card.Visible);
+            Card = newCard;
             CalculateScore();
         }
-
-        private void CalculateScore()
+        public void CalculateScore()
         {
-            if (Card.Visible == false)
+            if (Card.Visible == false || Card == null)
             {
                 Score = 0;
                 return ;
@@ -71,6 +85,7 @@ namespace SolitaireHelperModels
             Score = -1;
             Card = null;
         }
+
         private bool IsFoundation(Pile pile)
         {
             switch (pile.Type)
@@ -109,33 +124,21 @@ namespace SolitaireHelperModels
                     return false;
             }
         }
-        public void MoveCard()
-        {
-            List<Card> CardsToMove = new List<Card>();
-            List<Card> CardsInFromPile = From.GetCards();
-            foreach(Card card in CardsInFromPile)
-            {
-                if(card == Card)
-                {
-                    int elementsToMove = CardsInFromPile.Count - CardsInFromPile.IndexOf(card);
-                    for(int i = CardsInFromPile.IndexOf(card); i <= elementsToMove; i++)
-                    {
-                        CardsToMove.Add(CardsInFromPile[i]);
-                    }
-                    int cardIndex = From.GetCards().IndexOf(Card);
-                    // Check if the card beneath the moved card is not visible - if it is not visible, change it
-                    if (From.GetCards()[cardIndex-1].Visible == false)
-                    {
-                        From.GetCards()[cardIndex - 1].Visible = true;
-                    }
-                }
-            }
-            From.PopCards(CardsToMove);
-            To.PushCards(CardsToMove);
-        }
         public int GetScore()
         {
             return Score;
+        }
+        public Pile GetFrom()
+        {
+            return From;
+        }
+        public Pile GetTo()
+        {
+            return To;
+        }
+        public Card GetCard()
+        {
+            return Card;
         }
   
         public override string ToString()
