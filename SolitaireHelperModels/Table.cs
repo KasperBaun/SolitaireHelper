@@ -6,11 +6,11 @@ namespace SolitaireHelperModels
 {
     public class Table
     {
-        private List<Pile> Tableaus;
-        private List<Pile> Foundations;
-        private Pile Talon;
-        private Pile Stock;
-        private List<Move> PreviousMovesList;
+        private readonly List<Pile> Tableaus;
+        private readonly List<Pile> Foundations;
+        private readonly Pile Talon;
+        private readonly Pile Stock;
+        private readonly List<Move> PreviousMovesList;
 
         public Table(Pile stock, Pile talon, Pile T1, Pile T2, Pile T3, Pile T4, Pile T5, Pile T6, Pile T7, Pile F1, Pile F2, Pile F3, Pile F4)
         {

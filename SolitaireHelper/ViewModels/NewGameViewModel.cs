@@ -15,14 +15,14 @@ namespace SolitaireHelper.ViewModels
         private string player = "Kasper";
         private string date = DateTime.Today.Date.ToShortDateString();
         private string gameType = "7-Kabale";
-        private Game game;
+        private readonly Game game;
         private ImageSource imageURI;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NewGameViewModel()
         {
             Title = "New Game";
-            game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString(), IsFinished = false };
+            game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString() };
             CardDeck CardDeck = new CardDeck();
             CardDeck.PrintDeck();
             //Table Table = new Table(CardDeck.Deck);
