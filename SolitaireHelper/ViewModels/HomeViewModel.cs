@@ -11,6 +11,7 @@ namespace SolitaireHelper.ViewModels
             PlayNewGame = new Command(async () => await Shell.Current.GoToAsync("NewGamePage"));
             LearnHowToPlay = new Command(async () => await Shell.Current.GoToAsync("LearnHowToPlayPage"));
             SeeHistory = new Command(async () => await Shell.Current.GoToAsync("HistoryPage"));
+      
         }
 
         public ICommand PlayNewGame { get; }

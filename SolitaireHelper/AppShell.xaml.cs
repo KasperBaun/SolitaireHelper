@@ -15,6 +15,7 @@ namespace SolitaireHelper
             Routing.RegisterRoute(nameof(NewGamePage), typeof(NewGamePage));
             Routing.RegisterRoute(nameof(CameraPage), typeof(CameraPage));
             Routing.RegisterRoute(nameof(EvaluateImagePage), typeof(EvaluateImagePage));
+            Routing.RegisterRoute(nameof(LearnHowToPlayPage), typeof(LearnHowToPlayPage));
         }
 
     }
