@@ -85,7 +85,6 @@ namespace SolitaireHelperModels
             Score = -1;
             Card = null;
         }
-
         private bool IsFoundation(Pile pile)
         {
             switch (pile.Type)
@@ -140,7 +139,6 @@ namespace SolitaireHelperModels
         {
             return Card;
         }
-  
         public override string ToString()
         {
             // If the move is the first move to a foundation there is no GetTopCard() in Pile.

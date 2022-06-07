@@ -66,7 +66,6 @@ namespace SolitaireHelperModels
             }
             return "Something went wrong";
         }
-
         public bool IsEmpty()
         {
             if (Cards.Count == 0|| Cards == null) return true;
@@ -100,7 +99,6 @@ namespace SolitaireHelperModels
             }
             return false;
         }
-        
         private bool IsMoveToTableauPossible(Card toCard)
         {
             if(IsEmpty() && toCard.Rank == 13) return true;
@@ -123,7 +121,6 @@ namespace SolitaireHelperModels
             }
             return false;
         }
-
         public bool IsMovePossible(Card toCard)
         {
             // Call this function if this pile is a foundation-pile

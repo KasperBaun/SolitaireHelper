@@ -27,20 +27,16 @@ namespace SolitaireHelperModels
             while (!GameIsFinished)
             {
                 Move moveFound = FindNextMove(currentTable);
-                if(moveFound.GetCard() == null || moveFound.GetFrom() == null || moveFound.GetTo() == null && !currentTable.IsTableEmpty())
+            
+                if(moveFound == null && !currentTable.IsTableEmpty())
                 {
                     Console.WriteLine("No possible moves. Solitaire cannot be solved\n");
                     GameIsFinished = true;
                     break;
                 }
-                // TODO: Find better name for this method.
-                //if (currentTable.MoveIsInfiniteLoop(moveFound)) 
-                //    continue;
+                
                 Console.WriteLine(moveFound.ToString());
                 currentTable.MakeMove(moveFound);
-                //Table table = currentTable.MakeMove(moveFound);
-                //Console.WriteLine("Cards in table: {0}\n", currentTable.CardsInTable());  
-                //PlayGame(currentTable);
                 continue;
             }
             if(GameIsFinished && currentTable.IsTableEmpty())
@@ -66,9 +62,14 @@ namespace SolitaireHelperModels
                     throw new Exception("ERROR @ Game.cs -> FindNextMove(): possibleMoves.Count <= 0!");
                 }
             }
-            // TODO: This currently produces an infinite loop - need to change how we handle the boolean returned from AddCardsToTalon() if it is false.
-            table.AddCardsToTalon();
-            FindNextMove(table);
+            else if(possibleMoves.Count == 0)
+            {
+                if (table.AddCardsToTalon())
+                {
+                    FindNextMove(table);
+                }
+            }
+            
             return null;
         }
         private Table NewTable()
