@@ -66,8 +66,8 @@ namespace SolitaireHelperModels
                     throw new Exception("ERROR @ Game.cs -> FindNextMove(): possibleMoves.Count <= 0!");
                 }
             }
-            // TODO: Check that talon flips the cards correctly.
-            table.ChangeCardsInTalon();
+            // TODO: This currently produces an infinite loop - need to change how we handle the boolean returned from AddCardsToTalon() if it is false.
+            table.AddCardsToTalon();
             FindNextMove(table);
             return null;
         }
@@ -101,13 +101,8 @@ namespace SolitaireHelperModels
             T6.GetTopCard().Visible = true;
             T7.PushCards(CardDeck.Deck.GetRange(21, 7)); 
             T7.GetTopCard().Visible = true;
-            Talon.PushCards(CardDeck.Deck.GetRange(28, 3));
-            foreach (Card card in Talon.GetCards())
-            {
-                card.Visible = true;
-            }
             Pile Stock = new Pile() { Type = 0 }; 
-            Stock.PushCards(CardDeck.Deck.GetRange(31, 21));
+            Stock.PushCards(CardDeck.Deck.GetRange(28, 24));
             Table Table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
             return Table;
         } 

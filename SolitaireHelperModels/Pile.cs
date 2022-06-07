@@ -5,7 +5,7 @@ using System.Text;
 namespace SolitaireHelperModels
 {
     /* This class is used as a base when creating the different piles used in the solitaire game.
-     * Tableaus 1-7, Stock, Talon and Foundations 1-4 are all Pile classes from this
+     * Tableaus 1-7, Stock, Talon and Foundations 1-4 are all Pile classes
      */
     public class Pile
     {

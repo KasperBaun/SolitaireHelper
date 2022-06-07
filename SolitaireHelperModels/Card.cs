@@ -13,11 +13,6 @@
             Visible = visible;
         }
 
-        public Card Clone()
-        {
-            return MemberwiseClone() as Card;   
-        }
-
         public override string ToString()
         {
             return "Card: " + RankAsString() +" of " + SuitAsString() + ", Visible: " + Visible; 
@@ -33,7 +28,6 @@
         {
             return Suit == card.Suit && Rank == card.Rank;
         }
-        
         public string SuitAsString()
         { 
             switch (Suit)

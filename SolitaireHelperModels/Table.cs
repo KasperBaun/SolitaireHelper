@@ -93,11 +93,22 @@ namespace SolitaireHelperModels
                     allMoves.AddRange(pileMoves);
                 }
             }
-            List<Move> talonMoves = GetPossibleMovesInPile(Talon);
-            allMoves.AddRange(talonMoves);
+
+            // Accounting for algorithm rule ST-2 (Stock minimum rule)
+            if (CardsInStock() < 3 && CardsInStock() + Talon.GetCards().Count == 3)
+            {
+                // Take the cards from talon and put under stock
+                Stock.PushCards(Talon.GetCards());
+                Talon.GetCards().Clear();
+            }
+            else
+            {
+                List<Move> talonMoves = GetPossibleMovesInPile(Talon);
+                allMoves.AddRange(talonMoves);
+            }
+                
 
             allMoves.RemoveAll(move => move.GetCard() == null || move.GetTo() == null || move.GetFrom() == null);
-
             allMoves.RemoveAll(move => MoveIsInfiniteLoop(move));
 
             /*
@@ -190,19 +201,39 @@ namespace SolitaireHelperModels
         {
             return Stock.GetCards().Count;
         }
-        public bool ChangeCardsInTalon()
+        public bool AddCardsToTalon()
         {
+            if(CardsInStock() >= 3)
+            {
+                // Take 3 cards from stock and put in talon
+                Talon.PushCards(Stock.GetCards().GetRange(0,3));
+
+                // Remove the 3 cards from stock
+                Stock.PopCards(Stock.GetCards().GetRange(0,3));
+                Talon.GetCards().Reverse();
+
+                // All cards in talon are invisible
+                foreach(Card card in Talon.GetCards())
+                {
+                    card.Visible = false;
+                }
+
+                // Top card is visible
+                Talon.GetCards()[0].Visible = true;
+                return true;
+            }
+            
+            return false;
+            
+            /*
             if (CardsInStock() > 0)
             {
                 List<Card> oldTalonCards = Talon.GetCards();
                 Talon.GetCards().Clear();
-                if (Stock.GetCards().Count >= 3)
+                if (CardsInStock() >= 3)
                 {
                     List<Card> newTalonCards = Stock.GetCards().GetRange(0, 3);
-                    foreach (Card card in newTalonCards)
-                    {
-                        card.Visible = true;
-                    }
+                    newTalonCards[0].Visible = true;
                     Talon.PushCards(newTalonCards);
 
                 }
@@ -221,10 +252,12 @@ namespace SolitaireHelperModels
                 }
                 Stock.PushCards(oldTalonCards);
                 //Talon.PrintPile();
+
                 return true;
             }
             // No cards in stock remaining
             return false;
+            */
         }
         // For debugging purposes
         public int CardsInTable()
