@@ -16,7 +16,7 @@ namespace SolitaireHelperModels
 
         public int TestGame()
         {
-            Console.WriteLine("New Test Game \n");
+            Console.WriteLine("### New Test Game ###");
             GameIsFinished = false;
             Table = NewTable();
             return PlayGame(Table);
@@ -40,7 +40,10 @@ namespace SolitaireHelperModels
                 continue;
             }
             if(GameIsFinished && currentTable.IsTableEmpty())
+            {
+                Console.WriteLine("Solitaire complete!\n");
                 return 1;
+            }
             else
             {
                 return 0;
