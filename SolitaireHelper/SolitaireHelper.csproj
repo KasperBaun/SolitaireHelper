@@ -46,6 +46,9 @@
 	<Compile Update="Views\LoginPage.xaml.cs">
 		<DependentUpon>LoginPage.xaml</DependentUpon>
 	</Compile>
+	<Compile Update="Views\LearnHowToPlayPage.xaml.cs">
+	  <DependentUpon>LearnHowToPlayPage.xaml</DependentUpon>
+	</Compile>
 	<Compile Update="Views\PictureConfirmationPage.xaml.cs">
 		<DependentUpon>PictureConfirmationPage.xaml</DependentUpon>
 	</Compile>
@@ -58,6 +61,9 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Views\CameraPage.xaml">
       <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\LearnHowToPlayPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
