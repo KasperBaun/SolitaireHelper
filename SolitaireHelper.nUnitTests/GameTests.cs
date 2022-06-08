@@ -62,7 +62,7 @@ namespace SolitaireHelper.nUnitTests
         [Test]
         public void TableSetupTest()
         {
-            /* Tests the table as whole.
+            /* Tests the table as a whole.
              * Test that each tableau in set up gets the correct amount of cards with correct visibility 
              * Test that the stock holds 24 cards without visibility
              * Test that foundations are empty and talon is empty     
@@ -183,10 +183,22 @@ namespace SolitaireHelper.nUnitTests
             /* Test that cards are moved from Stock to Talon and only top one is visible */
 
             // Arrange
+            Table table = new();
 
             // Act
+            table.PrintTable();
+            table.AddCardsToTalon();
+            table.PrintTable();
+            int numberOfCardsInTalon = table.GetPileFromType(12).GetNumberOfCards();
+            bool firstCard = table.GetPileFromType(12).GetCards()[0].Visible;
+            bool secondCard = table.GetPileFromType(12).GetCards()[1].Visible;
+            bool thirdCard = table.GetPileFromType(12).GetCards()[2].Visible;
 
             // Assert
+            Assert.IsFalse(firstCard);
+            Assert.IsFalse(secondCard);
+            Assert.IsTrue(thirdCard);
+            Assert.IsTrue(numberOfCardsInTalon == 3);
 
         }
 

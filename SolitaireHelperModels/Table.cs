@@ -266,7 +266,7 @@ namespace SolitaireHelperModels
                 }
 
                 // Top card is visible
-                Talon.GetCards()[0].Visible = true;
+                Talon.GetCards()[Talon.GetCards().Count-1].Visible = true;
                 return true;
             }
             
@@ -322,53 +322,81 @@ namespace SolitaireHelperModels
         }
         public void PrintTable()
         {
+            Console.WriteLine("Table currently consists of:\n");
             Console.WriteLine("Talon:");
+            if (Talon.GetCards().Count == 0)
+                Console.WriteLine("Empty");
             foreach(Card card in Talon.GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
 
-            Console.WriteLine("T1:");
+            Console.WriteLine("\nT1:");
+            if (Tableaus[0].GetCards().Count == 0)
+                Console.WriteLine("Empty");
             foreach (Card card in Tableaus[0].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
 
-            Console.WriteLine("T2:");
+            Console.WriteLine("\nT2:");
+            if (Tableaus[1].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            if (Tableaus[1].GetCards().Count == 0)
+                Console.WriteLine("Empty");
             foreach (Card card in Tableaus[1].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("T3:");
+
+            Console.WriteLine("\nT3:");
+            if (Tableaus[2].GetCards().Count == 0)
+                Console.WriteLine("Empty");
             foreach (Card card in Tableaus[2].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("T4:");
+
+            Console.WriteLine("\nT4:");
+            if (Tableaus[3].GetCards().Count == 0)
+                Console.WriteLine("Empty");
             foreach (Card card in Tableaus[3].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("T5:");
+
+            Console.WriteLine("\nT5:");
+            if (Tableaus[4].GetCards().Count == 0)
+                Console.WriteLine("Empty");
             foreach (Card card in Tableaus[4].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("T6:");
+
+            Console.WriteLine("\nT6:");
+            if (Tableaus[5].GetCards().Count == 0)
+                Console.WriteLine("Empty");
             foreach (Card card in Tableaus[5].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("T7:");
+
+            Console.WriteLine("\nT7:");
+            if (Tableaus[6].GetCards().Count == 0)
+                Console.WriteLine("Empty");
             foreach (Card card in Tableaus[6].GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
-            Console.WriteLine("Stock");
+
+            Console.WriteLine("\nStock");
+            if (Stock.GetCards().Count == 0)
+                Console.WriteLine("Empty");
             foreach (Card card in Stock.GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
+            Console.WriteLine("\n\n");
         }
         public Pile GetPileFromType(int type)
         {
