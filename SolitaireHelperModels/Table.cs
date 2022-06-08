@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SolitaireHelperModels
 {
@@ -14,6 +13,7 @@ namespace SolitaireHelperModels
 
         public Table(Pile stock, Pile talon, Pile T1, Pile T2, Pile T3, Pile T4, Pile T5, Pile T6, Pile T7, Pile F1, Pile F2, Pile F3, Pile F4)
         {
+            // Constructor for a custom table to be used by the image recognitition
             Tableaus = new List<Pile>();
             Foundations = new List<Pile>();
             Stock = stock;
@@ -31,7 +31,52 @@ namespace SolitaireHelperModels
             Foundations.Add(F4);
             PreviousMovesList = new List<Move>();
         }
-
+        public Table()
+        {
+            // Constructor for a table with a fresh set of shuffled cards
+            CardDeck CardDeck = new CardDeck();
+            CardDeck.ShuffleDeck();
+            Stock = new Pile() { Type = 0 };
+            Pile T1 = new Pile() { Type = 1 };
+            Pile T2 = new Pile() { Type = 2 };
+            Pile T3 = new Pile() { Type = 3 };
+            Pile T4 = new Pile() { Type = 4 };
+            Pile T5 = new Pile() { Type = 5 };
+            Pile T6 = new Pile() { Type = 6 };
+            Pile T7 = new Pile() { Type = 7 };
+            Pile F1 = new Pile() { Type = 8 };
+            Pile F2 = new Pile() { Type = 9 };
+            Pile F3 = new Pile() { Type = 10 };
+            Pile F4 = new Pile() { Type = 11 };
+            Talon = new Pile() { Type = 12 };
+            T1.PushCards(CardDeck.Deck.GetRange(0, 1));
+            T1.GetTopCard().Visible = true;
+            T2.PushCards(CardDeck.Deck.GetRange(1, 2));
+            T2.GetTopCard().Visible = true;
+            T3.PushCards(CardDeck.Deck.GetRange(3, 3));
+            T3.GetTopCard().Visible = true;
+            T4.PushCards(CardDeck.Deck.GetRange(6, 4));
+            T4.GetTopCard().Visible = true;
+            T5.PushCards(CardDeck.Deck.GetRange(10, 5));
+            T5.GetTopCard().Visible = true;
+            T6.PushCards(CardDeck.Deck.GetRange(15, 6));
+            T6.GetTopCard().Visible = true;
+            T7.PushCards(CardDeck.Deck.GetRange(21, 7));
+            T7.GetTopCard().Visible = true;
+            Stock.PushCards(CardDeck.Deck.GetRange(28, 24));
+            Tableaus.Add(T1);
+            Tableaus.Add(T2);
+            Tableaus.Add(T3);
+            Tableaus.Add(T4);
+            Tableaus.Add(T5);
+            Tableaus.Add(T6);
+            Tableaus.Add(T7);
+            Foundations.Add(F1);
+            Foundations.Add(F2);
+            Foundations.Add(F3);
+            Foundations.Add(F4);
+            PreviousMovesList = new List<Move>();
+        }
         public List<Move> GetPossibleMovesInPile (Pile from)
         {
             List<Move> moves = new List<Move>();
@@ -259,9 +304,9 @@ namespace SolitaireHelperModels
             return false;
             */
         }
-        // For debugging purposes
         public int CardsInTable()
         {
+            // Returns the amount of cards on the table (in foundations and tableaus - NOT in the stock and talon)
             int cards = 0;
             foreach (Pile pile in Foundations)
             {
@@ -323,13 +368,13 @@ namespace SolitaireHelperModels
                 Console.WriteLine(card.ToString());
             }
         }
-        private Pile TypeToPile(int type)
+        public Pile GetPileFromType(int type)
         {
             switch (type)
             {
-                case 0: return this.Stock;
-                case 1: return this.Tableaus[0];
-                case 2: return this.Tableaus[1];
+                case 0: return Stock;
+                case 1: return Tableaus[0];
+                case 2: return Tableaus[1];
                 case 3: return Tableaus[2];
                 case 4: return Tableaus[3];
                 case 5: return Tableaus[4];

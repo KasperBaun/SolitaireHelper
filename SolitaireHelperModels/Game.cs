@@ -18,10 +18,9 @@ namespace SolitaireHelperModels
         {
             Console.WriteLine("### New Test Game ###");
             GameIsFinished = false;
-            Table = NewTable();
+            Table = new Table();
             return PlayGame(Table);
         }
-
         public int PlayGame(Table currentTable)
         {
             while (!GameIsFinished)
@@ -75,40 +74,5 @@ namespace SolitaireHelperModels
             
             return null;
         }
-        private Table NewTable()
-        {
-            CardDeck CardDeck = new CardDeck();
-            CardDeck.ShuffleDeck();
-            Pile F1 = new Pile() { Type = 8 };
-            Pile F2 = new Pile() { Type = 9 };
-            Pile F3 = new Pile() { Type = 10 };
-            Pile F4 = new Pile() { Type = 11 };
-            Pile T1 = new Pile() { Type = 1 }; 
-            Pile T2 = new Pile() { Type = 2 }; 
-            Pile T3 = new Pile() { Type = 3 }; 
-            Pile T4 = new Pile() { Type = 4 }; 
-            Pile T5 = new Pile() { Type = 5 }; 
-            Pile T6 = new Pile() { Type = 6 }; 
-            Pile T7 = new Pile() { Type = 7 }; 
-            Pile Talon = new Pile() { Type = 12 }; 
-            T1.PushCards(CardDeck.Deck.GetRange(0, 1)); 
-            T1.GetTopCard().Visible = true;
-            T2.PushCards(CardDeck.Deck.GetRange(1, 2)); 
-            T2.GetTopCard().Visible = true;
-            T3.PushCards(CardDeck.Deck.GetRange(3, 3)); 
-            T3.GetTopCard().Visible = true;
-            T4.PushCards(CardDeck.Deck.GetRange(6, 4)); 
-            T4.GetTopCard().Visible = true;
-            T5.PushCards(CardDeck.Deck.GetRange(10, 5)); 
-            T5.GetTopCard().Visible = true;
-            T6.PushCards(CardDeck.Deck.GetRange(15, 6)); 
-            T6.GetTopCard().Visible = true;
-            T7.PushCards(CardDeck.Deck.GetRange(21, 7)); 
-            T7.GetTopCard().Visible = true;
-            Pile Stock = new Pile() { Type = 0 }; 
-            Stock.PushCards(CardDeck.Deck.GetRange(28, 24));
-            Table Table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
-            return Table;
-        } 
     }
 }
