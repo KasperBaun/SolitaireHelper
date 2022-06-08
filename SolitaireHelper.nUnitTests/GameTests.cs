@@ -59,7 +59,6 @@ namespace SolitaireHelper.nUnitTests
             Assert.IsTrue(cardDeck.Deck.Count == 0);
 
         }
-
         [Test]
         public void TableSetupTest()
         {
@@ -176,8 +175,6 @@ namespace SolitaireHelper.nUnitTests
 
             Assert.IsTrue(visibleInStock == 0);
         }
-
-
         [Test]
         public void AddCardsToTalonTest()
         {
@@ -280,8 +277,6 @@ namespace SolitaireHelper.nUnitTests
             // Assert
 
         }
-
-
 
     }
 }
