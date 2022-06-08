@@ -201,6 +201,38 @@ namespace SolitaireHelper.nUnitTests
             Assert.IsTrue(numberOfCardsInTalon == 3);
 
         }
+        [Test]
+        public void AddMoreCardsToTalonTest()
+        {
+            /* Test that cards are moved from Stock to Talon and only top one is visible */
+
+            // Arrange
+            Table table = new();
+
+            // Act
+            table.PrintTable();
+            table.AddCardsToTalon();
+            table.PrintTable();
+            table.AddCardsToTalon();
+            table.PrintTable();
+            int numberOfCardsInTalon = table.GetPileFromType(12).GetNumberOfCards();
+            bool firstCard = table.GetPileFromType(12).GetCards()[0].Visible;
+            bool secondCard = table.GetPileFromType(12).GetCards()[1].Visible;
+            bool thirdCard = table.GetPileFromType(12).GetCards()[2].Visible;
+            bool fourthCard = table.GetPileFromType(12).GetCards()[3].Visible;
+            bool fifthCard = table.GetPileFromType(12).GetCards()[4].Visible;
+            bool sixthCard = table.GetPileFromType(12).GetCards()[5].Visible;
+
+            // Assert
+            Assert.IsFalse(firstCard);
+            Assert.IsFalse(secondCard);
+            Assert.IsFalse(thirdCard);
+            Assert.IsFalse(fourthCard);
+            Assert.IsFalse(fifthCard);
+            Assert.IsTrue(sixthCard);
+            Assert.IsTrue(numberOfCardsInTalon == 6);
+
+        }
 
         [Test]
         public void MoveTest()

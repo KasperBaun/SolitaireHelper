@@ -257,6 +257,7 @@ namespace SolitaireHelperModels
 
                 // Remove the 3 cards from stock
                 Stock.PopCards(Stock.GetCards().GetRange(0,3));
+                // TODO: Why do we have this code below?
                 Talon.GetCards().Reverse();
 
                 // All cards in talon are invisible
