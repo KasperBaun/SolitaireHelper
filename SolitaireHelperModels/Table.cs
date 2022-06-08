@@ -140,7 +140,7 @@ namespace SolitaireHelperModels
                     allMoves.AddRange(pileMoves);
                 }
             }
-
+            // TODO: Maybe this method has to be re-written after AddCardsToTalon now takes the responsibility of checking if CardsInStock<3
             // Accounting for algorithm rule ST-2 (Stock minimum rule)
             if (CardsInStock() < 3 && CardsInStock() + Talon.GetCards().Count == 3)
             {
@@ -250,7 +250,17 @@ namespace SolitaireHelperModels
         }
         public bool AddCardsToTalon()
         {
-            if(CardsInStock() >= 3)
+            // This accounts for algorithm rule ST-2 (Stock minimum rule)
+            if (CardsInStock() < 3 && Talon.GetCards().Count+CardsInStock() >= 3)
+            {
+                // Take the cards from talon and put under stock
+                int cardsToTakeFromTalon = 3-CardsInStock();
+                Stock.PushCards(Talon.GetCards().GetRange(0,cardsToTakeFromTalon));
+                Talon.GetCards().RemoveRange(0, cardsToTakeFromTalon);
+                AddCardsToTalon();
+            }
+
+            if (CardsInStock() >= 3)
             {
                 // Take 3 cards from stock and put in talon
                 Talon.PushCards(Stock.GetCards().GetRange(0,3));

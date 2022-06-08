@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using SolitaireHelperModels;
+using System;
 using System.Collections.Generic;
 
 namespace SolitaireHelper.nUnitTests
@@ -233,7 +234,40 @@ namespace SolitaireHelper.nUnitTests
             Assert.IsTrue(numberOfCardsInTalon == 6);
 
         }
+        [Test]
+        public void StockLessThanThreeCardsTest()
+        {
+            /* Test that cards are not moved from Stock to Talon if stock has less than 3 cards in it */
 
+            // Arrange
+            Table table = new();
+
+            // Act
+            Console.WriteLine("Before doing anything");
+            table.PrintTable();
+            table.AddCardsToTalon();
+            table.AddCardsToTalon();
+            table.AddCardsToTalon();
+            table.AddCardsToTalon();
+            table.AddCardsToTalon();
+            table.AddCardsToTalon();
+            table.AddCardsToTalon();
+            // This should cause stock to have 2 cards only
+            table.GetPileFromType(0).GetCards().RemoveAt(0);
+            // This method should handle the edge case where stock only has 2 cards by taking 1 card from Talon,
+            // and putting under stock then taking the cards from stock and putting it in talon.
+            table.AddCardsToTalon();
+            Console.WriteLine("After emptying all the cards in stock");
+            table.PrintTable();
+
+            int numberOfCardsInTalon = table.GetPileFromType(12).GetNumberOfCards();
+            int numberOfCardsInStock = table.GetPileFromType(0).GetCards().Count;
+
+            // Assert
+            Assert.IsTrue(numberOfCardsInStock == 0);
+            Assert.IsTrue(numberOfCardsInTalon == 23);
+
+        }
         [Test]
         public void MoveTest()
         {
