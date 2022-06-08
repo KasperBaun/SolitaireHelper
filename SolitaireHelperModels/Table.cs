@@ -37,6 +37,8 @@ namespace SolitaireHelperModels
             CardDeck CardDeck = new CardDeck();
             CardDeck.ShuffleDeck();
             Stock = new Pile() { Type = 0 };
+            Tableaus = new List<Pile>();
+            Foundations = new List<Pile>();
             Pile T1 = new Pile() { Type = 1 };
             Pile T2 = new Pile() { Type = 2 };
             Pile T3 = new Pile() { Type = 3 };
@@ -205,15 +207,15 @@ namespace SolitaireHelperModels
                     int listCount = move.GetFrom().GetCards().Count;
                     CardsToMove.AddRange(move.GetFrom().GetCards().GetRange(cardIndex,(listCount - cardIndex)));
                     // Check if the card beneath the moved card is not visible - if it is not visible, change it
-                    if(cardIndex != 0 && TypeToPile(move.GetFrom().Type).GetCards()[cardIndex-1] != null)
+                    if(cardIndex != 0 && GetPileFromType(move.GetFrom().Type).GetCards()[cardIndex-1] != null)
                     {
-                        TypeToPile(move.GetFrom().Type).GetCards()[cardIndex - 1].Visible = true;
+                        GetPileFromType(move.GetFrom().Type).GetCards()[cardIndex - 1].Visible = true;
                     }
                 }
             }
-            
-            TypeToPile(move.GetFrom().Type).PopCards(CardsToMove);
-            TypeToPile(move.GetTo().Type).PushCards(CardsToMove);
+
+            GetPileFromType(move.GetFrom().Type).PopCards(CardsToMove);
+            GetPileFromType(move.GetTo().Type).PushCards(CardsToMove);
             return;
         }
         public bool MoveIsInfiniteLoop(Move move)

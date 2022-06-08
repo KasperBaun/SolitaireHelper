@@ -123,42 +123,42 @@ namespace SolitaireHelper.nUnitTests
 
             foreach (Card card in t2Cards)
             {
-                if (card.Visible && card == t2Cards[0])
+                if (card.Visible && card == t2Cards[1])
                     n++;
             }
             Assert.IsTrue(n == 2);
 
             foreach (Card card in t3Cards)
             {
-                if (card.Visible && card == t3Cards[0])
+                if (card.Visible && card == t3Cards[2])
                     n++;
             }
             Assert.IsTrue(n == 3);
 
             foreach (Card card in t4Cards)
             {
-                if (card.Visible && card == t4Cards[0])
+                if (card.Visible && card == t4Cards[3])
                     n++;
             }
             Assert.IsTrue(n == 4);
 
             foreach (Card card in t5Cards)
             {
-                if (card.Visible && card == t5Cards[0])
+                if (card.Visible && card == t5Cards[4])
                     n++;
             }
             Assert.IsTrue(n == 5);
 
             foreach (Card card in t6Cards)
             {
-                if (card.Visible && card == t6Cards[0])
+                if (card.Visible && card == t6Cards[5])
                     n++;
             }
             Assert.IsTrue(n == 6);
 
             foreach (Card card in t7Cards)
             {
-                if (card.Visible && card == t7Cards[0])
+                if (card.Visible && card == t7Cards[6])
                     n++;
             }
             Assert.IsTrue(n == 7);
