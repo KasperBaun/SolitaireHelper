@@ -79,24 +79,25 @@ namespace SolitaireHelperModels
             Foundations.Add(F4);
             PreviousMovesList = new List<Move>();
         }
-        public List<Move> GetPossibleMovesInPile (Pile from)
+        public List<Move> GetPossibleMovesInPile(Pile from)
         {
             List<Move> moves = new List<Move>();
-            
+
             //Checks all cards for possible moves if the pile is not empty and add them to the list of possible moves. 
-            if(!from.IsEmpty())
+            if (!from.IsEmpty())
             {
-                foreach(Card card in from.GetCards())
+                foreach (Card card in from.GetCards())
                 {
-                    if(card.Visible == true)
+                    if (card.Visible == true)
                     {
                         // Can the visible card be moved to a tableau?
-                        foreach(Pile pile in Tableaus)
+                        foreach (Pile pile in Tableaus)
                         {
                             if (pile.IsMovePossible(card))
                             {
-                                Move move = new Move(from, pile, card);
-                                if (!PreviousMovesList.Exists(m => m.GetFrom() == move.GetFrom() && m.GetTo() == move.GetTo() && m.GetCard() == move.GetCard()))
+                                int score = CalculateScore(card, from, pile);
+                                Move move = new Move(from.PileToString(), pile.PileToString(), card, score);
+                                if (!PreviousMovesList.Exists(m => m.GetFrom() == move.GetFrom() && m.GetTo()==move.GetTo() && m.GetCard() == move.GetCard()))
                                 {
                                     moves.Add(move);
                                 }
@@ -107,7 +108,8 @@ namespace SolitaireHelperModels
                         {
                             if (pile.IsMovePossible(card))
                             {
-                                Move move = new Move(from, pile, card);
+                                int score = CalculateScore(card, from, pile);
+                                Move move = new Move(from.PileToString(), pile.PileToString(), card, score);
                                 if (!PreviousMovesList.Contains(move))
                                 {
                                     moves.Add(move);
@@ -121,7 +123,7 @@ namespace SolitaireHelperModels
         }
         public List<Move> GetAllPossibleMoves()
         {
-            List<Move> allMoves = new List<Move> ();
+            List<Move> allMoves = new List<Move>();
 
             // Find all possible moves in Talon
             if (CardsInStock() >= 3)
@@ -150,9 +152,9 @@ namespace SolitaireHelperModels
                     continue;
                 }
             }
-                
+
             // Remove all moves that are on the infinite-moves list and uneligible moves
-            allMoves.RemoveAll(move => move.GetCard() == null || move.GetTo() == null || move.GetFrom() == null);
+            allMoves.RemoveAll(move => move.GetCard() == null);
             //allMoves.RemoveAll(move => MoveIsInfiniteLoop(move));
 
             return allMoves;
@@ -162,13 +164,13 @@ namespace SolitaireHelperModels
             Move bestMove = null;
             if (allPossibleMoves.Count == 0)
             {
-                return new Move(null, null, null);
+                return new Move(null, null, null, 0);
             }
 
             foreach (Move move in allPossibleMoves)
             {
                 bool addToList = true;
-                
+
                 if (bestMove == null && addToList)
                 {
                     bestMove = move;
@@ -183,29 +185,27 @@ namespace SolitaireHelperModels
         }
         public void MakeMove(Move move)
         {
-            PreviousMovesList.Add(move);    
-            List<Card> CardsToMove = new List<Card>();
-            foreach (Card c in move.GetFrom().GetCards())
+            if(PreviousMovesList.Count >= 10)
             {
-                // We found the card in the list of cards in the from pile that we want to move
-                if (c.Rank == move.GetCard().Rank && c.Suit == move.GetCard().Suit)
-                {
-                    // We make sure that if there are cards beneath the card to be moved,
-                    // that these cards move with
-                    int cardIndex = move.GetFrom().GetCards().IndexOf(c);
-                    int listCount = move.GetFrom().GetCards().Count;
-                    CardsToMove.AddRange(move.GetFrom().GetCards().GetRange(cardIndex,(listCount - cardIndex)));
-                }
+                PreviousMovesList.Reverse();
+                PreviousMovesList.RemoveRange(9, PreviousMovesList.Count-9);
             }
-
+            PreviousMovesList.Add(move);
+            List<Card> CardsToMove = new List<Card>();
             // Find the correct pile in the table to make the move from and remove the cards
-            Pile fromPile = GetPileFromType(move.GetFrom().Type);
+            Pile fromPile = GetPileFromType(GetPileTypeFromString(move.GetFrom()));
+            // We make sure that if there are cards beneath the card to be moved,
+            // that these cards move with
+            int cardIndex = fromPile.GetCards().IndexOf(move.GetCard());
+            int listCount = fromPile.GetCards().Count;
+            CardsToMove.AddRange(fromPile.GetCards().GetRange(cardIndex, (listCount - cardIndex)));
             fromPile.RemoveCards(CardsToMove);
+            
             // Add the cards to the pile we are moving to
-            Pile toPile = GetPileFromType(move.GetTo().Type);
+            Pile toPile = GetPileFromType(GetPileTypeFromString(move.GetTo()));
             toPile.AddCards(CardsToMove);
             // If there are cards left in the from pile, and the top card is not visible, set it to visible
-            if(fromPile.GetCards().Count > 0)
+            if (fromPile.GetCards().Count > 0)
             {
                 fromPile.GetTopCard().Visible = true;
             }
@@ -213,28 +213,79 @@ namespace SolitaireHelperModels
         }
         public bool MoveIsInfiniteLoop(Move move)
         {
-            foreach(Move m in PreviousMovesList)
+            foreach (Move m in PreviousMovesList)
             {
-                if(m.GetCard().Rank == move.GetCard().Rank && m.GetCard().Suit == move.GetCard().Suit && m.GetFrom().Type == move.GetFrom().Type && m.GetTo().Type == move.GetTo().Type)
+                /*if (m.GetCard().Rank == move.GetCard().Rank && m.GetCard().Suit == move.GetCard().Suit && m.GetFrom().Type == move.GetFrom().Type && m.GetTo().Type == move.GetTo().Type)
                 {
                     return true;
                 }
+                */
             }
-            if(PreviousMovesList.Count >= 5)
+            if (PreviousMovesList.Count >= 5)
                 PreviousMovesList.RemoveAt(0);
             return false;
+        }
+        private int CalculateScore(Card card, Pile fromPile, Pile toPile)
+        {
+            if (card.Visible == false || card == null)
+            {
+                return 0;
+            }
+
+            // Test if ace can move to any of the Foundations
+            if (card.Rank == 1 && fromPile.IsTableau() && toPile.IsFoundation())
+            {
+                return 95 + fromPile.GetCards().Count;
+            }
+
+            // Test if 2 can move to any of the Foundations
+            if (card.Rank == 2 && fromPile.IsTableau() && toPile.IsFoundation())
+            {
+                return 85 + fromPile.GetCards().Count;
+            }
+
+            // Test if king can move to an empty Tableau
+            if (card.Rank == 13 && fromPile.IsTableau() && toPile.IsTableau() && toPile.IsEmpty() && !fromPile.IsEmpty())
+            {
+                return 75 + fromPile.GetCards().Count;
+            }
+            // Test if card can move from Table to Foundation
+            if (fromPile.IsTableau() && toPile.IsFoundation())
+            {
+                return fromPile.GetCards().Count + 40;
+            }
+
+            // Test if card can move from Tableau to Tableau
+            if (card.Rank != 13 && fromPile.IsTableau() && toPile.IsTableau())
+            {
+                return fromPile.GetCards().Count + 30;
+            }
+
+            // Test if card can move from Talon to Tableau
+            if (fromPile.Type == 12 && toPile.IsTableau())
+            {
+                return fromPile.GetCards().Count + 20;
+            }
+
+            // Test if card can move from Talon to any of the foundations
+            if (fromPile.Type == 12 && toPile.IsFoundation())
+            {
+                return fromPile.GetCards().Count + 10;
+            }
+
+            return -1;
         }
         public bool IsTableEmpty()
         {
             int cardsInFoundations = 0;
-            foreach(Pile pile in Foundations)
+            foreach (Pile pile in Foundations)
             {
                 cardsInFoundations += pile.GetCards().Count;
             }
-            
-            if(cardsInFoundations == 52) 
-                return true; 
-            else 
+
+            if (cardsInFoundations == 52)
+                return true;
+            else
                 return false;
         }
         public int CardsInStock()
@@ -244,7 +295,7 @@ namespace SolitaireHelperModels
         public bool NewCardsInTalon()
         {
             // No cards in stock but more than 3 in Talon
-            if(CardsInStock() == 0 && Talon.GetCards().Count > 3)
+            if (CardsInStock() == 0 && Talon.GetCards().Count > 3)
             {
                 Talon.GetCards().Reverse();
                 foreach (Card card in Talon.GetCards())
@@ -255,11 +306,11 @@ namespace SolitaireHelperModels
                 Talon.GetCards().Clear();
             }
             // This accounts for algorithm rule ST-2 (Stock minimum rule)
-            if (CardsInStock() < 3 && Talon.GetCards().Count+CardsInStock() >= 3)
+            if (CardsInStock() < 3 && Talon.GetCards().Count + CardsInStock() >= 3)
             {
                 // Take the cards from talon and put under stock
-                int cardsToTakeFromTalon = 3-CardsInStock();
-                Stock.AddCards(Talon.GetCards().GetRange(0,cardsToTakeFromTalon));
+                int cardsToTakeFromTalon = 3 - CardsInStock();
+                Stock.AddCards(Talon.GetCards().GetRange(0, cardsToTakeFromTalon));
                 Talon.GetCards().RemoveRange(0, cardsToTakeFromTalon);
                 NewCardsInTalon();
             }
@@ -275,18 +326,18 @@ namespace SolitaireHelperModels
                 Stock.RemoveCards(Stock.GetCards().GetRange(Stock.GetCards().Count - 3, 3));
 
                 // All cards in talon are invisible
-                foreach(Card card in Talon.GetCards())
+                foreach (Card card in Talon.GetCards())
                 {
                     card.Visible = false;
                 }
 
                 // Top card is visible
-                Talon.GetCards()[Talon.GetCards().Count-1].Visible = true;
+                Talon.GetCards()[Talon.GetCards().Count - 1].Visible = true;
                 return true;
             }
-            
+
             return false;
-            
+
         }
         public int CardsInTable()
         {
@@ -300,7 +351,7 @@ namespace SolitaireHelperModels
             {
                 cards += pile.GetNumberOfCards();
             }
-            return cards+ Talon.GetNumberOfCards() + Stock.GetNumberOfCards();
+            return cards + Talon.GetNumberOfCards() + Stock.GetNumberOfCards();
         }
         public void PrintTable()
         {
@@ -308,7 +359,7 @@ namespace SolitaireHelperModels
             Console.WriteLine("Talon:");
             if (Talon.GetCards().Count == 0)
                 Console.WriteLine("Empty");
-            foreach(Card card in Talon.GetCards())
+            foreach (Card card in Talon.GetCards())
             {
                 Console.WriteLine(card.ToString());
             }
@@ -398,6 +449,26 @@ namespace SolitaireHelperModels
                 case 11: return Foundations[3];
                 case 12: return Talon;
                 default: return null;
+            }
+        }
+        public int GetPileTypeFromString(string pile)
+        {
+            switch (pile)
+            {
+                case "Stock": return 0;
+                case "T1": return 1;
+                case "T2": return 2;
+                case "T3": return 3;
+                case "T4": return 4;
+                case "T5": return 5;
+                case "T6": return 6;
+                case "T7": return 7;
+                case "F1": return 8;
+                case "F2": return 9;
+                case "F3": return 10;
+                case "F4": return 11;
+                case "Talon": return 12;
+                default: return 0;
             }
         }
     }

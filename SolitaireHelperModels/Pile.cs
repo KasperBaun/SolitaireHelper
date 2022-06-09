@@ -142,6 +142,18 @@ namespace SolitaireHelperModels
             }
             return false;
         }
+        public bool IsFoundation()
+        {
+            if (Type == 8 || Type == 9 || Type == 10 || Type == 11)
+                return true;
+            return false;
+        }
+        public bool IsTableau()
+        {
+            if (Type == 1 || Type == 2 || Type == 3 || Type == 4 || Type == 5 || Type == 6 || Type == 7)
+                return true;
+            return false;
+        }
         private int SuitToType(int suit)
         {
             switch (suit)
@@ -179,7 +191,7 @@ namespace SolitaireHelperModels
         }
     }
 
-    public enum PileType
+    public enum PileTypeFromString
     {
         Stock = 0,
         T1 = 1,
