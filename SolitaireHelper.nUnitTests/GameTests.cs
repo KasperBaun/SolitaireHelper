@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using SolitaireHelperModels;
+using System;
 using System.Collections.Generic;
 
 namespace SolitaireHelper.nUnitTests
@@ -58,11 +59,11 @@ namespace SolitaireHelper.nUnitTests
             Assert.IsTrue(cardDeck.Deck.Count == 0);
 
         }
-
         [Test]
         public void TableSetupTest()
         {
-            /* Tests the table as a whole.
+            /* Test id's fulfilled: ST1 - Stock placement 
+             * Tests the table as a whole.
              * Test that each tableau in set up gets the correct amount of cards with correct visibility 
              * Test that the stock holds 24 cards without visibility
              * Test that foundations are empty and talon is empty     
@@ -175,8 +176,6 @@ namespace SolitaireHelper.nUnitTests
 
             Assert.IsTrue(visibleInStock == 0);
         }
-
-
         [Test]
         public void AddCardsToTalonTest()
         {
@@ -187,7 +186,7 @@ namespace SolitaireHelper.nUnitTests
 
             // Act
             table.PrintTable();
-            table.AddCardsToTalon();
+            table.NewCardsInTalon();
             table.PrintTable();
             int numberOfCardsInTalon = table.GetPileFromType(12).GetNumberOfCards();
             bool firstCard = table.GetPileFromType(12).GetCards()[0].Visible;
@@ -211,9 +210,9 @@ namespace SolitaireHelper.nUnitTests
 
             // Act
             table.PrintTable();
-            table.AddCardsToTalon();
+            table.NewCardsInTalon();
             table.PrintTable();
-            table.AddCardsToTalon();
+            table.NewCardsInTalon();
             table.PrintTable();
             int numberOfCardsInTalon = table.GetPileFromType(12).GetNumberOfCards();
             bool firstCard = table.GetPileFromType(12).GetCards()[0].Visible;
@@ -233,7 +232,40 @@ namespace SolitaireHelper.nUnitTests
             Assert.IsTrue(numberOfCardsInTalon == 6);
 
         }
+        [Test]
+        public void StockLessThanThreeCardsTest()
+        {
+            /* Test that cards are not moved from Stock to Talon if stock has less than 3 cards in it */
 
+            // Arrange
+            Table table = new();
+
+            // Act
+            Console.WriteLine("Before doing anything");
+            table.PrintTable();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            // This should cause stock to have 2 cards only
+            table.GetPileFromType(0).GetCards().RemoveAt(0);
+            // This method should handle the edge case where stock only has 2 cards by taking 1 card from Talon,
+            // and putting under stock then taking the cards from stock and putting it in talon.
+            table.NewCardsInTalon();
+            Console.WriteLine("After emptying all the cards in stock");
+            table.PrintTable();
+
+            int numberOfCardsInTalon = table.GetPileFromType(12).GetNumberOfCards();
+            int numberOfCardsInStock = table.GetPileFromType(0).GetCards().Count;
+
+            // Assert
+            Assert.IsTrue(numberOfCardsInStock == 0);
+            Assert.IsTrue(numberOfCardsInTalon == 23);
+
+        }
         [Test]
         public void MoveTest()
         {
@@ -246,8 +278,6 @@ namespace SolitaireHelper.nUnitTests
             // Assert
 
         }
-
-
 
     }
 }

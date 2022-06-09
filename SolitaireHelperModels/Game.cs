@@ -48,7 +48,7 @@ namespace SolitaireHelperModels
             {
                 return 0;
             }
-            throw new Exception("Error @Game.cs -> PlayGame() - table.IsTableEmpty() == false with no GameIsFinished == true");
+            throw new Exception("Error @Game.cs -> PlayGame() - table.IsTableEmpty() == false and GameIsFinished == false");
         }
         private Move FindNextMove(Table table)
         {
@@ -67,7 +67,7 @@ namespace SolitaireHelperModels
             }
             else if(possibleMoves.Count == 0)
             {
-                if (table.AddCardsToTalon())
+                if (table.NewCardsInTalon())
                 {
                     FindNextMove(table);
                 }

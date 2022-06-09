@@ -9,7 +9,7 @@ namespace SolitaireHelperModels
      */
     public class Pile
     {
-        protected List<Card> Cards { get; set; }
+        private readonly List<Card> Cards;
         public int Type { get; set; }
 
         public Pile()
@@ -17,22 +17,28 @@ namespace SolitaireHelperModels
             Cards = new List<Card>();
         }
 
-        public void PushCards(List<Card> cards)
+        public void AddCards(List<Card> cards)
         {
-            foreach(Card card in cards)
+            if(cards != null & cards.Count > 0)
             {
-                Cards.Add(card);
+                foreach(Card card in cards)
+                {
+                    Cards.Add(card);
+                }
             }
         }
-        public void PopCards(List<Card> cardsToRemove)
+        public void RemoveCards(List<Card> cardsToRemove)
         {
+            /*
             if(cardsToRemove == Cards)
             {
                 cardsToRemove.Clear();
             }
+            */
             foreach(Card card in cardsToRemove)
             {
-                Cards.Remove(card);
+                if(Cards.Contains(card))
+                    Cards.Remove(card);
             }
         }
         public Card GetTopCard()
@@ -68,7 +74,7 @@ namespace SolitaireHelperModels
         }
         public bool IsEmpty()
         {
-            if (Cards.Count == 0|| Cards == null) return true;
+            if (Cards.Count == 0 || Cards == null) return true;
             return false;
         }
         public int GetNumberOfCards()
@@ -84,37 +90,37 @@ namespace SolitaireHelperModels
             }
             Console.WriteLine();
         }
-        private bool IsMoveToFoundationPossible(Card toCard)
+        private bool IsMoveToFoundationPossible(Card card)
         {
             //Checks if card is ace             
-            if(IsEmpty() && toCard.Rank == 1 && SuitToType(toCard.Suit) == Type)
+            if(IsEmpty() && card.Rank == 1 && SuitToType(card.Suit) == Type)
             {
                 return true;
             }
 
             //Checks if other cards can be moved to foundation
-            if (!IsEmpty() && GetTopCard().Visible && GetTopCard().Suit == toCard.Suit && GetTopCard().Rank == toCard.Rank - 1)
+            if (!IsEmpty() && GetTopCard().Visible && GetTopCard().Suit == card.Suit && GetTopCard().Rank == card.Rank - 1)
             {
                 return true;
             }
             return false;
         }
-        private bool IsMoveToTableauPossible(Card toCard)
+        private bool IsMoveToTableauPossible(Card card)
         {
-            if(IsEmpty() && toCard.Rank == 13) return true;
+            if(IsEmpty() && card.Rank == 13) return true;
             /* Checks if toCard can be moved to top of this pile
              * Checks done:
              * - Tableau-pile should not be empty
              * - Topcard should be visible
              * - Topcard should have a color different than toCard
              */
-            if(GetTopCard() == null && toCard.Rank != 13)
+            if(IsEmpty() && card.Rank != 13)
             {
                 return false;
             }
-            if (!IsEmpty() && GetTopCard().Visible && GetTopCard().IsRed() && toCard.IsBlack() || (GetTopCard().IsBlack() && toCard.IsRed()))
+            if (!IsEmpty() && ((GetTopCard().IsRed() && card.IsBlack()) || (GetTopCard().IsBlack() && card.IsRed())))
             {
-                if (toCard.Rank == GetTopCard().Rank - 1)
+                if (card.Rank == GetTopCard().Rank - 1)
                 {
                     return true;
                 }

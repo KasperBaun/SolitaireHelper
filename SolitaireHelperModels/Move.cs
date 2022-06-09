@@ -15,17 +15,19 @@ namespace SolitaireHelperModels
         {
             Pile fromPile = new Pile();
             fromPile.Type = from.Type;
+            // Card list in from-pile has to be instantiated and have atleast 1 card in order to create a valid move
             if(from.GetCards() != null && from.GetCards().Count > 0)
             {
-                fromPile.PushCards(from.GetCards());
+                fromPile.AddCards(from.GetCards());
             }
             From = fromPile;
 
             Pile toPile = new Pile();
             toPile.Type = to.Type;
-            if(to.GetCards() != null && to.GetCards().Count > 0)
+            // Card list in to-pile has to be instantiated and not empty in order to copy cards
+            if(to.GetCards() != null && !to.IsEmpty())
             {
-                toPile.PushCards(to.GetCards());
+                toPile.AddCards(to.GetCards());
             }
             To = toPile;
 
