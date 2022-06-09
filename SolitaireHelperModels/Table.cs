@@ -51,21 +51,21 @@ namespace SolitaireHelperModels
             Pile F3 = new Pile() { Type = 10 };
             Pile F4 = new Pile() { Type = 11 };
             Talon = new Pile() { Type = 12 };
-            T1.PushCards(CardDeck.Deck.GetRange(0, 1));
+            T1.AddCards(CardDeck.Deck.GetRange(0, 1));
             T1.GetTopCard().Visible = true;
-            T2.PushCards(CardDeck.Deck.GetRange(1, 2));
+            T2.AddCards(CardDeck.Deck.GetRange(1, 2));
             T2.GetTopCard().Visible = true;
-            T3.PushCards(CardDeck.Deck.GetRange(3, 3));
+            T3.AddCards(CardDeck.Deck.GetRange(3, 3));
             T3.GetTopCard().Visible = true;
-            T4.PushCards(CardDeck.Deck.GetRange(6, 4));
+            T4.AddCards(CardDeck.Deck.GetRange(6, 4));
             T4.GetTopCard().Visible = true;
-            T5.PushCards(CardDeck.Deck.GetRange(10, 5));
+            T5.AddCards(CardDeck.Deck.GetRange(10, 5));
             T5.GetTopCard().Visible = true;
-            T6.PushCards(CardDeck.Deck.GetRange(15, 6));
+            T6.AddCards(CardDeck.Deck.GetRange(15, 6));
             T6.GetTopCard().Visible = true;
-            T7.PushCards(CardDeck.Deck.GetRange(21, 7));
+            T7.AddCards(CardDeck.Deck.GetRange(21, 7));
             T7.GetTopCard().Visible = true;
-            Stock.PushCards(CardDeck.Deck.GetRange(28, 24));
+            Stock.AddCards(CardDeck.Deck.GetRange(28, 24));
             Tableaus.Add(T1);
             Tableaus.Add(T2);
             Tableaus.Add(T3);
@@ -115,6 +115,8 @@ namespace SolitaireHelperModels
         public List<Move> GetAllPossibleMoves()
         {
             List<Move> allMoves = new List<Move> ();
+
+            // Find all possible moves in Foundations
             foreach(Pile pile in Foundations)
             {
                 if (pile.IsEmpty())
@@ -128,6 +130,7 @@ namespace SolitaireHelperModels
                 }
             }
 
+            // Find all possible moves in Tableaus
             foreach (Pile pile in Tableaus)
             {
                 if (pile.IsEmpty())
@@ -140,34 +143,18 @@ namespace SolitaireHelperModels
                     allMoves.AddRange(pileMoves);
                 }
             }
-            // TODO: Maybe this method has to be re-written after AddCardsToTalon now takes the responsibility of checking if CardsInStock<3
-            // Accounting for algorithm rule ST-2 (Stock minimum rule)
-            if (CardsInStock() < 3 && CardsInStock() + Talon.GetCards().Count == 3)
-            {
-                // Take the cards from talon and put under stock
-                Stock.PushCards(Talon.GetCards());
-                Talon.GetCards().Clear();
-            }
-            else
+
+            // Find all possible moves in Talon
+            if (CardsInStock() >= 3)
             {
                 List<Move> talonMoves = GetPossibleMovesInPile(Talon);
                 allMoves.AddRange(talonMoves);
             }
+           
                 
-
+            // Remove all moves that are on the infinite-moves list and uneligible moves
             allMoves.RemoveAll(move => move.GetCard() == null || move.GetTo() == null || move.GetFrom() == null);
             allMoves.RemoveAll(move => MoveIsInfiniteLoop(move));
-
-            /*
-            if (PreviousMovesList != null && PreviousMovesList.Count > 0)
-            {
-                foreach(Move move in allMoves)
-                {
-                    if(MoveIsInfiniteLoop(move))
-                        allMoves.Remove(move);
-                }
-            }
-            */
 
             return allMoves;
         }
@@ -214,8 +201,8 @@ namespace SolitaireHelperModels
                 }
             }
 
-            GetPileFromType(move.GetFrom().Type).PopCards(CardsToMove);
-            GetPileFromType(move.GetTo().Type).PushCards(CardsToMove);
+            GetPileFromType(move.GetFrom().Type).RemoveCards(CardsToMove);
+            GetPileFromType(move.GetTo().Type).AddCards(CardsToMove);
             return;
         }
         public bool MoveIsInfiniteLoop(Move move)
@@ -248,16 +235,27 @@ namespace SolitaireHelperModels
         {
             return Stock.GetCards().Count;
         }
-        public bool AddCardsToTalon()
+        public bool NewCardsInTalon()
         {
+            // No cards in stock but more than 3 in Talon
+            if(CardsInStock() == 0 && Talon.GetCards().Count > 3)
+            {
+                Talon.GetCards().Reverse();
+                foreach (Card card in Talon.GetCards())
+                {
+                    card.Visible = false;
+                }
+                Stock.AddCards(Talon.GetCards());
+                Talon.GetCards().Clear();
+            }
             // This accounts for algorithm rule ST-2 (Stock minimum rule)
             if (CardsInStock() < 3 && Talon.GetCards().Count+CardsInStock() >= 3)
             {
                 // Take the cards from talon and put under stock
                 int cardsToTakeFromTalon = 3-CardsInStock();
-                Stock.PushCards(Talon.GetCards().GetRange(0,cardsToTakeFromTalon));
+                Stock.AddCards(Talon.GetCards().GetRange(0,cardsToTakeFromTalon));
                 Talon.GetCards().RemoveRange(0, cardsToTakeFromTalon);
-                AddCardsToTalon();
+                NewCardsInTalon();
             }
 
             if (CardsInStock() >= 3)
@@ -265,10 +263,10 @@ namespace SolitaireHelperModels
                 // Take 3 cards from stock, reverse them (flip) and put in talon
                 List<Card> newCards = Stock.GetCards().GetRange(Stock.GetCards().Count - 3, 3);
                 newCards.Reverse();
-                Talon.PushCards(newCards);
+                Talon.AddCards(newCards);
 
                 // Remove the 3 cards from stock
-                Stock.PopCards(Stock.GetCards().GetRange(Stock.GetCards().Count - 3, 3));
+                Stock.RemoveCards(Stock.GetCards().GetRange(Stock.GetCards().Count - 3, 3));
 
                 // All cards in talon are invisible
                 foreach(Card card in Talon.GetCards())

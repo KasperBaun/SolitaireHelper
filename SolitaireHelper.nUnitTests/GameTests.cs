@@ -186,7 +186,7 @@ namespace SolitaireHelper.nUnitTests
 
             // Act
             table.PrintTable();
-            table.AddCardsToTalon();
+            table.NewCardsInTalon();
             table.PrintTable();
             int numberOfCardsInTalon = table.GetPileFromType(12).GetNumberOfCards();
             bool firstCard = table.GetPileFromType(12).GetCards()[0].Visible;
@@ -210,9 +210,9 @@ namespace SolitaireHelper.nUnitTests
 
             // Act
             table.PrintTable();
-            table.AddCardsToTalon();
+            table.NewCardsInTalon();
             table.PrintTable();
-            table.AddCardsToTalon();
+            table.NewCardsInTalon();
             table.PrintTable();
             int numberOfCardsInTalon = table.GetPileFromType(12).GetNumberOfCards();
             bool firstCard = table.GetPileFromType(12).GetCards()[0].Visible;
@@ -243,18 +243,18 @@ namespace SolitaireHelper.nUnitTests
             // Act
             Console.WriteLine("Before doing anything");
             table.PrintTable();
-            table.AddCardsToTalon();
-            table.AddCardsToTalon();
-            table.AddCardsToTalon();
-            table.AddCardsToTalon();
-            table.AddCardsToTalon();
-            table.AddCardsToTalon();
-            table.AddCardsToTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
+            table.NewCardsInTalon();
             // This should cause stock to have 2 cards only
             table.GetPileFromType(0).GetCards().RemoveAt(0);
             // This method should handle the edge case where stock only has 2 cards by taking 1 card from Talon,
             // and putting under stock then taking the cards from stock and putting it in talon.
-            table.AddCardsToTalon();
+            table.NewCardsInTalon();
             Console.WriteLine("After emptying all the cards in stock");
             table.PrintTable();
 
@@ -264,19 +264,6 @@ namespace SolitaireHelper.nUnitTests
             // Assert
             Assert.IsTrue(numberOfCardsInStock == 0);
             Assert.IsTrue(numberOfCardsInTalon == 23);
-
-        }
-        [Test]
-        public void TalonTurnoverTest()
-        {
-            /* Test if stock is empty and talon has more than 3 cards, we reverse talon, 
-             * make cards invisible and put them in stock, then 3 new cards in talon */
-
-            // Arrange
-
-            // Act
-
-            // Assert
 
         }
         [Test]

@@ -17,15 +17,15 @@ namespace SolitaireHelperModels
             fromPile.Type = from.Type;
             if(from.GetCards() != null && from.GetCards().Count > 0)
             {
-                fromPile.PushCards(from.GetCards());
+                fromPile.AddCards(from.GetCards());
             }
             From = fromPile;
 
             Pile toPile = new Pile();
             toPile.Type = to.Type;
-            if(to.GetCards() != null && to.GetCards().Count > 0)
+            if(to.GetCards() != null)
             {
-                toPile.PushCards(to.GetCards());
+                toPile.AddCards(to.GetCards());
             }
             To = toPile;
 

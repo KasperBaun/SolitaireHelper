@@ -66,7 +66,7 @@ namespace SolitaireHelperModels
             }
             else if(possibleMoves.Count == 0)
             {
-                if (table.AddCardsToTalon())
+                if (table.NewCardsInTalon())
                 {
                     FindNextMove(table);
                 }
