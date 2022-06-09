@@ -6,23 +6,21 @@ using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using SolitaireHelperModels;
-
+using SolitaireHelper.Services;
 
 namespace SolitaireHelper.ViewModels
 {
     public class NewGameViewModel : BaseViewModel
     {
-        private string player = "Kasper";
         private string date = DateTime.Today.Date.ToShortDateString();
         private string gameType = "7-Kabale";
-        private readonly Game game;
         private ImageSource imageURI;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NewGameViewModel()
         {
+            
             Title = "New Game";
-            game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString() };
             CardDeck CardDeck = new CardDeck();
             CardDeck.PrintDeck();
             //Table Table = new Table(CardDeck.Deck);
@@ -35,6 +33,8 @@ namespace SolitaireHelper.ViewModels
         }
         private async void OnSave()
         {
+            string player = NewGamePage.PlayerName;
+            Game game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString() };
             await DataStore.AddGameAsync(game);
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
@@ -100,16 +100,7 @@ namespace SolitaireHelper.ViewModels
         }
 
 
-        public string Player
-        {
-            get => player;
-            set
-            {
-                player = value;
-                var args = new PropertyChangedEventArgs(nameof(Player));
-                PropertyChanged?.Invoke(this, args);
-            }
-        }
+
 
         public string Date
         {

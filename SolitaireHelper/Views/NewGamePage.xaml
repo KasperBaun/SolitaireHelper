@@ -12,7 +12,7 @@
         <StackLayout Spacing="3" Padding="15">
             <StackLayout Orientation="Horizontal">
                 <Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand" CornerRadius="10"/>
-                <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand" CornerRadius="10"/>
+            <Button Text="Save" Clicked="GameSaved" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand" CornerRadius="10"/>
             </StackLayout>
             
             <Label Text="{Binding GameType}" 
@@ -21,11 +21,12 @@
                             FontAttributes="Bold"
                             FontSize="Medium" />
 
-            <Label Text="{Binding Player}" 
-                            LineBreakMode="NoWrap" 
-                            TextColor="Black"
-                            FontSize="Medium" />
-
+        <StackLayout Orientation="Horizontal">
+            <Entry x:Name="entry_field" Placeholder="Enter A Player Name" />
+            <Button Text="OK" Clicked="GameSaved" HorizontalOptions="FillAndExpand" CornerRadius="10"/>
+        </StackLayout>
+        
+            
             <Label Text="{Binding Date}" 
                             LineBreakMode="NoWrap"
                             TextColor="Black"
