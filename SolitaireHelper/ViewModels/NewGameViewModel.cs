@@ -7,11 +7,14 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using SolitaireHelperModels;
 using SolitaireHelper.Services;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace SolitaireHelper.ViewModels
 {
     public class NewGameViewModel : BaseViewModel
     {
+        ReadWriteXML write = new ReadWriteXML();
         private string date = DateTime.Today.Date.ToShortDateString();
         private string gameType = "7-Kabale";
         private ImageSource imageURI;
@@ -19,7 +22,6 @@ namespace SolitaireHelper.ViewModels
 
         public NewGameViewModel()
         {
-            
             Title = "New Game";
             CardDeck CardDeck = new CardDeck();
             CardDeck.PrintDeck();
@@ -34,10 +36,12 @@ namespace SolitaireHelper.ViewModels
         private async void OnSave()
         {
             string player = NewGamePage.PlayerName;
-            Game game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString() };
+            Game game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString(), GameIsFinished = false };
             await DataStore.AddGameAsync(game);
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
+            write.WriteXML(game);
+
         }
         private async void OnTakePicture(/*object sender, EventArgs e*/)
         {

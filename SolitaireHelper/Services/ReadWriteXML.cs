@@ -1,18 +1,25 @@
 ﻿using SolitaireHelperModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace SolitaireHelper.Services
 {
     public class ReadWriteXML
     {
+
+        public string file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "data.xml");
         public void WriteXML(Object gameData)
         {
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Game));
-            System.IO.FileStream file = System.IO.File.Create("PlayerHistoryData.xml");
-            serializer.Serialize(file, gameData);
-            file.Close();
+            try {
+                FileStream path = File.Create(file);
+                XmlSerializer x = new XmlSerializer(gameData.GetType());
+                x.Serialize(path, gameData);
+            }
+            catch(NullReferenceException e) { Console.WriteLine(e.StackTrace); }
         }
     }
 }
