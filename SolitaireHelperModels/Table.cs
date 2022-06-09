@@ -90,6 +90,7 @@ namespace SolitaireHelperModels
                 {
                     if(card.Visible == true)
                     {
+                        // Can the visible card be moved to a tableau?
                         foreach(Pile pile in Tableaus)
                         {
                             if (pile.IsMovePossible(card))
@@ -98,7 +99,7 @@ namespace SolitaireHelperModels
                                 moves.Add(move);
                             }
                         }
-
+                        // Can the visible card be moved to a foundation?
                         foreach (Pile pile in Foundations)
                         {
                             if (pile.IsMovePossible(card))
@@ -116,8 +117,15 @@ namespace SolitaireHelperModels
         {
             List<Move> allMoves = new List<Move> ();
 
+            // Find all possible moves in Talon
+            if (CardsInStock() >= 3)
+            {
+                List<Move> talonMoves = GetPossibleMovesInPile(Talon);
+                allMoves.AddRange(talonMoves);
+            }
+
             // Find all possible moves in Foundations
-            foreach(Pile pile in Foundations)
+            foreach (Pile pile in Foundations)
             {
                 if (pile.IsEmpty())
                 {
@@ -144,12 +152,7 @@ namespace SolitaireHelperModels
                 }
             }
 
-            // Find all possible moves in Talon
-            if (CardsInStock() >= 3)
-            {
-                List<Move> talonMoves = GetPossibleMovesInPile(Talon);
-                allMoves.AddRange(talonMoves);
-            }
+          
            
                 
             // Remove all moves that are on the infinite-moves list and uneligible moves
@@ -188,21 +191,29 @@ namespace SolitaireHelperModels
             List<Card> CardsToMove = new List<Card>();
             foreach (Card c in move.GetFrom().GetCards())
             {
+                // We found the card in the list of cards in the from pile that we want to move
                 if (c.Rank == move.GetCard().Rank && c.Suit == move.GetCard().Suit)
                 {
+                    // We make sure that if there are cards beneath the card to be moved,
+                    // that these cards move with
                     int cardIndex = move.GetFrom().GetCards().IndexOf(c);
                     int listCount = move.GetFrom().GetCards().Count;
                     CardsToMove.AddRange(move.GetFrom().GetCards().GetRange(cardIndex,(listCount - cardIndex)));
-                    // Check if the card beneath the moved card is not visible - if it is not visible, change it
-                    if(cardIndex != 0 && GetPileFromType(move.GetFrom().Type).GetCards()[cardIndex-1] != null)
-                    {
-                        GetPileFromType(move.GetFrom().Type).GetCards()[cardIndex - 1].Visible = true;
-                    }
+                    
                 }
             }
 
-            GetPileFromType(move.GetFrom().Type).RemoveCards(CardsToMove);
-            GetPileFromType(move.GetTo().Type).AddCards(CardsToMove);
+            // Find the correct pile in the table to make the move from and remove the cards
+            Pile fromPile = GetPileFromType(move.GetFrom().Type);
+            fromPile.RemoveCards(CardsToMove);
+            // Add the cards to the pile we are moving to
+            Pile toPile = GetPileFromType(move.GetTo().Type);
+            toPile.AddCards(CardsToMove);
+            // If there are cards left in the from pile, and the top card is not visible, set it to visible
+            if(fromPile.GetCards().Count > 0)
+            {
+                fromPile.GetTopCard().Visible = true;
+            }
             return;
         }
         public bool MoveIsInfiniteLoop(Move move)
