@@ -96,7 +96,10 @@ namespace SolitaireHelperModels
                             if (pile.IsMovePossible(card))
                             {
                                 Move move = new Move(from, pile, card);
-                                moves.Add(move);
+                                if (!PreviousMovesList.Exists(m => m.GetFrom() == move.GetFrom() && m.GetTo() == move.GetTo() && m.GetCard() == move.GetCard()))
+                                {
+                                    moves.Add(move);
+                                }
                             }
                         }
                         // Can the visible card be moved to a foundation?
@@ -105,7 +108,10 @@ namespace SolitaireHelperModels
                             if (pile.IsMovePossible(card))
                             {
                                 Move move = new Move(from, pile, card);
-                                moves.Add(move);
+                                if (!PreviousMovesList.Contains(move))
+                                {
+                                    moves.Add(move);
+                                }
                             }
                         }
                     }
@@ -127,11 +133,7 @@ namespace SolitaireHelperModels
             // Find all possible moves in Foundations
             foreach (Pile pile in Foundations)
             {
-                if (pile.IsEmpty())
-                {
-                    continue;
-                }
-                else
+                if (!pile.IsEmpty())
                 {
                     List<Move> pileMoves = GetPossibleMovesInPile(pile);
                     allMoves.AddRange(pileMoves);
@@ -141,23 +143,17 @@ namespace SolitaireHelperModels
             // Find all possible moves in Tableaus
             foreach (Pile pile in Tableaus)
             {
-                if (pile.IsEmpty())
-                {
-                    continue;
-                }
-                else
+                if (!pile.IsEmpty())
                 {
                     List<Move> pileMoves = GetPossibleMovesInPile(pile);
                     allMoves.AddRange(pileMoves);
+                    continue;
                 }
             }
-
-          
-           
                 
             // Remove all moves that are on the infinite-moves list and uneligible moves
             allMoves.RemoveAll(move => move.GetCard() == null || move.GetTo() == null || move.GetFrom() == null);
-            allMoves.RemoveAll(move => MoveIsInfiniteLoop(move));
+            //allMoves.RemoveAll(move => MoveIsInfiniteLoop(move));
 
             return allMoves;
         }
@@ -199,7 +195,6 @@ namespace SolitaireHelperModels
                     int cardIndex = move.GetFrom().GetCards().IndexOf(c);
                     int listCount = move.GetFrom().GetCards().Count;
                     CardsToMove.AddRange(move.GetFrom().GetCards().GetRange(cardIndex,(listCount - cardIndex)));
-                    
                 }
             }
 

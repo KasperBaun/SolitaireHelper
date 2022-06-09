@@ -9,7 +9,7 @@ namespace SolitaireHelperModels
      */
     public class Pile
     {
-        public List<Card> Cards;
+        private readonly List<Card> Cards;
         public int Type { get; set; }
 
         public Pile()
@@ -29,13 +29,16 @@ namespace SolitaireHelperModels
         }
         public void RemoveCards(List<Card> cardsToRemove)
         {
+            /*
             if(cardsToRemove == Cards)
             {
                 cardsToRemove.Clear();
             }
+            */
             foreach(Card card in cardsToRemove)
             {
-                Cards.Remove(card);
+                if(Cards.Contains(card))
+                    Cards.Remove(card);
             }
         }
         public Card GetTopCard()
