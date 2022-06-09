@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace SolitaireHelperModels
 {
-
     public class CardDeck
     {
         public List<Card> Deck { get; set; }

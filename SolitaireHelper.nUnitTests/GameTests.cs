@@ -62,7 +62,8 @@ namespace SolitaireHelper.nUnitTests
         [Test]
         public void TableSetupTest()
         {
-            /* Tests the table as a whole.
+            /* Test id's fulfilled: ST1 - Stock placement 
+             * Tests the table as a whole.
              * Test that each tableau in set up gets the correct amount of cards with correct visibility 
              * Test that the stock holds 24 cards without visibility
              * Test that foundations are empty and talon is empty     
@@ -263,6 +264,19 @@ namespace SolitaireHelper.nUnitTests
             // Assert
             Assert.IsTrue(numberOfCardsInStock == 0);
             Assert.IsTrue(numberOfCardsInTalon == 23);
+
+        }
+        [Test]
+        public void TalonTurnoverTest()
+        {
+            /* Test if stock is empty and talon has more than 3 cards, we reverse talon, 
+             * make cards invisible and put them in stock, then 3 new cards in talon */
+
+            // Arrange
+
+            // Act
+
+            // Assert
 
         }
         [Test]

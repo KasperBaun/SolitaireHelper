@@ -47,7 +47,7 @@ namespace SolitaireHelperModels
             {
                 return 0;
             }
-            throw new Exception("Error @Game.cs -> PlayGame() - table.IsTableEmpty() == false with no GameIsFinished == true");
+            throw new Exception("Error @Game.cs -> PlayGame() - table.IsTableEmpty() == false and GameIsFinished == false");
         }
         private Move FindNextMove(Table table)
         {

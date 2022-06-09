@@ -262,13 +262,13 @@ namespace SolitaireHelperModels
 
             if (CardsInStock() >= 3)
             {
-                // Take 3 cards from stock and put in talon
-                Talon.PushCards(Stock.GetCards().GetRange(0,3));
+                // Take 3 cards from stock, reverse them (flip) and put in talon
+                List<Card> newCards = Stock.GetCards().GetRange(Stock.GetCards().Count - 3, 3);
+                newCards.Reverse();
+                Talon.PushCards(newCards);
 
                 // Remove the 3 cards from stock
-                Stock.PopCards(Stock.GetCards().GetRange(0,3));
-                // TODO: Why do we have this code below?
-                Talon.GetCards().Reverse();
+                Stock.PopCards(Stock.GetCards().GetRange(Stock.GetCards().Count - 3, 3));
 
                 // All cards in talon are invisible
                 foreach(Card card in Talon.GetCards())
@@ -283,39 +283,6 @@ namespace SolitaireHelperModels
             
             return false;
             
-            /*
-            if (CardsInStock() > 0)
-            {
-                List<Card> oldTalonCards = Talon.GetCards();
-                Talon.GetCards().Clear();
-                if (CardsInStock() >= 3)
-                {
-                    List<Card> newTalonCards = Stock.GetCards().GetRange(0, 3);
-                    newTalonCards[0].Visible = true;
-                    Talon.PushCards(newTalonCards);
-
-                }
-                else
-                {
-                    List<Card> newTalonCards = Stock.GetCards();
-                    foreach (Card card in newTalonCards)
-                    {
-                        card.Visible = true;
-                    }
-                    Talon.PushCards(newTalonCards);
-                }
-                foreach (Card card in oldTalonCards)
-                {
-                    card.Visible = false;
-                }
-                Stock.PushCards(oldTalonCards);
-                //Talon.PrintPile();
-
-                return true;
-            }
-            // No cards in stock remaining
-            return false;
-            */
         }
         public int CardsInTable()
         {
