@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace SolitaireHelperModels
 {
+    [Serializable]
     public class Game
     {
         public string Id { get; set; }
