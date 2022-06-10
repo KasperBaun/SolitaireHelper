@@ -79,24 +79,32 @@ namespace SolitaireHelperModels
             Foundations.Add(F4);
             PreviousMovesList = new List<Move>();
         }
-        private List<Move> GetPossibleMovesInPile(Pile from)
+        private List<Move> GetPossibleMovesInPile(Pile fromPile)
         {
             List<Move> moves = new List<Move>();
 
             //Checks all cards for possible moves if the pile is not empty and add them to the list of possible moves. 
-            if (!from.IsEmpty())
+            if (!fromPile.IsEmpty())
             {
-                foreach (Card card in from.GetCards())
+                // If the fromPile is a foundation, we can only move the topCard
+                if(fromPile.IsFoundation())
+                {
+                    Card topCard = fromPile.GetTopCard();   
+
+                }
+                List<Card> cardsInFromPile = fromPile.GetCards();
+                foreach (Card card in cardsInFromPile)
                 {
                     if (card.Visible == true)
                     {
+
                         // Can the visible card be moved to a tableau?
                         foreach (Pile pile in Tableaus)
                         {
                             if (pile.IsMovePossible(card))
                             {
-                                int score = CalculateScore(card, from, pile);
-                                Move move = new Move(from.PileToString(), pile.PileToString(), card, score);
+                                int score = CalculateScore(card, fromPile, pile);
+                                Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
                                 if (!PreviousMovesList.Exists(m => m.GetFrom() == move.GetFrom() && m.GetTo()==move.GetTo() && m.GetCard() == move.GetCard()))
                                 {
                                     moves.Add(move);
@@ -108,8 +116,8 @@ namespace SolitaireHelperModels
                         {
                             if (pile.IsMovePossible(card))
                             {
-                                int score = CalculateScore(card, from, pile);
-                                Move move = new Move(from.PileToString(), pile.PileToString(), card, score);
+                                int score = CalculateScore(card, fromPile, pile);
+                                Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
                                 if (!PreviousMovesList.Contains(move))
                                 {
                                     moves.Add(move);
@@ -133,7 +141,7 @@ namespace SolitaireHelperModels
                 allMoves.AddRange(talonMoves);
             }
 
-            // Find all possible moves in Foundations
+            // Find all possible moves in Foundations (only top-cards)
             foreach (Pile pile in Foundations)
             {
                 if (!pile.IsEmpty())
@@ -143,7 +151,7 @@ namespace SolitaireHelperModels
                 }
             }
 
-            // Find all possible moves in Tableaus
+            // Find all possible moves in the visible cards currently in Tableaus
             foreach (Pile pile in Tableaus)
             {
                 if (!pile.IsEmpty())
@@ -163,24 +171,17 @@ namespace SolitaireHelperModels
         public Move GetBestMove(List<Move> moves)
         {
             Move bestMove = null;
-            if (moves.Count == 0)
-            {
-                return new Move(null, null, null, 0);
-            }
 
             foreach (Move move in moves)
             {
-                bool addToList = true;
-
-                if (bestMove == null && addToList)
+                if (bestMove == null)
                 {
                     bestMove = move;
                 }
-                else if (addToList && (move.GetScore() > bestMove.GetScore()))
+                if (move.GetScore() > bestMove.GetScore())
                 {
                     bestMove = move;
                 }
-
             }
             return bestMove;
         }
