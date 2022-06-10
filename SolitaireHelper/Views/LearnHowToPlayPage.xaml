@@ -1,52 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SolitaireHelper.Views.LearnHowToPlayPage">
+             x:Class="SolitaireHelper.Views.LearnHowToPlayPage"
+             Title="Learn How to Play">
     <ContentPage.Content>
-        <StackLayout Margin="20">
-            
+        <StackLayout Margin="13">
+
             <!--Top title on page-->
-            <Label Text="Rules of the game - How to play" 
+            <Label Text="Rules of the game" 
                    HorizontalOptions="CenterAndExpand" 
                    TextDecorations="Underline" 
                    FontAttributes="Bold"/>
 
             <!--Making the page scrollable-->
             <ScrollView>
-               
-                       
-            
-                 <StackLayout Orientation="Vertical" Padding="2">
-                                   
-           
 
-                 <Label Text="The following definitions apply to the game of KLondike Solitaie and its variants. &#10;A screenshot of the Klondike Solitaire can be seen below.">
-                 </Label>
 
-                 <Image Source="Game_Descriptive_Layout.png" ></Image>
 
-                 <Label Text="Suit : ♦ (diamonds) and ♥ (hearts) are red. ♣ (clubs) and ♠ (spades) are black." TextColor="Black">
-                 </Label>
+                <StackLayout Orientation="Vertical" 
+                              Padding="2">
 
-                 <Label Text="Rank : Each suit is composed of 13 cards, ranked (in ascending order): Ace, 2, 3, 4, ..., 10, Jack, Queen, King.
-                For our value functions, we also refer to a 0-based rank value: (A=0, 2=1, ..., J=10, Q=11, K=12).&#10;&#10;
+
+
+                    <Label Text="The following definitions apply to the game of Klondike Solitaie and its variants. &#10;A screenshot of the Klondike Solitaire can be seen below."/>
+
+                    <Image Source="Game_Descriptive_Layout.png" />
+
+
+                    <Label Text="subtitle test ignore" 
+                           FontAttributes="Bold"/>
+
+                    <Label Text="Suit : ♦ (diamonds) and ♥ (hearts) are red. ♣ (clubs) and ♠ (spades) are black.&#10;" 
+                           TextColor="Black" 
+                           FontSize="Subtitle"
+                           LineHeight="1.3"/>
+
+
+                    <Label Text="Rank : Each suit is composed of 13 cards, ranked (in ascending order): Ace, 2, 3, 4, ..., 10, Jack, Queen, King.
+&#10;For our value functions, we also refer to a 0-based rank value: (A=0, 2=1, ..., J=10, Q=11, K=12).
+                        &#10;&#10;
 Tableau or build or base stacks: seven stacks to build down card sequences in descending order and alternating
-colour. A card x can block another card y if x is above y in a Tableau stack and x is not resting on a face
-up card. Each card (except for Kings) has two tableau build cards, which are the two cards of opposite
-colour and next higher rank that a card can be placed on to build down the Tableau stacks.
-Searching Solitaire in Real Time 133
+ colour. A card x can block another card y if x is above y in a Tableau stack and x is not resting on a face
+                up card. Each card (except for Kings) has two tableau build cards, which are the two cards of opposite
+                colour and next higher rank that a card can be placed on to build down the Tableau stacks.
+                        &#10;&#10;
 Foundation or suit stacks: one for each suit (♦, ♣, ♥, ♠). The goal of the game is to build all 52 cards into the
-Foundation stacks in ascending order. Each card (except for Aces) has a foundation build card which is
-the suited card of preceding rank that a card can be placed on to build up the Foundation.
-Stock or deck: holds face-down cards, which can be transferred to the Talon three at a time.
+&#10;Foundation stacks in ascending order. Each card (except for Aces) has a foundation build card which is
+                the suited card of preceding rank that a card can be placed on to build up the Foundation.
+                        &#10;&#10;
+Stock or deck: holds face-down cards, which should be transferred to the Talon three at a time.
+                        &#10;&#10;
 Talon or discard or waste: holds face-up cards transferred from the Stock. The top-most card on the Talon can
-be played to the Foundation or Tableau. When the Stock is emptied, the Talon can be recycled by placing
-it as a unit face down onto the Stock" TextColor="Black">
-            </Label>
+                be played to the Foundation or Tableau. When the Stock is emptied, the Talon can be recycled by placing
+                it as a unit face down onto the Stock" 
+                           TextColor="Black" 
+                           FontSize="Subtitle" 
+                           LineHeight="1.3" />
 
-         
 
-                 </StackLayout>
+
+
+                </StackLayout>
 
             </ScrollView>
 
