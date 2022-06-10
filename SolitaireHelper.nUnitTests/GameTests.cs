@@ -272,11 +272,156 @@ namespace SolitaireHelper.nUnitTests
             /* Test that the function correctly extracts all the possible moves in the current table */
 
             // Arrange
+            // Constructor for a table with a specific set of cards
+            Pile Stock = new Pile() { Type = 0 };
+            Pile T1 = new Pile() { Type = 1 };
+            Pile T2 = new Pile() { Type = 2 };
+            Pile T3 = new Pile() { Type = 3 };
+            Pile T4 = new Pile() { Type = 4 };
+            Pile T5 = new Pile() { Type = 5 };
+            Pile T6 = new Pile() { Type = 6 };
+            Pile T7 = new Pile() { Type = 7 };
+            Pile F1 = new Pile() { Type = 8 };
+            Pile F2 = new Pile() { Type = 9 };
+            Pile F3 = new Pile() { Type = 10 };
+            Pile F4 = new Pile() { Type = 11 };
+            Pile Talon = new Pile() { Type = 12 };
+
+            Card D1 = new Card(3, 1, true);
+            T1.GetCards().Add(D1);
+
+            Card H7 = new Card(1, 7, false);
+            Card S5 = new Card(4, 5, true);
+            T2.GetCards().Add(H7);
+            T2.GetCards().Add(S5);
+
+            Card H8 = new Card(1, 8, false);
+            Card HJ = new Card(1, 11, false);
+            Card HK = new Card(1, 13, true);
+            T3.GetCards().Add(H8);
+            T3.GetCards().Add(HJ);
+            T3.GetCards().Add(HK);
+
+            Card H9 = new Card(1, 9, false);
+            Card H6 = new Card(1, 6, false);
+            Card DQ = new Card(3, 12, false);
+            Card S7 = new Card(4, 7, true);
+            T4.GetCards().Add(H9);
+            T4.GetCards().Add(H6);
+            T4.GetCards().Add(DQ);
+            T4.GetCards().Add(S7);
+
+            Card S9 = new Card(4, 9, false);
+            Card HQ = new Card(1, 12, false);
+            Card DK = new Card(3, 13, false);
+            Card H10 = new Card(1, 10, false);
+            Card C8 = new Card(2, 8, true);
+            T5.GetCards().Add(S9);
+            T5.GetCards().Add(HQ);
+            T5.GetCards().Add(DK);
+            T5.GetCards().Add(H10);
+            T5.GetCards().Add(C8);
+
+            Card S10 = new Card(4, 10, false);
+            Card H2 = new Card(1, 2, false);
+            Card SK = new Card(4, 13, false);
+            Card CA = new Card(2, 1, false);
+            Card C9 = new Card(2, 9, false);
+            Card CJ = new Card(2, 11, true);
+            T6.GetCards().Add(S10);
+            T6.GetCards().Add(H2);
+            T6.GetCards().Add(SK);
+            T6.GetCards().Add(CA);
+            T6.GetCards().Add(C9);
+            T6.GetCards().Add(CJ);
+
+            Card D5 = new Card(3, 5, false);
+            Card DJ = new Card(3, 11, false);
+            Card SJ = new Card(4, 11, false);
+            Card SQ = new Card(4, 12, false);
+            Card C10 = new Card(2, 10, false);
+            Card CQ = new Card(2, 12, false);
+            Card CK = new Card(2, 13, true);
+            T7.GetCards().Add(D5);
+            T7.GetCards().Add(DJ);
+            T7.GetCards().Add(SJ);
+            T7.GetCards().Add(SQ);
+            T7.GetCards().Add(C10);
+            T7.GetCards().Add(CQ);
+            T7.GetCards().Add(CK);
+
+            Card SA = new Card(4, 1, false);
+            Stock.GetCards().Add(SA);
+            Card S2 = new Card(4, 2, false);
+            Stock.GetCards().Add(S2);
+            Card S4 = new Card(4, 4, false);
+            Stock.GetCards().Add(S4);
+            Card D4 = new Card(3, 4, false);
+            Stock.GetCards().Add(D4);
+            Card D6 = new Card(3, 6, false);
+            Stock.GetCards().Add(D6);
+            Card D8 = new Card(3, 8, false);
+            Stock.GetCards().Add(D8);
+            Card D10 = new Card(3, 10, false);
+            Stock.GetCards().Add(D10);
+            Card C2 = new Card(2, 2, false);
+            Stock.GetCards().Add(C2);
+            Card C4 = new Card(2, 4, false);
+            Stock.GetCards().Add(C4);
+            Card C6 = new Card(2, 6, false);
+            Stock.GetCards().Add(C6);
+            Card HA = new Card(1, 1, false);
+            Stock.GetCards().Add(HA);
+            Card H3 = new Card(1, 3, false);
+            Stock.GetCards().Add(H3);
+            Card H4 = new Card(1, 4, false);
+            Stock.GetCards().Add(H4);
+            Card H5 = new Card(1, 5, false);
+            Stock.GetCards().Add(H5);
+            Card C7 = new Card(2, 7, false);
+            Stock.GetCards().Add(C7);
+            Card S3 = new Card(4, 3, false);
+            Stock.GetCards().Add(S3);
+            Card S6 = new Card(4, 6, false);
+            Stock.GetCards().Add(S6);
+            Card S8 = new Card(4, 8, false);
+            Stock.GetCards().Add(S8);
+            Card D7 = new Card(3, 7, false);
+            Stock.GetCards().Add(D7);
+            Card D9 = new Card(3, 9, false);
+            Stock.GetCards().Add(D9);
+            Card D3 = new Card(3, 3, false);
+            Stock.GetCards().Add(D3);
+            Card C3 = new Card(2, 3, false);
+            Stock.GetCards().Add(C3);
+            Card C5 = new Card(2, 5, false);
+            Stock.GetCards().Add(C5);
+            Card D2 = new Card(3, 2, false);
+            Stock.GetCards().Add(D2);
+
+            Table table = new Table(Stock,Talon,T1,T2,T3,T4,T5,T6,T7,F1,F2,F3,F4);
 
             // Act
+            table.PrintTable();
+            List<Move> moves = table.GetAllPossibleMoves();
+
+            // Moves that are possible in the current state of the table (got these moves from doing the solitaire on my table):
+            // AD from T1 -> F3
+            // D7 from Talon -> T5
+            // H4 from Talon -> T2
+            // D10 from Talon -> T6
+            // D4 from Talon -> T2
+            // SA from Talon -> 
+
+
+            Console.WriteLine("Moves in allPossibleMoves list:");
+            foreach(Move move in moves)
+            {
+                Console.WriteLine(move.ToString());
+            }
 
             // Assert
-
+            Assert.IsTrue(moves.Count == 0);
         }
 
     }
