@@ -10,16 +10,47 @@ namespace SolitaireHelper.Services
 {
     public class ReadWriteXML
     {
-
-        public string file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "data.xml");
         public void WriteXML(Object gameData)
         {
             try {
-                FileStream path = File.Create(file);
+                
                 XmlSerializer x = new XmlSerializer(gameData.GetType());
-                x.Serialize(path, gameData);
+                x.Serialize(Singleton.Instance.filePath, gameData);
             }
             catch(NullReferenceException e) { Console.WriteLine(e.StackTrace); }
+        }
+    }
+    public sealed class Singleton
+    {
+        private static Singleton instance = null;
+        public static string file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "data.xml");
+        private FileStream path = File.Create(file);
+
+        public FileStream filePath
+        {
+            get { return path; }
+            set { path = value; }
+        }
+
+
+
+        Singleton()
+        {
+        }
+
+        public static Singleton Instance
+        {
+            get
+            {
+                lock (file)
+                {
+                    if (instance == null)
+                    {
+                        instance = new Singleton();
+                    }
+                    return instance;
+                }
+            }
         }
     }
 }
