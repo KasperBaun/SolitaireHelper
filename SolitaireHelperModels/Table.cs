@@ -83,46 +83,63 @@ namespace SolitaireHelperModels
         {
             List<Move> moves = new List<Move>();
 
-            //Checks all cards for possible moves if the pile is not empty and add them to the list of possible moves. 
-            if (!fromPile.IsEmpty())
+            //Checks if the fromPile is empty
+            if (fromPile.IsEmpty())
             {
-                // If the fromPile is a foundation, we can only move the topCard
-                if(fromPile.IsFoundation())
-                {
-                    Card topCard = fromPile.GetTopCard();   
+                return moves;
+            }
 
-                }
-                List<Card> cardsInFromPile = fromPile.GetCards();
-                foreach (Card card in cardsInFromPile)
+            // If the fromPile is a foundation, we can only move the topCard
+            if(fromPile.IsFoundation())
+            {
+                Card topCard = fromPile.GetTopCard();
+                // Can the visible card be moved to a tableau?
+                foreach (Pile pile in Tableaus)
                 {
-                    if (card.Visible == true)
+                    if (pile.IsMovePossible(topCard))
                     {
+                        int score = CalculateScore(topCard, fromPile, pile);
+                        Move move = new Move(fromPile.PileToString(), pile.PileToString(), topCard, score);
+                        moves.Add(move);
+                    }
+                }
+                // Can the visible card be moved to a foundation?
+                foreach (Pile pile in Foundations)
+                {
+                    if (pile.IsMovePossible(topCard))
+                    {
+                        int score = CalculateScore(topCard, fromPile, pile);
+                        Move move = new Move(fromPile.PileToString(), pile.PileToString(), topCard, score);
+                        moves.Add(move);
+                    }
+                }
+                return moves;
+            }
 
-                        // Can the visible card be moved to a tableau?
-                        foreach (Pile pile in Tableaus)
+            List<Card> cardsInFromPile = fromPile.GetCards();
+            foreach (Card card in cardsInFromPile)
+            {
+                if (card.Visible == true)
+                {
+
+                    // Can the visible card be moved to a tableau?
+                    foreach (Pile pile in Tableaus)
+                    {
+                        if (pile.IsMovePossible(card))
                         {
-                            if (pile.IsMovePossible(card))
-                            {
-                                int score = CalculateScore(card, fromPile, pile);
-                                Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
-                                if (!PreviousMovesList.Exists(m => m.GetFrom() == move.GetFrom() && m.GetTo()==move.GetTo() && m.GetCard() == move.GetCard()))
-                                {
-                                    moves.Add(move);
-                                }
-                            }
+                            int score = CalculateScore(card, fromPile, pile);
+                            Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
+                            moves.Add(move);
                         }
-                        // Can the visible card be moved to a foundation?
-                        foreach (Pile pile in Foundations)
+                    }
+                    // Can the visible card be moved to a foundation?
+                    foreach (Pile pile in Foundations)
+                    {
+                        if (pile.IsMovePossible(card))
                         {
-                            if (pile.IsMovePossible(card))
-                            {
-                                int score = CalculateScore(card, fromPile, pile);
-                                Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
-                                if (!PreviousMovesList.Contains(move))
-                                {
-                                    moves.Add(move);
-                                }
-                            }
+                            int score = CalculateScore(card, fromPile, pile);
+                            Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
+                            moves.Add(move);
                         }
                     }
                 }
@@ -131,42 +148,35 @@ namespace SolitaireHelperModels
         }
         public List<Move> GetAllPossibleMoves()
         {
-            List<Move> allMoves = new List<Move>();
+            List<Move> moves = new List<Move>();
 
             // TODO: Make the table flip the talon over and over until we know all of the possible moves available
             // Find all possible moves in Talon
+            NewCardsInTalon();
             if (CardsInStock() >= 3)
             {
                 List<Move> talonMoves = GetPossibleMovesInPile(Talon);
-                allMoves.AddRange(talonMoves);
+                moves.AddRange(talonMoves);
             }
 
             // Find all possible moves in Foundations (only top-cards)
             foreach (Pile pile in Foundations)
             {
-                if (!pile.IsEmpty())
-                {
-                    List<Move> pileMoves = GetPossibleMovesInPile(pile);
-                    allMoves.AddRange(pileMoves);
-                }
+                List<Move> pileMoves = GetPossibleMovesInPile(pile);
+                moves.AddRange(pileMoves);
             }
 
             // Find all possible moves in the visible cards currently in Tableaus
             foreach (Pile pile in Tableaus)
             {
-                if (!pile.IsEmpty())
-                {
-                    List<Move> pileMoves = GetPossibleMovesInPile(pile);
-                    allMoves.AddRange(pileMoves);
-                    continue;
-                }
+                List<Move> pileMoves = GetPossibleMovesInPile(pile);
+                moves.AddRange(pileMoves);
             }
 
             // Remove all moves that are on the infinite-moves list and uneligible moves
-            allMoves.RemoveAll(move => move.GetCard() == null);
-            //allMoves.RemoveAll(move => MoveIsInfiniteLoop(move));
+            moves.RemoveAll(move => MoveIsInfiniteLoop(move));
 
-            return allMoves;
+            return moves;
         }
         public Move GetBestMove(List<Move> moves)
         {
@@ -187,10 +197,9 @@ namespace SolitaireHelperModels
         }
         public void MakeMove(Move move)
         {
-            if(PreviousMovesList.Count >= 10)
+            if(PreviousMovesList.Count >= 15)
             {
-                PreviousMovesList.Reverse();
-                PreviousMovesList.RemoveRange(9, PreviousMovesList.Count-9);
+                PreviousMovesList.RemoveAt(0);
             }
             PreviousMovesList.Add(move);
             List<Card> CardsToMove = new List<Card>();
@@ -459,19 +468,22 @@ namespace SolitaireHelperModels
                 default: return -1;
             }
         }
-        /*public bool MoveIsInfiniteLoop(Move move)
+        public bool MoveIsInfiniteLoop(Move move)
         {
             foreach (Move m in PreviousMovesList)
             {
-                if (m.GetCard().Rank == move.GetCard().Rank && m.GetCard().Suit == move.GetCard().Suit && m.GetFrom().Type == move.GetFrom().Type && m.GetTo().Type == move.GetTo().Type)
+                if (
+                    m.GetCard().Rank == move.GetCard().Rank 
+                    && m.GetCard().Suit == move.GetCard().Suit 
+                    && m.GetFrom() == move.GetFrom() 
+                    && m.GetTo() == move.GetTo()
+                    )
                 {
                     return true;
                 }
                 
             }
-            if (PreviousMovesList.Count >= 5)
-                PreviousMovesList.RemoveAt(0);
             return false;
-        }*/
+        }
     }
 }

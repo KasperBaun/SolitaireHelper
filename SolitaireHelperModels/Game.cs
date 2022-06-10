@@ -40,7 +40,7 @@ namespace SolitaireHelperModels
 
             if(GameIsFinished && table.IsTableEmpty())
             {
-                Console.WriteLine("Solitaire solved!\n");
+                Console.WriteLine("Solitaire succesfully solved!\n");
                 return 1;
             }
             else

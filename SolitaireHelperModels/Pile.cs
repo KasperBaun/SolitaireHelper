@@ -29,12 +29,6 @@ namespace SolitaireHelperModels
         }
         public void RemoveCards(List<Card> cardsToRemove)
         {
-            /*
-            if(cardsToRemove == Cards)
-            {
-                cardsToRemove.Clear();
-            }
-            */
             foreach(Card card in cardsToRemove)
             {
                 if(Cards.Contains(card))
@@ -99,7 +93,7 @@ namespace SolitaireHelperModels
             }
 
             //Checks if other cards can be moved to foundation
-            if (!IsEmpty() && GetTopCard().Visible && GetTopCard().Suit == card.Suit && GetTopCard().Rank == card.Rank - 1)
+            if (!IsEmpty() && card.Suit == GetTopCard().Suit && card.Rank - 1 == GetTopCard().Rank)
             {
                 return true;
             }
@@ -108,12 +102,7 @@ namespace SolitaireHelperModels
         private bool IsMoveToTableauPossible(Card card)
         {
             if(IsEmpty() && card.Rank == 13) return true;
-            /* Checks if toCard can be moved to top of this pile
-             * Checks done:
-             * - Tableau-pile should not be empty
-             * - Topcard should be visible
-             * - Topcard should have a color different than toCard
-             */
+            
             if(IsEmpty() && card.Rank != 13)
             {
                 return false;
@@ -130,13 +119,13 @@ namespace SolitaireHelperModels
         public bool IsMovePossible(Card toCard)
         {
             // Call this function if this pile is a foundation-pile
-            if(Type == 8 || Type == 9 || Type == 10 || Type == 11 )
+            if(IsFoundation())
             {
                 return IsMoveToFoundationPossible(toCard);
 
             }
             // Call this function if this pile is a tableau-pile
-            if (Type == 1 || Type == 2 || Type == 3 || Type == 4 || Type == 5 || Type == 6 || Type == 7)
+            if (IsTableau())
             {
                 return IsMoveToTableauPossible(toCard);
             }
@@ -189,22 +178,5 @@ namespace SolitaireHelperModels
                 default:    return null;
             }
         }
-    }
-
-    public enum PileTypeFromString
-    {
-        Stock = 0,
-        T1 = 1,
-        T2 = 2,
-        T3 = 3,
-        T4 = 4,
-        T5 = 5,
-        T6 = 6,
-        T7 = 7,
-        F1 = 8,
-        F2 = 9,
-        F3 = 10,
-        F4 = 11,
-        Talon = 12
     }
 }
