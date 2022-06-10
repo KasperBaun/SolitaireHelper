@@ -267,9 +267,9 @@ namespace SolitaireHelper.nUnitTests
 
         }
         [Test]
-        public void MoveTest()
+        public void GetAllPossibleMovesTest()
         {
-            /* Test that the move is correctly done and behaves as expected */
+            /* Test that the function correctly extracts all the possible moves in the current table */
 
             // Arrange
 

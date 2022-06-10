@@ -79,7 +79,7 @@ namespace SolitaireHelperModels
             Foundations.Add(F4);
             PreviousMovesList = new List<Move>();
         }
-        public List<Move> GetPossibleMovesInPile(Pile from)
+        private List<Move> GetPossibleMovesInPile(Pile from)
         {
             List<Move> moves = new List<Move>();
 
@@ -125,6 +125,7 @@ namespace SolitaireHelperModels
         {
             List<Move> allMoves = new List<Move>();
 
+            // TODO: Make the table flip the talon over and over until we know all of the possible moves available
             // Find all possible moves in Talon
             if (CardsInStock() >= 3)
             {
@@ -159,15 +160,15 @@ namespace SolitaireHelperModels
 
             return allMoves;
         }
-        public Move GetBestMove(List<Move> allPossibleMoves)
+        public Move GetBestMove(List<Move> moves)
         {
             Move bestMove = null;
-            if (allPossibleMoves.Count == 0)
+            if (moves.Count == 0)
             {
                 return new Move(null, null, null, 0);
             }
 
-            foreach (Move move in allPossibleMoves)
+            foreach (Move move in moves)
             {
                 bool addToList = true;
 
@@ -210,20 +211,6 @@ namespace SolitaireHelperModels
                 fromPile.GetTopCard().Visible = true;
             }
             return;
-        }
-        public bool MoveIsInfiniteLoop(Move move)
-        {
-            foreach (Move m in PreviousMovesList)
-            {
-                /*if (m.GetCard().Rank == move.GetCard().Rank && m.GetCard().Suit == move.GetCard().Suit && m.GetFrom().Type == move.GetFrom().Type && m.GetTo().Type == move.GetTo().Type)
-                {
-                    return true;
-                }
-                */
-            }
-            if (PreviousMovesList.Count >= 5)
-                PreviousMovesList.RemoveAt(0);
-            return false;
         }
         private int CalculateScore(Card card, Pile fromPile, Pile toPile)
         {
@@ -468,8 +455,22 @@ namespace SolitaireHelperModels
                 case "F3": return 10;
                 case "F4": return 11;
                 case "Talon": return 12;
-                default: return 0;
+                default: return -1;
             }
         }
+        /*public bool MoveIsInfiniteLoop(Move move)
+        {
+            foreach (Move m in PreviousMovesList)
+            {
+                if (m.GetCard().Rank == move.GetCard().Rank && m.GetCard().Suit == move.GetCard().Suit && m.GetFrom().Type == move.GetFrom().Type && m.GetTo().Type == move.GetTo().Type)
+                {
+                    return true;
+                }
+                
+            }
+            if (PreviousMovesList.Count >= 5)
+                PreviousMovesList.RemoveAt(0);
+            return false;
+        }*/
     }
 }
