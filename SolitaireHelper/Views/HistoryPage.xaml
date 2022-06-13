@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SolitaireHelper.Views.HistoryPage"
+             Title="{Binding Title}"
+             xmlns:local="clr-namespace:SolitaireHelper.ViewModels"  
+             xmlns:model="clr-namespace:SolitaireHelperModels;assembly=SolitaireHelperModels" x:DataType="local:HistoryViewModel">
+
+    <ContentPage.ToolbarItems>
+        <!--<ToolbarItem Text="Add" Command="{Binding AddGameCommand}" />-->
+    </ContentPage.ToolbarItems>
+    <!--
+      x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
+      https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
+    -->
+    <RefreshView x:DataType="local:HistoryViewModel" Command="{Binding LoadGamesCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <CollectionView x:Name="GamesListView"
+                ItemsSource="{Binding Games}"
+                SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Padding="12" x:DataType="model:Game">
+                        <ContentView VerticalOptions="FillAndExpand">
+                            <Image Source="card_icons.png" VerticalOptions="Start" HeightRequest="32" />
+                        </ContentView>
+                        <Label Text="{Binding GameType}" 
+                            LineBreakMode="NoWrap"
+                            TextColor="Red"
+                            FontAttributes="Bold"
+                            FontSize="16" />
+                        
+                        <Label Text="{Binding Player}" 
+                            LineBreakMode="NoWrap" 
+                            TextColor="Black"
+                            FontSize="14" />
+                        
+                        <Label Text="{Binding Date}" 
+                            LineBreakMode="NoWrap"
+                            TextColor="Black"
+                            FontAttributes="Italic"
+                            FontSize="13" />
+                        
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:HistoryViewModel}}, Path=GameTapped}"		
+                                CommandParameter="{Binding .}">
+                            </TapGestureRecognizer>
+                        </StackLayout.GestureRecognizers>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>

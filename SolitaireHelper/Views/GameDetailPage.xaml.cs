@@ -1,15 +1,14 @@
 ﻿using SolitaireHelper.ViewModels;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace SolitaireHelper.Views
 {
-    public partial class LoginPage : ContentPage
+    public partial class GameDetailPage : ContentPage
     {
-        public LoginPage()
+        public GameDetailPage()
         {
             InitializeComponent();
-            this.BindingContext = new LoginViewModel();
+            BindingContext = new GameDetailViewModel();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using SolitaireHelper.Models;
+﻿using SolitaireHelperModels;
 using SolitaireHelper.Services;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace SolitaireHelper.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        public IDataStore<Game> DataStore => DependencyService.Get<IDataStore<Game>>();
 
         bool isBusy = false;
         public bool IsBusy

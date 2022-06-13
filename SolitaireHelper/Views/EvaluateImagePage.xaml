@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SolitaireHelper.ViewModels" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Class="SolitaireHelper.Views.EvaluateImagePage"
+             Shell.NavBarIsVisible="False"
+             >
+<ContentPage.BindingContext>
+    <vm:EvaluateImageViewModel />
+</ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid>
+            <Image
+                Margin="10"
+                Aspect="AspectFill"
+                HeightRequest="500"
+                HorizontalOptions="Center"
+                Source="{Binding Photo}"
+                VerticalOptions="Start"
+                WidthRequest="500" />
+         
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

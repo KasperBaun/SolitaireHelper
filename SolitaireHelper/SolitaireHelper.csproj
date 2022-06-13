@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,7 +6,58 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\CameraPage - Copy.xaml.cs" />
+    <Compile Remove="Views\PictureConfirmationPage.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Views\EvaluateImagePage.xaml.cs">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CameraPage.xaml.cs">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Xamarin.CommunityToolkit" Version="1.2.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SolitaireHelperModels\SolitaireHelperModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\HomePage.xaml.cs">
+      <DependentUpon>HomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\GameDetailPage.xaml.cs">
+      <DependentUpon>GameDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HistoryPage.xaml.cs">
+      <DependentUpon>HistoryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\NewGamePage.xaml.cs">
+      <DependentUpon>NewGamePage.xaml</DependentUpon>
+    </Compile>
+	<Compile Update="Views\LoginPage.xaml.cs">
+		<DependentUpon>LoginPage.xaml</DependentUpon>
+	</Compile>
+	<Compile Update="Views\PictureConfirmationPage.xaml.cs">
+		<DependentUpon>PictureConfirmationPage.xaml</DependentUpon>
+	</Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\EvaluateImagePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\CameraPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SolitaireHelper.Views.AboutPage"
+             x:Class="SolitaireHelper.Views.HomePage"
              xmlns:vm="clr-namespace:SolitaireHelper.ViewModels"
              Title="{Binding Title}">
     
     <ContentPage.BindingContext>
-        <vm:AboutViewModel />
+        <vm:HomeViewModel />
     </ContentPage.BindingContext>
     
     <ContentPage.Resources>
@@ -46,21 +46,21 @@
                 <Label Text="Because why use your brain?" FontSize="14" TextColor="{StaticResource TextPrimary}" XAlign="Center" />
                 
                 <Button Margin="5,25,5,5" Text="Play new game"
-                        Command="{Binding OpenWebCommand}"
+                        Command="{Binding PlayNewGame}"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White"
                         CornerRadius="10"
                         TextTransform="None"/>
                 
                 <Button Margin="5,5,5,5" Text="Learn how to play"
-                        Command="{Binding OpenWebCommand}"
+                        Command="{Binding LearnHowToPlay}"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White"
                         CornerRadius="10"
                         TextTransform="None"/>
                 
-                <Button Margin="5,5,5,5" Text="See finished games"
-                        Command="{Binding OpenWebCommand}"
+                <Button Margin="5,5,5,5" Text="See history"
+                        Command="{Binding SeeHistory}"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White"
                         CornerRadius="10"
