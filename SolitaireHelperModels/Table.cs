@@ -140,27 +140,9 @@ namespace SolitaireHelperModels
         {
             List<Move> moves = new List<Move>();
 
-            // Find all possible moves in Talon
-            
-            while(CardsInStock() > 0)
-            {
-                NewCardsInTalon();
-                List<Move> talonMoves = GetPossibleMovesInPile(Talon);
-                if(CardsInStock()+Talon.GetCards().Count-1 >= 3)
-                {
-                    moves.AddRange(talonMoves);
-                }
-                else
-                {
-                    Console.WriteLine("This move would cause cards to be frozen in Stock: {0}",talonMoves[0]);
-                }
-            }
-
-            if(CardsInStock() == 0 && Talon.GetCards().Count < 3)
-            {
-                List<Move> talonMoves = GetPossibleMovesInPile(Talon);
-                moves.AddRange(talonMoves);
-            }
+            // Turn 3 cards to Talon and find possible move
+            DrawNewCardsToTalon();
+            moves.AddRange(GetPossibleMovesInPile(Talon));
 
             // Find all possible moves in Foundations (only top-cards)
             foreach (Pile pile in Foundations)
@@ -178,35 +160,55 @@ namespace SolitaireHelperModels
 
             if(PreviousMovesList.Count > 0)
             {
-                Move lastMove = PreviousMovesList[PreviousMovesList.Count - 1];
-                moves.RemoveAll(move => IsReverseMove(lastMove,move));
+                moves.RemoveAll(move => IsReverseMove(move));
                 moves.RemoveAll(move => MoveIsInPreviousMovesList(move));
-                /*
-                foreach(Move move in moves)
-                {
-                    if (IsReverseMove(lastMove, move)){
-                        moves.Remove(move);
-                    }
-                    if (MoveIsInPreviousMovesList(move))
-                    {
-                        Console.WriteLine("Move is in PreviousMovesList: " + move.ToString());
-                        //moves.Remove(move);
-                        continue;
-                    }
-                }
-                */
-                // Remove all moves that are on the infinite-moves list and uneligible moves
             }
 
             return moves;
         }
-        private bool IsReverseMove(Move lastMove, Move currentMove)
+        private bool IsReverseMove(Move currentMove)
         {
-            if (lastMove.GetCard() == currentMove.GetCard() && lastMove.GetFrom() == currentMove.GetTo() && lastMove.GetTo() == currentMove.GetFrom())
+            foreach(Move move in PreviousMovesList)
             {
-                return true;
+                if (move.GetCard() == currentMove.GetCard() && move.GetFrom() == currentMove.GetTo() && move.GetTo() == currentMove.GetFrom())
+                {
+                    return true;
+                }
             }
             return false;
+        }
+        public Move FindNextMove()
+        {
+            /* This function is responsible for the primary logic in the solving of the solitaire game.
+             * This is done as so:
+             * 1. Check that the solitaire on the table is not solved by counting the amount of king-cards in the foundations with the method IsTableEmpty().
+             * 2. Create a list of all possible moves from the current state of the table
+             * 3. If that list contains valid moves, find the move with the highest score (ranked by CalculateScore() method)
+             * 4. Return that move
+             */
+
+            // This accounts for the case where all the foundations are full and the solitaire is solved
+            if (IsTableEmpty())
+            {
+                return null;
+            }
+
+            List<Move> possibleMoves = GetAllPossibleMoves();
+
+            if (possibleMoves.Count > 0)
+            {
+                Move bestMove = GetBestMove(possibleMoves);
+                if (bestMove != null)
+                {
+                    return bestMove;
+                }
+                else
+                {
+                    DrawNewCardsToTalon();
+                    FindNextMove();
+                }
+            }
+            return null;
         }
         public Move GetBestMove(List<Move> moves)
         {
@@ -316,13 +318,16 @@ namespace SolitaireHelperModels
         }
         public bool IsTableEmpty()
         {
-            int cardsInFoundations = 0;
+            int kingsInFoundations = 0;
             foreach (Pile pile in Foundations)
             {
-                cardsInFoundations += pile.GetCards().Count;
+                if (pile.GetCards().Count > 0 && pile.GetTopCard().Rank == 13)
+                {
+                    kingsInFoundations++;
+                }
             }
 
-            if (cardsInFoundations == 52)
+            if (kingsInFoundations == 4)
                 return true;
             else
                 return false;
@@ -331,7 +336,11 @@ namespace SolitaireHelperModels
         {
             return Stock.GetCards().Count;
         }
-        public bool NewCardsInTalon()
+        public int CardsInTalon()
+        {
+            return Talon.GetCards().Count;
+        }
+        public bool DrawNewCardsToTalon()
         {
 
             if (CardsInStock() >= 3)
@@ -352,7 +361,7 @@ namespace SolitaireHelperModels
 
                 // Top card is visible
                 Talon.GetTopCard().Visible = true;
-                //Console.WriteLine(Talon.GetTopCard().ToString());
+                //Console.WriteLine("Drawing new cards to talon. Visible card: " + Talon.GetTopCard().ToString());
                 return true;
             }
 
@@ -362,7 +371,7 @@ namespace SolitaireHelperModels
                 // Take the cards from talon and put under stock
                 Stock.AddCards(Talon.GetCards().GetRange(0, Talon.GetCards().Count));
                 Talon.GetCards().Clear();
-                NewCardsInTalon();
+                DrawNewCardsToTalon();
             }
 
             return false;
