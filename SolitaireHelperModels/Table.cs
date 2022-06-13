@@ -152,9 +152,10 @@ namespace SolitaireHelperModels
 
             // TODO: Make the table flip the talon over and over until we know all of the possible moves available
             // Find all possible moves in Talon
-            NewCardsInTalon();
-            if (CardsInStock() >= 3)
+            
+            while(CardsInStock() > 0)
             {
+                NewCardsInTalon();
                 List<Move> talonMoves = GetPossibleMovesInPile(Talon);
                 moves.AddRange(talonMoves);
             }
@@ -197,7 +198,7 @@ namespace SolitaireHelperModels
         }
         public void MakeMove(Move move)
         {
-            if(PreviousMovesList.Count >= 15)
+            if(PreviousMovesList.Count > 0)
             {
                 PreviousMovesList.RemoveAt(0);
             }
@@ -220,6 +221,9 @@ namespace SolitaireHelperModels
             {
                 fromPile.GetTopCard().Visible = true;
             }
+            // Take cards from Talon and put in Stock
+            RefillStock();
+
             return;
         }
         private int CalculateScore(Card card, Pile fromPile, Pile toPile)
@@ -272,6 +276,15 @@ namespace SolitaireHelperModels
 
             return -1;
         }
+        private void RefillStock()
+        {
+            foreach (Card card in Talon.GetCards())
+            {
+                card.Visible = false;
+            }
+            Stock.AddCards(Talon.GetCards());
+            Talon.GetCards().Clear();
+        }
         public bool IsTableEmpty()
         {
             int cardsInFoundations = 0;
@@ -291,10 +304,33 @@ namespace SolitaireHelperModels
         }
         public bool NewCardsInTalon()
         {
+            if (CardsInStock() >= 3)
+            {
+                // Take 3 cards from stock, reverse them (flip) and put in talon
+                List<Card> newCards = Stock.GetCards().GetRange(0, 3);
+                //newCards.Reverse();
+                Talon.AddCards(newCards);
+
+                // Remove the 3 cards from stock
+                Stock.RemoveCards(Stock.GetCards().GetRange(0, 3));
+
+                // All cards in talon are invisible
+                foreach (Card card in Talon.GetCards())
+                {
+                    card.Visible = false;
+                }
+
+                // Top card is visible
+                Talon.GetTopCard().Visible = true;
+                //Console.WriteLine(Talon.GetTopCard().ToString());
+                return true;
+            }
+
             // No cards in stock but more than 3 in Talon
+            /*
             if (CardsInStock() == 0 && Talon.GetCards().Count > 3)
             {
-                Talon.GetCards().Reverse();
+                //Talon.GetCards().Reverse();
                 foreach (Card card in Talon.GetCards())
                 {
                     card.Visible = false;
@@ -302,6 +338,7 @@ namespace SolitaireHelperModels
                 Stock.AddCards(Talon.GetCards());
                 Talon.GetCards().Clear();
             }
+            */
             // This accounts for algorithm rule ST-2 (Stock minimum rule)
             if (CardsInStock() < 3 && Talon.GetCards().Count + CardsInStock() >= 3)
             {
@@ -312,26 +349,6 @@ namespace SolitaireHelperModels
                 NewCardsInTalon();
             }
 
-            if (CardsInStock() >= 3)
-            {
-                // Take 3 cards from stock, reverse them (flip) and put in talon
-                List<Card> newCards = Stock.GetCards().GetRange(Stock.GetCards().Count - 3, 3);
-                newCards.Reverse();
-                Talon.AddCards(newCards);
-
-                // Remove the 3 cards from stock
-                Stock.RemoveCards(Stock.GetCards().GetRange(Stock.GetCards().Count - 3, 3));
-
-                // All cards in talon are invisible
-                foreach (Card card in Talon.GetCards())
-                {
-                    card.Visible = false;
-                }
-
-                // Top card is visible
-                Talon.GetCards()[Talon.GetCards().Count - 1].Visible = true;
-                return true;
-            }
 
             return false;
 

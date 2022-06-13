@@ -398,11 +398,16 @@ namespace SolitaireHelper.nUnitTests
             Stock.GetCards().Add(C5);
             Card D2 = new Card(3, 2, false);
             Stock.GetCards().Add(D2);
+           
 
             Table table = new Table(Stock,Talon,T1,T2,T3,T4,T5,T6,T7,F1,F2,F3,F4);
 
             // Act
             table.PrintTable();
+            // Vender bunken om på grund af manuel fejl ved indtastning.
+            table.GetPileFromType(0).PrintPile();
+            Stock.GetCards().Reverse();
+            table.GetPileFromType(0).PrintPile();
             List<Move> moves = table.GetAllPossibleMoves();
 
             // Moves that are possible in the current state of the table (got these moves from doing the solitaire on my table):
@@ -411,7 +416,7 @@ namespace SolitaireHelper.nUnitTests
             // H4 from Talon -> T2
             // D10 from Talon -> T6
             // D4 from Talon -> T2
-            // SA from Talon -> 
+            // SA from Talon -> F4
 
 
             Console.WriteLine("Moves in allPossibleMoves list:");
@@ -421,7 +426,7 @@ namespace SolitaireHelper.nUnitTests
             }
 
             // Assert
-            Assert.IsTrue(moves.Count == 0);
+            Assert.IsTrue(moves.Count == 6);
         }
 
     }
