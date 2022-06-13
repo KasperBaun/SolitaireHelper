@@ -175,7 +175,7 @@ namespace SolitaireHelperModels
             }
 
             // Remove all moves that are on the infinite-moves list and uneligible moves
-            moves.RemoveAll(move => MoveIsInfiniteLoop(move));
+            moves.RemoveAll(move => MoveIsInPreviousMovesList(move));
 
             return moves;
         }
@@ -234,7 +234,7 @@ namespace SolitaireHelperModels
             }
 
             // Test if ace can move to any of the Foundations
-            if (card.Rank == 1 && fromPile.IsTableau() && toPile.IsFoundation())
+            if (card.Rank == 1 && toPile.IsFoundation())
             {
                 return 95 + fromPile.GetCards().Count;
             }
@@ -378,6 +378,38 @@ namespace SolitaireHelperModels
                 Console.WriteLine(card.ToString());
             }
 
+            Console.WriteLine("\nF1:");
+            if (Foundations[0].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[0].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nF2:");
+            if (Foundations[1].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[1].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nF3:");
+            if (Foundations[2].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[2].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nF4:");
+            if (Foundations[3].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[3].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
             Console.WriteLine("\nT1:");
             if (Tableaus[0].GetCards().Count == 0)
                 Console.WriteLine("Empty");
@@ -485,7 +517,7 @@ namespace SolitaireHelperModels
                 default: return -1;
             }
         }
-        public bool MoveIsInfiniteLoop(Move move)
+        public bool MoveIsInPreviousMovesList(Move move)
         {
             foreach (Move m in PreviousMovesList)
             {

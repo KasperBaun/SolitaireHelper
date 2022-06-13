@@ -7,9 +7,11 @@ namespace SolitaireHelper.nUnitTests
 {
     public class GameTests
     {
+        Table table;
         [SetUp]
         public void Setup()
         {
+            table = TestTable();
         }
 
         [Test]
@@ -272,6 +274,65 @@ namespace SolitaireHelper.nUnitTests
             /* Test that the function correctly extracts all the possible moves in the current table */
 
             // Arrange
+
+            // Act
+            table.PrintTable();
+            table.GetPileFromType(0).PrintPile();
+            List<Move> moves = table.GetAllPossibleMoves();
+
+            // Moves that are possible in the current state of the table (got these moves from doing the solitaire on my table):
+            // AD from T1 -> F3
+            // D7 from Talon -> T5
+            // H4 from Talon -> T2
+            // D10 from Talon -> T6
+            // D4 from Talon -> T2
+            // SA from Talon -> F4
+
+
+            Console.WriteLine("Moves in allPossibleMoves list:");
+            foreach(Move move in moves)
+            {
+                Console.WriteLine(move.ToString());
+            }
+
+            // Assert
+            Assert.IsTrue(moves.Count == 6);
+        }
+        [Test]
+        public void MakeMoveTest()
+        {
+            /* Tests that the move is made correctly on the table */
+
+            // Arrange
+            List<Move> moves = table.GetAllPossibleMoves();
+            Move bestMove = table.GetBestMove(moves);
+            Console.WriteLine(bestMove.ToString());
+
+            // Act
+            table.MakeMove(bestMove);
+            table.PrintTable();
+            // Ace of Spades from Talon -> F4 has a score of 119
+
+
+
+            // Assert - What do we expect?
+            // 1. The move made is added to PreviousMovesList and the score is 119
+            Assert.IsTrue(bestMove.GetScore() == 119);
+            Assert.IsTrue(table.MoveIsInPreviousMovesList(bestMove));
+
+            // 2. The card is moved from fromPile to toPile and the state of the piles is correct (hidden topCards set to visible etc.)
+            Assert.IsFalse(table.GetPileFromType(0).GetCards().Contains(bestMove.GetCard()));
+            Assert.IsTrue(table.GetPileFromType(11).GetCards().Contains(bestMove.GetCard()));   
+
+            // 3. Stock is refilled and Talon is empty
+            Assert.IsTrue(table.GetPileFromType(0).IsEmpty() != true);
+            Assert.IsTrue(table.GetPileFromType(12).IsEmpty() == true);
+            Assert.IsTrue(table.CardsInStock() == 23);
+
+        }
+
+        public Table TestTable()
+        {
             // Constructor for a table with a specific set of cards
             Pile Stock = new Pile() { Type = 0 };
             Pile T1 = new Pile() { Type = 1 };
@@ -398,35 +459,11 @@ namespace SolitaireHelper.nUnitTests
             Stock.GetCards().Add(C5);
             Card D2 = new Card(3, 2, false);
             Stock.GetCards().Add(D2);
-           
-
-            Table table = new Table(Stock,Talon,T1,T2,T3,T4,T5,T6,T7,F1,F2,F3,F4);
-
-            // Act
-            table.PrintTable();
-            // Vender bunken om på grund af manuel fejl ved indtastning.
-            table.GetPileFromType(0).PrintPile();
+            // Vender Stock pga fejl i manuel indtastning.
             Stock.GetCards().Reverse();
-            table.GetPileFromType(0).PrintPile();
-            List<Move> moves = table.GetAllPossibleMoves();
-
-            // Moves that are possible in the current state of the table (got these moves from doing the solitaire on my table):
-            // AD from T1 -> F3
-            // D7 from Talon -> T5
-            // H4 from Talon -> T2
-            // D10 from Talon -> T6
-            // D4 from Talon -> T2
-            // SA from Talon -> F4
 
 
-            Console.WriteLine("Moves in allPossibleMoves list:");
-            foreach(Move move in moves)
-            {
-                Console.WriteLine(move.ToString());
-            }
-
-            // Assert
-            Assert.IsTrue(moves.Count == 6);
+            return table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
         }
 
     }
