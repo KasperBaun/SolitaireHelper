@@ -169,6 +169,7 @@ namespace SolitaireHelperModels
             {
                 moves.RemoveAll(move => IsReverseMove(move));
                 moves.RemoveAll(move => MoveIsInPreviousMovesList(move));
+                moves.RemoveAll(move => move.GetScore() == -1);
             }
 
          
@@ -212,8 +213,11 @@ namespace SolitaireHelperModels
             if (possibleMoves.Count > 0)
             {
                 Move bestMove = GetBestMove(possibleMoves);
+                foreach(Move move in possibleMoves)
+                {
+                    Console.WriteLine(move.ToString());
+                }
                 Console.WriteLine("@possibleMoves.Count>0 " + bestMove.ToString());
-              
                 return bestMove;
             }
 
@@ -227,11 +231,12 @@ namespace SolitaireHelperModels
         }
         public Move GetBestMove(List<Move> moves)
         {
-            Move bestMove = new Move(null, null, null, 0);
+            Move bestMove = moves[0];
+            // Move 4S from Talon --> T2 - Score: [22]
+            // Move 2D from F3 --> T4 - Score: [-1]
 
             foreach (Move move in moves)
             {
-                bestMove = move;
                 if (move.GetScore() > bestMove.GetScore())
                 {
                     bestMove = move;
@@ -294,8 +299,14 @@ namespace SolitaireHelperModels
             {
                 return 75 + fromPile.GetCards().Count;
             }
-            // Test if card can move from Table to Foundation
+            // Test if card can move from Tableau to Foundation
             if (fromPile.IsTableau() && toPile.IsFoundation())
+            {
+                return fromPile.GetCards().Count + 40;
+            }
+
+            // Test if card can move from Talon to Foundation
+            if (fromPile.Type == 12 && toPile.IsFoundation())
             {
                 return fromPile.GetCards().Count + 40;
             }
@@ -322,6 +333,7 @@ namespace SolitaireHelperModels
         }
         private void RefillStock()
         {
+            Console.WriteLine("## Refilling stock ##");
             foreach (Card card in Talon.GetCards())
             {
                 card.Visible = false;
@@ -382,8 +394,7 @@ namespace SolitaireHelperModels
             if (CardsInStock() < 3 && Talon.GetCards().Count + CardsInStock() >= 3)
             {
                 // Take the cards from talon and put under stock
-                Stock.AddCards(Talon.GetCards().GetRange(0, Talon.GetCards().Count));
-                Talon.GetCards().Clear();
+                RefillStock();
                 DrawNewCardsToTalon();
             }
 
