@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace SolitaireHelperModels
 {
@@ -10,7 +10,7 @@ namespace SolitaireHelperModels
         private readonly List<Pile> Foundations;
         private readonly Pile Talon;
         private readonly Pile Stock;
-        private readonly List<Move> PreviousMovesList;
+        private readonly Hashtable PreviousMovesList;
 
         public Table(Pile stock, Pile talon, Pile T1, Pile T2, Pile T3, Pile T4, Pile T5, Pile T6, Pile T7, Pile F1, Pile F2, Pile F3, Pile F4)
         {
@@ -30,7 +30,7 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            PreviousMovesList = new List<Move>();
+            PreviousMovesList = new Hashtable();
         }
         public Table()
         {
@@ -78,7 +78,7 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            PreviousMovesList = new List<Move>();
+            PreviousMovesList = new Hashtable();
         }
         private List<Move> GetPossibleMovesInPile(Pile fromPile)
         {
@@ -164,27 +164,10 @@ namespace SolitaireHelperModels
                 DrawNewCardsToTalon();
                 moves.AddRange(GetPossibleMovesInPile(Talon));
             }
-
-            if (PreviousMovesList.Count > 0)
-            {
-                moves.RemoveAll(move => IsReverseMove(move));
-                moves.RemoveAll(move => MoveIsInPreviousMovesList(move));
-                moves.RemoveAll(move => move.GetScore() == -1);
-            }
-
+          
+            moves.RemoveAll(move => move.GetScore() == -1);
          
             return moves;
-        }
-        private bool IsReverseMove(Move currentMove)
-        {
-            foreach(Move move in PreviousMovesList)
-            {
-                if (move.GetCard() == currentMove.GetCard() && move.GetFrom() == currentMove.GetTo() && move.GetTo() == currentMove.GetFrom())
-                {
-                    return true;
-                }
-            }
-            return false;
         }
         public Move FindNextMove()
         {
@@ -203,21 +186,10 @@ namespace SolitaireHelperModels
             }
 
             List<Move> possibleMoves = GetAllPossibleMoves();
-            /*
-            foreach(Move move in possibleMoves)
-            {
-                Console.WriteLine(move.ToString());
-            }
-            */
 
             if (possibleMoves.Count > 0)
             {
                 Move bestMove = GetBestMove(possibleMoves);
-                foreach(Move move in possibleMoves)
-                {
-                    Console.WriteLine(move.ToString());
-                }
-                Console.WriteLine("@possibleMoves.Count>0 " + bestMove.ToString());
                 return bestMove;
             }
 
@@ -232,8 +204,6 @@ namespace SolitaireHelperModels
         public Move GetBestMove(List<Move> moves)
         {
             Move bestMove = moves[0];
-            // Move 4S from Talon --> T2 - Score: [22]
-            // Move 2D from F3 --> T4 - Score: [-1]
 
             foreach (Move move in moves)
             {
@@ -242,16 +212,12 @@ namespace SolitaireHelperModels
                     bestMove = move;
                 }
             }
-            //Console.WriteLine("@GetBestMove" + bestMove.ToString());
+
             return bestMove;
         }
         public void MakeMove(Move move)
         {
-            if(PreviousMovesList.Count > 6)
-            {
-                PreviousMovesList.RemoveAt(0);
-            }
-            PreviousMovesList.Add(move);
+            
             List<Card> CardsToMove = new List<Card>();
             // Find the correct pile in the table to make the move from and remove the cards
             Pile fromPile = GetPileFromType(GetPileTypeFromString(move.GetFrom()));
@@ -270,8 +236,6 @@ namespace SolitaireHelperModels
             {
                 fromPile.GetTopCard().Visible = true;
             }
-            // Take cards from Talon and put in Stock
-            //RefillStock();
 
             return;
         }
@@ -386,7 +350,7 @@ namespace SolitaireHelperModels
 
                 // Top card is visible
                 Talon.GetTopCard().Visible = true;
-                Console.WriteLine("Drawing new cards to talon. Visible card: " + Talon.GetTopCard().ToString());
+                Console.WriteLine("Drawing new cards to talon: " + Talon.GetTopCard().ToString());
                 return true;
             }
 
@@ -564,23 +528,6 @@ namespace SolitaireHelperModels
                 case "Talon": return 12;
                 default: return -1;
             }
-        }
-        public bool MoveIsInPreviousMovesList(Move move)
-        {
-            foreach (Move m in PreviousMovesList)
-            {
-                if (
-                    m.GetCard().Rank == move.GetCard().Rank 
-                    && m.GetCard().Suit == move.GetCard().Suit 
-                    && m.GetFrom() == move.GetFrom() 
-                    && m.GetTo() == move.GetTo()
-                    )
-                {
-                    return true;
-                }
-                
-            }
-            return false;
         }
     }
 }

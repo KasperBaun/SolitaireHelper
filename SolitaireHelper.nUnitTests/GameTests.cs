@@ -316,9 +316,8 @@ namespace SolitaireHelper.nUnitTests
 
 
             // Assert - What do we expect?
-            // 1. The move made is added to PreviousMovesList and the score is 119
+            // 1. The move score is 119
             Assert.IsTrue(bestMove.GetScore() == 96);
-            Assert.IsTrue(table.MoveIsInPreviousMovesList(bestMove));
 
             // 2. The card is moved from fromPile to toPile and the state of the piles is correct (hidden topCards set to visible etc.)
             Assert.IsFalse(table.GetPileFromType(0).GetCards().Contains(bestMove.GetCard()));
@@ -337,8 +336,6 @@ namespace SolitaireHelper.nUnitTests
             Move bestMove = table.FindNextMove();
             Console.WriteLine("1st move:");
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
             // Assert - What do we expect?
@@ -351,8 +348,6 @@ namespace SolitaireHelper.nUnitTests
             bestMove = table.FindNextMove();
             Console.WriteLine("2nd move:");
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
             // Assert - What do we expect?
@@ -368,8 +363,6 @@ namespace SolitaireHelper.nUnitTests
             bestMove = table.FindNextMove();
             Console.WriteLine("3rd move:");
             Console.WriteLine(bestMove.ToString() + "\n"); ;
-
-            // Act
             table.MakeMove(bestMove);
 
             // Assert - What do we expect?
@@ -385,8 +378,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("4th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
             // Assert - What do we expect?
@@ -403,8 +394,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("5th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
             // Assert - What do we expect?
@@ -420,8 +409,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("6th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
             // Assert - What do we expect?
@@ -438,8 +425,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("7th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
             // Assert - What do we expect?
@@ -455,16 +440,12 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("8th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
             /* 9th move */
             Console.WriteLine("9th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
             // Assert - What do we expect?
@@ -480,8 +461,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("10th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
             // Move 6C from Talon --> T7 - Score: [32]
 
@@ -489,8 +468,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("11th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
             // Move AH from Talon --> F1 - Score: [106]
 
@@ -498,8 +475,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("12th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
             // Move AS from Talon --> F4 - Score: [114]
 
@@ -507,8 +482,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("13th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
             // Move 2S from Talon --> F4 - Score: [28]
 
@@ -516,8 +489,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("14th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
             // Move 3C from Talon --> T2 - Score: [23]
 
@@ -525,8 +496,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("15th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString()+"\n");
-
-            // Act
             table.MakeMove(bestMove);
             // Move 5H from Talon --> T7 - Score: [28]
 
@@ -534,16 +503,12 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("16th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
             /* 17th move */
             Console.WriteLine("17th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
             // Move 6D from Talon --> T4 - Score: [33]
 
@@ -551,8 +516,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("18th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
             // Assert
@@ -562,8 +525,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("19th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
             // Move 6C from T7 --> T2 - Score: [40]
 
@@ -571,8 +532,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("20th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
             // Move 2D from Talon --> F3 - Score: [13]
 
@@ -580,8 +539,6 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("21th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
             // Move 4S from Talon --> T2 - Score: [22]
 
@@ -589,11 +546,9 @@ namespace SolitaireHelper.nUnitTests
             Console.WriteLine("22th move:");
             bestMove = table.FindNextMove();
             Console.WriteLine(bestMove.ToString() + "\n");
-
-            // Act
             table.MakeMove(bestMove);
 
-            /* Soltaire is stuck at this point */
+            /* Solitaire is stuck at this point */
 
 
 
@@ -602,61 +557,61 @@ namespace SolitaireHelper.nUnitTests
         public Table TestTable()
         {
             // Constructor for a table with a specific set of cards
-            Pile Stock = new Pile() { Type = 0 };
-            Pile T1 = new Pile() { Type = 1 };
-            Pile T2 = new Pile() { Type = 2 };
-            Pile T3 = new Pile() { Type = 3 };
-            Pile T4 = new Pile() { Type = 4 };
-            Pile T5 = new Pile() { Type = 5 };
-            Pile T6 = new Pile() { Type = 6 };
-            Pile T7 = new Pile() { Type = 7 };
-            Pile F1 = new Pile() { Type = 8 };
-            Pile F2 = new Pile() { Type = 9 };
-            Pile F3 = new Pile() { Type = 10 };
-            Pile F4 = new Pile() { Type = 11 };
-            Pile Talon = new Pile() { Type = 12 };
+            Pile Stock = new() { Type = 0 };
+            Pile T1 = new() { Type = 1 };
+            Pile T2 = new() { Type = 2 };
+            Pile T3 = new() { Type = 3 };
+            Pile T4 = new() { Type = 4 };
+            Pile T5 = new() { Type = 5 };
+            Pile T6 = new() { Type = 6 };
+            Pile T7 = new() { Type = 7 };
+            Pile F1 = new() { Type = 8 };
+            Pile F2 = new() { Type = 9 };
+            Pile F3 = new() { Type = 10 };
+            Pile F4 = new() { Type = 11 };
+            Pile Talon = new() { Type = 12 };
 
-            Card D1 = new Card(3, 1, true);
+            Card D1 = new(3, 1, true);
             T1.GetCards().Add(D1);
 
-            Card H7 = new Card(1, 7, false);
-            Card S5 = new Card(4, 5, true);
+            Card H7 = new(1, 7, false);
+            Card S5 = new(4, 5, true);
             T2.GetCards().Add(H7);
             T2.GetCards().Add(S5);
 
-            Card H8 = new Card(1, 8, false);
-            Card HJ = new Card(1, 11, false);
-            Card HK = new Card(1, 13, true);
+            Card H8 = new(1, 8, false);
+            Card HJ = new(1, 11, false);
+            Card HK = new(1, 13, true);
             T3.GetCards().Add(H8);
             T3.GetCards().Add(HJ);
             T3.GetCards().Add(HK);
 
-            Card H9 = new Card(1, 9, false);
-            Card H6 = new Card(1, 6, false);
-            Card DQ = new Card(3, 12, false);
-            Card S7 = new Card(4, 7, true);
+            Card H9 = new(1, 9, false);
+            Card H6 = new(1, 6, false);
+            Card DQ = new(3, 12, false);
+            Card S7 = new(4, 7, true);
             T4.GetCards().Add(H9);
             T4.GetCards().Add(H6);
             T4.GetCards().Add(DQ);
             T4.GetCards().Add(S7);
 
-            Card S9 = new Card(4, 9, false);
-            Card HQ = new Card(1, 12, false);
-            Card DK = new Card(3, 13, false);
-            Card H10 = new Card(1, 10, false);
-            Card C8 = new Card(2, 8, true);
+            Card S9 = new(4, 9, false);
+            Card HQ = new(1, 12, false);
+            Card DK = new(3, 13, false);
+            Card H10 = new(1, 10, false);
+            Card C8 = new(2, 8, true);
             T5.GetCards().Add(S9);
             T5.GetCards().Add(HQ);
             T5.GetCards().Add(DK);
             T5.GetCards().Add(H10);
             T5.GetCards().Add(C8);
 
-            Card S10 = new Card(4, 10, false);
-            Card H2 = new Card(1, 2, false);
-            Card SK = new Card(4, 13, false);
-            Card CA = new Card(2, 1, false);
-            Card C9 = new Card(2, 9, false);
-            Card CJ = new Card(2, 11, true);
+            Card S10 = new(4, 10, false);
+            Card H2 = new(1, 2, false);
+            Card SK = new(4, 13, false);
+            Card CA = new(2, 1, false);
+            Card C9 = new(2, 9, false);
+            Card CJ = new(2, 11, true);
             T6.GetCards().Add(S10);
             T6.GetCards().Add(H2);
             T6.GetCards().Add(SK);
@@ -664,13 +619,13 @@ namespace SolitaireHelper.nUnitTests
             T6.GetCards().Add(C9);
             T6.GetCards().Add(CJ);
 
-            Card D5 = new Card(3, 5, false);
-            Card DJ = new Card(3, 11, false);
-            Card SJ = new Card(4, 11, false);
-            Card SQ = new Card(4, 12, false);
-            Card C10 = new Card(2, 10, false);
-            Card CQ = new Card(2, 12, false);
-            Card CK = new Card(2, 13, true);
+            Card D5 = new(3, 5, false);
+            Card DJ = new(3, 11, false);
+            Card SJ = new(4, 11, false);
+            Card SQ = new(4, 12, false);
+            Card C10 = new(2, 10, false);
+            Card CQ = new(2, 12, false);
+            Card CK = new(2, 13, true);
             T7.GetCards().Add(D5);
             T7.GetCards().Add(DJ);
             T7.GetCards().Add(SJ);
@@ -679,53 +634,53 @@ namespace SolitaireHelper.nUnitTests
             T7.GetCards().Add(CQ);
             T7.GetCards().Add(CK);
 
-            Card SA = new Card(4, 1, false);
+            Card SA = new(4, 1, false);
             Stock.GetCards().Add(SA);
-            Card S2 = new Card(4, 2, false);
+            Card S2 = new(4, 2, false);
             Stock.GetCards().Add(S2);
-            Card S4 = new Card(4, 4, false);
+            Card S4 = new(4, 4, false);
             Stock.GetCards().Add(S4);
-            Card D4 = new Card(3, 4, false);
+            Card D4 = new(3, 4, false);
             Stock.GetCards().Add(D4);
-            Card D6 = new Card(3, 6, false);
+            Card D6 = new(3, 6, false);
             Stock.GetCards().Add(D6);
-            Card D8 = new Card(3, 8, false);
+            Card D8 = new(3, 8, false);
             Stock.GetCards().Add(D8);
-            Card D10 = new Card(3, 10, false);
+            Card D10 = new(3, 10, false);
             Stock.GetCards().Add(D10);
-            Card C2 = new Card(2, 2, false);
+            Card C2 = new(2, 2, false);
             Stock.GetCards().Add(C2);
-            Card C4 = new Card(2, 4, false);
+            Card C4 = new(2, 4, false);
             Stock.GetCards().Add(C4);
-            Card C6 = new Card(2, 6, false);
+            Card C6 = new(2, 6, false);
             Stock.GetCards().Add(C6);
-            Card HA = new Card(1, 1, false);
+            Card HA = new(1, 1, false);
             Stock.GetCards().Add(HA);
-            Card H3 = new Card(1, 3, false);
+            Card H3 = new(1, 3, false);
             Stock.GetCards().Add(H3);
-            Card H4 = new Card(1, 4, false);
+            Card H4 = new(1, 4, false);
             Stock.GetCards().Add(H4);
-            Card H5 = new Card(1, 5, false);
+            Card H5 = new(1, 5, false);
             Stock.GetCards().Add(H5);
-            Card C7 = new Card(2, 7, false);
+            Card C7 = new(2, 7, false);
             Stock.GetCards().Add(C7);
-            Card S3 = new Card(4, 3, false);
+            Card S3 = new(4, 3, false);
             Stock.GetCards().Add(S3);
-            Card S6 = new Card(4, 6, false);
+            Card S6 = new(4, 6, false);
             Stock.GetCards().Add(S6);
-            Card S8 = new Card(4, 8, false);
+            Card S8 = new(4, 8, false);
             Stock.GetCards().Add(S8);
-            Card D7 = new Card(3, 7, false);
+            Card D7 = new(3, 7, false);
             Stock.GetCards().Add(D7);
-            Card D9 = new Card(3, 9, false);
+            Card D9 = new(3, 9, false);
             Stock.GetCards().Add(D9);
-            Card D3 = new Card(3, 3, false);
+            Card D3 = new(3, 3, false);
             Stock.GetCards().Add(D3);
-            Card C3 = new Card(2, 3, false);
+            Card C3 = new(2, 3, false);
             Stock.GetCards().Add(C3);
-            Card C5 = new Card(2, 5, false);
+            Card C5 = new(2, 5, false);
             Stock.GetCards().Add(C5);
-            Card D2 = new Card(3, 2, false);
+            Card D2 = new(3, 2, false);
             Stock.GetCards().Add(D2);
             // Vender Stock pga fejl i manuel indtastning.
             Stock.GetCards().Reverse();
