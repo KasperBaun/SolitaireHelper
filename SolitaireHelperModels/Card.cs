@@ -128,5 +128,22 @@
                     return "Something went wrong";
             }
         }
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int result =  Rank.GetHashCode();
+                result = (result * 397)^(Suit.GetHashCode());
+                if (Visible)
+                {
+                    result = result * 2;
+                }
+                else
+                {
+                    result = result * 3;
+                }
+            return result;
+            }
+        }
     }    
 }

@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SolitaireHelperModels
 {
+    [Serializable]
     public class Table
     {
         private readonly List<Pile> Tableaus;
         private readonly List<Pile> Foundations;
         private readonly Pile Talon;
         private readonly Pile Stock;
-        private readonly Hashtable PreviousMovesList;
+        private readonly List<int> PreviousMovesList;
 
         public Table(Pile stock, Pile talon, Pile T1, Pile T2, Pile T3, Pile T4, Pile T5, Pile T6, Pile T7, Pile F1, Pile F2, Pile F3, Pile F4)
         {
@@ -30,7 +35,7 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            PreviousMovesList = new Hashtable();
+            PreviousMovesList = new List<int>();
         }
         public Table()
         {
@@ -78,7 +83,7 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            PreviousMovesList = new Hashtable();
+            PreviousMovesList = new List<int>();
         }
         private List<Move> GetPossibleMovesInPile(Pile fromPile)
         {
@@ -101,7 +106,11 @@ namespace SolitaireHelperModels
                     {
                         int score = CalculateScore(topCard, fromPile, pile);
                         Move move = new Move(fromPile.PileToString(), pile.PileToString(), topCard, score);
-                        moves.Add(move);
+                        int moveState = CreateTableStateHash(move);
+                        if (!PreviousMovesList.Contains(moveState))
+                        {
+                            moves.Add(move);
+                        }
                     }
                 }
                 return moves;
@@ -120,7 +129,11 @@ namespace SolitaireHelperModels
                         {
                             int score = CalculateScore(card, fromPile, pile);
                             Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
-                            moves.Add(move);
+                            int moveState = CreateTableStateHash(move);
+                            if (!PreviousMovesList.Contains(moveState))
+                            {
+                                moves.Add(move);
+                            }
                         }
                     }
                     // Can the visible card be moved to a foundation?
@@ -130,7 +143,11 @@ namespace SolitaireHelperModels
                         {
                             int score = CalculateScore(card, fromPile, pile);
                             Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
-                            moves.Add(move);
+                            int moveState = CreateTableStateHash(move);
+                            if (!PreviousMovesList.Contains(moveState))
+                            {
+                                moves.Add(move);
+                            }
                         }
                     }
                 }
@@ -201,6 +218,35 @@ namespace SolitaireHelperModels
 
             return FindNextMove();
         }
+        public int CreateTableStateHash(Move moveToBeMade)
+        {
+            int cardHashCodeSum = 0;
+            List<Card> cardsOnTable = new List<Card>();
+            cardsOnTable.AddRange(Stock.GetCards());
+            cardsOnTable.AddRange(Talon.GetCards());
+            cardsOnTable.AddRange(Tableaus[0].GetCards());
+            cardsOnTable.AddRange(Tableaus[1].GetCards());
+            cardsOnTable.AddRange(Tableaus[2].GetCards());
+            cardsOnTable.AddRange(Tableaus[3].GetCards());
+            cardsOnTable.AddRange(Tableaus[4].GetCards());
+            cardsOnTable.AddRange(Tableaus[5].GetCards());
+            cardsOnTable.AddRange(Tableaus[6].GetCards());
+            cardsOnTable.AddRange(Foundations[0].GetCards());
+            cardsOnTable.AddRange(Foundations[1].GetCards());
+            cardsOnTable.AddRange(Foundations[2].GetCards());
+            cardsOnTable.AddRange(Foundations[3].GetCards());
+            
+            foreach(Card card in cardsOnTable)
+            {
+                cardHashCodeSum += card.GetHashCode();
+                //Console.WriteLine(card.GetHashCode());
+            }
+            
+            Console.WriteLine("Stock card 0 hashcode: " + Stock.GetCards()[0].GetHashCode());
+            Console.WriteLine("cardsOnTable HashCode: " + cardHashCodeSum);
+            Console.WriteLine("moveToBeMade HashCode: " + moveToBeMade.GetHashCode());
+            return cardHashCodeSum + moveToBeMade.GetHashCode();
+        }
         public Move GetBestMove(List<Move> moves)
         {
             Move bestMove = moves[0];
@@ -217,7 +263,8 @@ namespace SolitaireHelperModels
         }
         public void MakeMove(Move move)
         {
-            
+            int stateHash = CreateTableStateHash(move);
+            PreviousMovesList.Add(stateHash);
             List<Card> CardsToMove = new List<Card>();
             // Find the correct pile in the table to make the move from and remove the cards
             Pile fromPile = GetPileFromType(GetPileTypeFromString(move.GetFrom()));

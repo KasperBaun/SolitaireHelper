@@ -553,7 +553,12 @@ namespace SolitaireHelper.nUnitTests
 
 
         }
-
+        [Test]
+        public void TableHashTest()
+        {
+            Move move = table.FindNextMove();
+            Console.WriteLine("State hash: " + table.CreateTableStateHash(move));
+        }
         public Table TestTable()
         {
             // Constructor for a table with a specific set of cards
