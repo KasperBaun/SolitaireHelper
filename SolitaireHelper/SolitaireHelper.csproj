@@ -11,6 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Views\best.pt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Views\best.pt" />
     <EmbeddedResource Include="Views\EvaluateImagePage.xaml.cs">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
