@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace SolitaireHelperModels
 {
@@ -140,8 +141,7 @@ namespace SolitaireHelperModels
         {
             List<Move> moves = new List<Move>();
 
-            // Turn 3 cards to Talon and find possible move
-            DrawNewCardsToTalon();
+            // See if there is any legal moves in talon
             moves.AddRange(GetPossibleMovesInPile(Talon));
 
             // Find all possible moves in Foundations (only top-cards)
@@ -158,12 +158,20 @@ namespace SolitaireHelperModels
                 moves.AddRange(pileMoves);
             }
 
-            if(PreviousMovesList.Count > 0)
+            // If no moves, turn 3 cards to Talon and find possible move
+            if(moves.Count == 0)
+            {
+                DrawNewCardsToTalon();
+                moves.AddRange(GetPossibleMovesInPile(Talon));
+            }
+
+            if (PreviousMovesList.Count > 0)
             {
                 moves.RemoveAll(move => IsReverseMove(move));
                 moves.RemoveAll(move => MoveIsInPreviousMovesList(move));
             }
 
+         
             return moves;
         }
         private bool IsReverseMove(Move currentMove)
@@ -194,37 +202,42 @@ namespace SolitaireHelperModels
             }
 
             List<Move> possibleMoves = GetAllPossibleMoves();
+            /*
+            foreach(Move move in possibleMoves)
+            {
+                Console.WriteLine(move.ToString());
+            }
+            */
 
             if (possibleMoves.Count > 0)
             {
                 Move bestMove = GetBestMove(possibleMoves);
-                if (bestMove != null)
-                {
-                    return bestMove;
-                }
-                else
-                {
-                    DrawNewCardsToTalon();
-                    FindNextMove();
-                }
+                Console.WriteLine("@possibleMoves.Count>0 " + bestMove.ToString());
+              
+                return bestMove;
             }
-            return null;
+
+            if(possibleMoves.Count == 0)
+            {
+                DrawNewCardsToTalon();
+                FindNextMove();
+            }
+
+            return FindNextMove();
         }
         public Move GetBestMove(List<Move> moves)
         {
-            Move bestMove = null;
+            Move bestMove = new Move(null, null, null, 0);
 
             foreach (Move move in moves)
             {
-                if (bestMove == null)
-                {
-                    bestMove = move;
-                }
+                bestMove = move;
                 if (move.GetScore() > bestMove.GetScore())
                 {
                     bestMove = move;
                 }
             }
+            //Console.WriteLine("@GetBestMove" + bestMove.ToString());
             return bestMove;
         }
         public void MakeMove(Move move)
@@ -253,7 +266,7 @@ namespace SolitaireHelperModels
                 fromPile.GetTopCard().Visible = true;
             }
             // Take cards from Talon and put in Stock
-            RefillStock();
+            //RefillStock();
 
             return;
         }
@@ -361,7 +374,7 @@ namespace SolitaireHelperModels
 
                 // Top card is visible
                 Talon.GetTopCard().Visible = true;
-                //Console.WriteLine("Drawing new cards to talon. Visible card: " + Talon.GetTopCard().ToString());
+                Console.WriteLine("Drawing new cards to talon. Visible card: " + Talon.GetTopCard().ToString());
                 return true;
             }
 

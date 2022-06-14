@@ -333,6 +333,74 @@ namespace SolitaireHelper.nUnitTests
         [Test]
         public void PlayGameTest()
         {
+            /* 1st move */
+            Move bestMove = table.FindNextMove();
+            Console.WriteLine("1st move:");
+            Console.WriteLine(bestMove.ToString());
+
+            // Act
+            table.MakeMove(bestMove);
+
+            // Assert - What do we expect?
+            // The first move to be: Move AD from T1 --> F3 - Score: [96]
+            Assert.IsTrue(bestMove.GetCard().Rank == 1 && bestMove.GetCard().Suit == 3);
+            Assert.IsTrue(table.GetPileFromType(10).GetCards().Contains(bestMove.GetCard()));
+
+
+            /* 2nd move */
+            bestMove = table.FindNextMove();
+            Console.WriteLine("2nd move:");
+            Console.WriteLine(bestMove.ToString());
+
+            // Act
+            table.MakeMove(bestMove);
+
+            // Assert - What do we expect?
+            // The second move to be: Move KC from T7 --> T1 - Score: [82]
+            Assert.IsTrue(bestMove.GetCard().Rank == 13 && bestMove.GetCard().Suit == 2);
+            Assert.IsTrue(table.GetPileFromType(1).GetCards().Contains(bestMove.GetCard()));
+            // We test that the topCard that is left in T7 after KC is moved becomes visible
+            Assert.IsTrue(table.GetPileFromType(7).GetTopCard().Visible == true);
+            Assert.IsTrue(table.GetPileFromType(7).GetTopCard().Rank == 12);
+            Assert.IsTrue(table.GetPileFromType(7).GetTopCard().Suit == 2);
+
+            /* 3rd move */
+            bestMove = table.FindNextMove();
+            Console.WriteLine("3rd move:");
+            Console.WriteLine(bestMove.ToString());
+
+            // Act
+            table.MakeMove(bestMove);
+
+            // Assert - What do we expect?
+            // The third move to be: Move QC from T7 --> T3 - Score: [36]
+            Assert.IsTrue(bestMove.GetCard().Rank == 12 && bestMove.GetCard().Suit == 2);
+            Assert.IsTrue(table.GetPileFromType(3).GetCards().Contains(bestMove.GetCard()));
+            // We test that the topCard that is left in T7 after QC is moved becomes visible
+            Assert.IsTrue(table.GetPileFromType(7).GetTopCard().Visible == true);
+            Assert.IsTrue(table.GetPileFromType(7).GetTopCard().Rank == 10);
+            Assert.IsTrue(table.GetPileFromType(7).GetTopCard().Suit == 2);
+
+            /* 4th move */
+            Console.WriteLine("4th move:");
+            bestMove = table.FindNextMove();
+            table.PrintTable();
+            Console.WriteLine(bestMove.ToString());
+
+            // Act
+            table.MakeMove(bestMove);
+
+            // Assert - What do we expect?
+            // The fourth move to be: 
+            Assert.IsTrue(bestMove.GetCard().Rank == 7 && bestMove.GetCard().Suit == 3);
+            Assert.IsTrue(table.GetPileFromType(5).GetCards().Contains(bestMove.GetCard()));
+            // We test that the topCard that is left in Talon after 7D is moved becomes visible
+            table.PrintTable();
+            Assert.IsTrue(table.GetPileFromType(12).GetTopCard().Visible == true);
+            Assert.IsTrue(table.GetPileFromType(12).GetTopCard().Rank == 9);
+            Assert.IsTrue(table.GetPileFromType(12).GetTopCard().Suit == 3);
+
+
 
         }
 
