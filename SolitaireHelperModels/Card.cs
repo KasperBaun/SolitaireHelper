@@ -130,20 +130,13 @@
         }
         public override int GetHashCode()
         {
-            unchecked
+            int vis = 0;
+            if (Visible)
             {
-                int result =  Rank.GetHashCode();
-                result = (result * 397)^(Suit.GetHashCode());
-                if (Visible)
-                {
-                    result = result * 2;
-                }
-                else
-                {
-                    result = result * 3;
-                }
-            return result;
+                vis = 1;
             }
+            return Rank+Suit+vis;
+            
         }
     }    
 }

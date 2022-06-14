@@ -220,32 +220,79 @@ namespace SolitaireHelperModels
         }
         public int CreateTableStateHash(Move moveToBeMade)
         {
-            int cardHashCodeSum = 0;
-            List<Card> cardsOnTable = new List<Card>();
-            cardsOnTable.AddRange(Stock.GetCards());
-            cardsOnTable.AddRange(Talon.GetCards());
-            cardsOnTable.AddRange(Tableaus[0].GetCards());
-            cardsOnTable.AddRange(Tableaus[1].GetCards());
-            cardsOnTable.AddRange(Tableaus[2].GetCards());
-            cardsOnTable.AddRange(Tableaus[3].GetCards());
-            cardsOnTable.AddRange(Tableaus[4].GetCards());
-            cardsOnTable.AddRange(Tableaus[5].GetCards());
-            cardsOnTable.AddRange(Tableaus[6].GetCards());
-            cardsOnTable.AddRange(Foundations[0].GetCards());
-            cardsOnTable.AddRange(Foundations[1].GetCards());
-            cardsOnTable.AddRange(Foundations[2].GetCards());
-            cardsOnTable.AddRange(Foundations[3].GetCards());
-            
-            foreach(Card card in cardsOnTable)
+            int cardsHashCodeSum = 0;
+            int moveToBeMadeHashCode = moveToBeMade.GetScore() + GetPileTypeFromString(moveToBeMade.GetFrom()) + GetPileTypeFromString(moveToBeMade.GetTo()) + moveToBeMade.GetCard().GetHashCode();
+
+
+            foreach (Card card in Stock.GetCards())
             {
-                cardHashCodeSum += card.GetHashCode();
-                //Console.WriteLine(card.GetHashCode());
+                cardsHashCodeSum += card.GetHashCode()+Stock.Type;
             }
-            
-            Console.WriteLine("Stock card 0 hashcode: " + Stock.GetCards()[0].GetHashCode());
-            Console.WriteLine("cardsOnTable HashCode: " + cardHashCodeSum);
-            Console.WriteLine("moveToBeMade HashCode: " + moveToBeMade.GetHashCode());
-            return cardHashCodeSum + moveToBeMade.GetHashCode();
+
+            foreach (Card card in Talon.GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Talon.Type;
+            }
+
+            foreach (Card card in Tableaus[0].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Tableaus[0].Type;
+            }
+
+            foreach (Card card in Tableaus[1].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Tableaus[1].Type;
+            }
+
+            foreach (Card card in Tableaus[2].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Tableaus[2].Type;
+            }
+
+            foreach (Card card in Tableaus[3].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Tableaus[3].Type;
+            }
+
+            foreach (Card card in Tableaus[4].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Tableaus[4].Type;
+            }
+
+            foreach (Card card in Tableaus[5].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Tableaus[5].Type;
+            }
+
+            foreach (Card card in Tableaus[6].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Tableaus[6].Type;
+            }
+
+            foreach (Card card in Foundations[0].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Foundations[0].Type;
+            }
+
+            foreach (Card card in Foundations[1].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Foundations[1].Type;
+            }
+
+            foreach (Card card in Foundations[2].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Foundations[2].Type;
+            }
+
+            foreach (Card card in Foundations[3].GetCards())
+            {
+                cardsHashCodeSum += card.GetHashCode() + Foundations[3].Type;
+            }
+
+            //Console.WriteLine("cardsHashCodeSum: " + cardsHashCodeSum);
+            //Console.WriteLine("moveToBeMadeHashCode: " + moveToBeMadeHashCode);
+            //Console.WriteLine("Hashcode Sum: " + cardsHashCodeSum + moveToBeMadeHashCode);
+            return cardsHashCodeSum / moveToBeMadeHashCode;
         }
         public Move GetBestMove(List<Move> moves)
         {
