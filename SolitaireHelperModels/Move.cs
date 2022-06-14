@@ -18,7 +18,7 @@ namespace SolitaireHelperModels
             Card = card;
             Score = score;
         }
-       
+
         public int GetScore()
         {
             return Score;
@@ -52,6 +52,10 @@ namespace SolitaireHelperModels
             */
 
             return "Move " + Card.RankAsChar() + Card.SuitAsChar() + " from " + From + " --> " + To + " - Score: " + "[" + Score + "]";
+        }
+        public override int GetHashCode()
+        {
+            return GetScore() + GetCard().GetHashCode();
         }
 
     }

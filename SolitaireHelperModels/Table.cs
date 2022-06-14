@@ -15,7 +15,8 @@ namespace SolitaireHelperModels
         private readonly List<Pile> Foundations;
         private readonly Pile Talon;
         private readonly Pile Stock;
-        private readonly List<int> PreviousMovesList;
+        private readonly Hashtable PreviousMovesList;
+        private int Counter { get; set; }
 
         public Table(Pile stock, Pile talon, Pile T1, Pile T2, Pile T3, Pile T4, Pile T5, Pile T6, Pile T7, Pile F1, Pile F2, Pile F3, Pile F4)
         {
@@ -35,7 +36,8 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            PreviousMovesList = new List<int>();
+            PreviousMovesList = new Hashtable();
+            Counter = 0;
         }
         public Table()
         {
@@ -83,10 +85,12 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            PreviousMovesList = new List<int>();
+            PreviousMovesList = new Hashtable();
+            Counter = 0;
         }
         private List<Move> GetPossibleMovesInPile(Pile fromPile)
         {
+            Hashtable possibleMoves = new Hashtable();
             List<Move> moves = new List<Move>();
 
             //Checks if the fromPile is empty
@@ -106,11 +110,7 @@ namespace SolitaireHelperModels
                     {
                         int score = CalculateScore(topCard, fromPile, pile);
                         Move move = new Move(fromPile.PileToString(), pile.PileToString(), topCard, score);
-                        int moveState = CreateTableStateHash(move);
-                        if (!PreviousMovesList.Contains(moveState))
-                        {
-                            moves.Add(move);
-                        }
+                        possibleMoves.Add(CreateTableStateHash(move), move);
                     }
                 }
                 return moves;
@@ -129,11 +129,7 @@ namespace SolitaireHelperModels
                         {
                             int score = CalculateScore(card, fromPile, pile);
                             Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
-                            int moveState = CreateTableStateHash(move);
-                            if (!PreviousMovesList.Contains(moveState))
-                            {
-                                moves.Add(move);
-                            }
+                            possibleMoves.Add(CreateTableStateHash(move), move);
                         }
                     }
                     // Can the visible card be moved to a foundation?
@@ -143,14 +139,20 @@ namespace SolitaireHelperModels
                         {
                             int score = CalculateScore(card, fromPile, pile);
                             Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
-                            int moveState = CreateTableStateHash(move);
-                            if (!PreviousMovesList.Contains(moveState))
-                            {
-                                moves.Add(move);
-                            }
+                            possibleMoves.Add(CreateTableStateHash(move), move);
                         }
                     }
                 }
+            }
+            foreach(DictionaryEntry m in possibleMoves)
+            {
+                if (PreviousMovesList.ContainsKey(m.Key)){
+                    if (PreviousMovesList[m.Key] == possibleMoves[m.Key])
+                    {
+                        // Dont add it
+                    }
+                }
+                moves.Add((Move)possibleMoves[m.Key]);
             }
             return moves;
         }
@@ -181,7 +183,7 @@ namespace SolitaireHelperModels
                 DrawNewCardsToTalon();
                 moves.AddRange(GetPossibleMovesInPile(Talon));
             }
-          
+            moves.RemoveAll(move => PreviousMovesList[CreateTableStateHash(move)].Equals(move));
             moves.RemoveAll(move => move.GetScore() == -1);
          
             return moves;
@@ -197,7 +199,7 @@ namespace SolitaireHelperModels
              */
 
             // This accounts for the case where all the foundations are full and the solitaire is solved
-            if (IsTableEmpty())
+            if (IsTableEmpty() || Counter > 5)
             {
                 return null;
             }
@@ -221,7 +223,7 @@ namespace SolitaireHelperModels
         public int CreateTableStateHash(Move moveToBeMade)
         {
             int cardsHashCodeSum = 0;
-            int moveToBeMadeHashCode = moveToBeMade.GetScore() + GetPileTypeFromString(moveToBeMade.GetFrom()) + GetPileTypeFromString(moveToBeMade.GetTo()) + moveToBeMade.GetCard().GetHashCode();
+            int moveToBeMadeHashCode = moveToBeMade.GetHashCode();
 
 
             foreach (Card card in Stock.GetCards())
@@ -292,7 +294,7 @@ namespace SolitaireHelperModels
             //Console.WriteLine("cardsHashCodeSum: " + cardsHashCodeSum);
             //Console.WriteLine("moveToBeMadeHashCode: " + moveToBeMadeHashCode);
             //Console.WriteLine("Hashcode Sum: " + cardsHashCodeSum + moveToBeMadeHashCode);
-            return cardsHashCodeSum / moveToBeMadeHashCode;
+            return (cardsHashCodeSum * 397)^  moveToBeMadeHashCode;
         }
         public Move GetBestMove(List<Move> moves)
         {
@@ -310,8 +312,8 @@ namespace SolitaireHelperModels
         }
         public void MakeMove(Move move)
         {
-            int stateHash = CreateTableStateHash(move);
-            PreviousMovesList.Add(stateHash);
+            Counter = 0;
+            PreviousMovesList.Add(CreateTableStateHash(move),move);
             List<Card> CardsToMove = new List<Card>();
             // Find the correct pile in the table to make the move from and remove the cards
             Pile fromPile = GetPileFromType(GetPileTypeFromString(move.GetFrom()));
@@ -391,6 +393,7 @@ namespace SolitaireHelperModels
         }
         private void RefillStock()
         {
+            Counter++;
             Console.WriteLine("## Refilling stock ##");
             foreach (Card card in Talon.GetCards())
             {
