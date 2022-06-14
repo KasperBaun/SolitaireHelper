@@ -5,6 +5,11 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using SolitaireHelper.Services;
+using System.Xml;
+using System.Xml.Linq;
+using System.IO;
+using System.Text;
 
 namespace SolitaireHelper.ViewModels
 {

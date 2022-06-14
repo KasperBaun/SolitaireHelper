@@ -1,9 +1,5 @@
-﻿using SolitaireHelperModels;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace SolitaireHelper.Services
@@ -12,27 +8,39 @@ namespace SolitaireHelper.Services
     {
         public void WriteXML(Object gameData)
         {
-            try {
-                
+            try
+            {
                 XmlSerializer x = new XmlSerializer(gameData.GetType());
-                x.Serialize(Singleton.Instance.filePath, gameData);
+                x.Serialize(Singleton.Instance.path, gameData);
+                Console.WriteLine(Singleton.Instance.file);
             }
-            catch(NullReferenceException e) { Console.WriteLine(e.StackTrace); }
+            catch
+            {
+                Console.WriteLine("ERROR: Serialization Failed!");
+            }
+            
         }
+
     }
+
+
     public sealed class Singleton
     {
         private static Singleton instance = null;
-        public static string file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "data.xml");
-        private FileStream path = File.Create(file);
+        private static string _file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "data.xml");
+        private FileStream _path = File.Create(_file);
 
-        public FileStream filePath
+        public FileStream path
         {
-            get { return path; }
-            set { path = value; }
+            get { return _path; }
+            set { _path = value; }
         }
 
-
+        public string file
+        {
+            get { return _file; }
+            set { _file = value; }
+        }
 
         Singleton()
         {
@@ -42,7 +50,7 @@ namespace SolitaireHelper.Services
         {
             get
             {
-                lock (file)
+                lock (_file)
                 {
                     if (instance == null)
                     {
