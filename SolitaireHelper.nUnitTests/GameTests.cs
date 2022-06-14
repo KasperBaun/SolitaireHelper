@@ -264,8 +264,8 @@ namespace SolitaireHelper.nUnitTests
             int numberOfCardsInStock = table.GetPileFromType(0).GetCards().Count;
 
             // Assert
-            Assert.IsTrue(numberOfCardsInStock == 0);
-            Assert.IsTrue(numberOfCardsInTalon == 23);
+            Assert.IsTrue(numberOfCardsInStock == 20);
+            Assert.IsTrue(numberOfCardsInTalon == 3);
 
         }
         [Test]
@@ -280,7 +280,7 @@ namespace SolitaireHelper.nUnitTests
             table.GetPileFromType(0).PrintPile();
             List<Move> moves = table.GetAllPossibleMoves();
 
-            // Moves that are possible in the current state of the table (got these moves from doing the solitaire on my table):
+            // Moves that are possible in the current state of the table if all talon is checked (got these moves from doing the solitaire on my table):
             // AD from T1 -> F3
             // D7 from Talon -> T5
             // H4 from Talon -> T2
@@ -288,7 +288,7 @@ namespace SolitaireHelper.nUnitTests
             // D4 from Talon -> T2
             // SA from Talon -> F4
 
-
+            Console.WriteLine("# of moves in allPossibleMoves list:" + moves.Count);
             Console.WriteLine("Moves in allPossibleMoves list:");
             foreach(Move move in moves)
             {
@@ -296,7 +296,7 @@ namespace SolitaireHelper.nUnitTests
             }
 
             // Assert
-            Assert.IsTrue(moves.Count == 6);
+            Assert.IsTrue(moves.Count == 1);
         }
         [Test]
         public void MakeMoveTest()
@@ -317,17 +317,22 @@ namespace SolitaireHelper.nUnitTests
 
             // Assert - What do we expect?
             // 1. The move made is added to PreviousMovesList and the score is 119
-            Assert.IsTrue(bestMove.GetScore() == 119);
+            Assert.IsTrue(bestMove.GetScore() == 96);
             Assert.IsTrue(table.MoveIsInPreviousMovesList(bestMove));
 
             // 2. The card is moved from fromPile to toPile and the state of the piles is correct (hidden topCards set to visible etc.)
             Assert.IsFalse(table.GetPileFromType(0).GetCards().Contains(bestMove.GetCard()));
-            Assert.IsTrue(table.GetPileFromType(11).GetCards().Contains(bestMove.GetCard()));   
+            Assert.IsTrue(table.GetPileFromType(10).GetCards().Contains(bestMove.GetCard()));   
 
             // 3. Stock is refilled and Talon is empty
             Assert.IsTrue(table.GetPileFromType(0).IsEmpty() != true);
             Assert.IsTrue(table.GetPileFromType(12).IsEmpty() == true);
-            Assert.IsTrue(table.CardsInStock() == 23);
+            Assert.IsTrue(table.CardsInStock() == 24);
+
+        }
+        [Test]
+        public void PlayGameTest()
+        {
 
         }
 
