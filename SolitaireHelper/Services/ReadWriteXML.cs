@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Xml.Serialization;
 
 namespace SolitaireHelper.Services
@@ -12,6 +13,7 @@ namespace SolitaireHelper.Services
             {
                 XmlSerializer x = new XmlSerializer(gameData.GetType());
                 x.Serialize(Singleton.Instance.path, gameData);
+                x.Serialize(Console.Out, gameData);
                 Console.WriteLine(Singleton.Instance.file);
             }
             catch
@@ -20,7 +22,6 @@ namespace SolitaireHelper.Services
             }
             
         }
-
     }
 
 
