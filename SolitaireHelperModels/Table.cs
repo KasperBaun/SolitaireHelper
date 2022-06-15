@@ -8,7 +8,7 @@ using System.Text;
 
 namespace SolitaireHelperModels
 {
-    public class Table
+    public class Table : ICloneable
     {
         private readonly List<Pile> Tableaus;
         private readonly List<Pile> Foundations;
@@ -83,6 +83,112 @@ namespace SolitaireHelperModels
             Foundations.Add(F3);
             Foundations.Add(F4);
             Counter = 0;
+        }
+        public Table(Table table)
+        {
+            // Copy constructor that deep-clones the object
+            Stock = new Pile() { Type = 0 };
+            Tableaus = new List<Pile>();
+            Foundations = new List<Pile>();
+            Pile T1 = new Pile() { Type = 1 };
+            Pile T2 = new Pile() { Type = 2 };
+            Pile T3 = new Pile() { Type = 3 };
+            Pile T4 = new Pile() { Type = 4 };
+            Pile T5 = new Pile() { Type = 5 };
+            Pile T6 = new Pile() { Type = 6 };
+            Pile T7 = new Pile() { Type = 7 };
+            Pile F1 = new Pile() { Type = 8 };
+            Pile F2 = new Pile() { Type = 9 };
+            Pile F3 = new Pile() { Type = 10 };
+            Pile F4 = new Pile() { Type = 11 };
+            Talon = new Pile() { Type = 12 };
+            foreach(Card c in table.GetPileFromType(0).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                Stock.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(1).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T1.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(2).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T2.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(3).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T3.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(4).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T4.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(5).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T5.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(6).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T6.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(7).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T7.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(8).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                F1.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(9).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                F2.GetCards().Add(card);
+            }
+            foreach (Card c in table.GetPileFromType(10).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                F3.GetCards().Add(card);
+            }
+            foreach (Card c in table.GetPileFromType(11).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                F4.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(12).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                Talon.GetCards().Add(card);
+            }
+            Tableaus.Add(T1);
+            Tableaus.Add(T2);
+            Tableaus.Add(T3);
+            Tableaus.Add(T4);
+            Tableaus.Add(T5);
+            Tableaus.Add(T6);
+            Tableaus.Add(T7);
+            Foundations.Add(F1);
+            Foundations.Add(F2);
+            Foundations.Add(F3);
+            Foundations.Add(F4);
+            Counter = table.Counter;
         }
         private List<Move> GetPossibleMovesInPile(Pile fromPile)
         {
@@ -533,20 +639,19 @@ namespace SolitaireHelperModels
                 default: return -1;
             }
         }
-        public bool IsEqual(Table tableToCompare)
+        public bool IsEqual(Table otherTable)
         {
             // Check Stock is the same
-            int stockCardsCount = tableToCompare.GetPileFromType(0).GetCards().Count;
+            int stockCardsCount = otherTable.GetPileFromType(0).GetCards().Count;
             Console.WriteLine(CardsInStock());
             Console.WriteLine(stockCardsCount);
             if(!(CardsInStock() == stockCardsCount))
             {
-                Console.WriteLine("Virker du");
                 return false;
             }
 
             // Check if Talon is the same
-            Pile talonCardsToCompare = tableToCompare.GetPileFromType(12);
+            Pile talonCardsToCompare = otherTable.GetPileFromType(12);
             if(!(CardsInTalon() == talonCardsToCompare.GetCards().Count))
             {
                 return false;
@@ -560,7 +665,7 @@ namespace SolitaireHelperModels
             }
 
             // Check T1
-            Pile t1ToCompare = tableToCompare.GetPileFromType(1);
+            Pile t1ToCompare = otherTable.GetPileFromType(1);
             if(!(GetPileFromType(1).GetCards().Count == t1ToCompare.GetCards().Count))
             {
                 return false;
@@ -577,7 +682,7 @@ namespace SolitaireHelperModels
             }
 
             // Check T2
-            Pile t2ToCompare = tableToCompare.GetPileFromType(2);
+            Pile t2ToCompare = otherTable.GetPileFromType(2);
             if (!(GetPileFromType(2).GetCards().Count == t2ToCompare.GetCards().Count))
             {
                 return false;
@@ -594,7 +699,7 @@ namespace SolitaireHelperModels
             }
 
             // Check T3
-            Pile t3ToCompare = tableToCompare.GetPileFromType(3);
+            Pile t3ToCompare = otherTable.GetPileFromType(3);
             if (!(GetPileFromType(3).GetCards().Count == t3ToCompare.GetCards().Count))
             {
                 return false;
@@ -611,7 +716,7 @@ namespace SolitaireHelperModels
             }
 
             // Check T4
-            Pile t4ToCompare = tableToCompare.GetPileFromType(4);
+            Pile t4ToCompare = otherTable.GetPileFromType(4);
             if (!(GetPileFromType(4).GetCards().Count == t4ToCompare.GetCards().Count))
             {
                 return false;
@@ -628,7 +733,7 @@ namespace SolitaireHelperModels
             }
 
             // Check T5
-            Pile t5ToCompare = tableToCompare.GetPileFromType(5);
+            Pile t5ToCompare = otherTable.GetPileFromType(5);
             if (!(GetPileFromType(5).GetCards().Count == t5ToCompare.GetCards().Count))
             {
                 return false;
@@ -645,7 +750,7 @@ namespace SolitaireHelperModels
             }
 
             // Check T6
-            Pile t6ToCompare = tableToCompare.GetPileFromType(6);
+            Pile t6ToCompare = otherTable.GetPileFromType(6);
             if (!(GetPileFromType(6).GetCards().Count == t6ToCompare.GetCards().Count))
             {
                 return false;
@@ -662,7 +767,7 @@ namespace SolitaireHelperModels
             }
 
             // Check T7
-            Pile t7ToCompare = tableToCompare.GetPileFromType(7);
+            Pile t7ToCompare = otherTable.GetPileFromType(7);
             if (!(GetPileFromType(7).GetCards().Count == t7ToCompare.GetCards().Count))
             {
                 return false;
@@ -679,34 +784,39 @@ namespace SolitaireHelperModels
             }
 
             // Check F1
-            Pile f1ToCompare = tableToCompare.GetPileFromType(8);
+            Pile f1ToCompare = otherTable.GetPileFromType(8);
             if (!(GetPileFromType(8).GetTopCard() == f1ToCompare.GetTopCard()))
             {
                 return false;
             }
 
             // Check F2
-            Pile f2ToCompare = tableToCompare.GetPileFromType(9);
+            Pile f2ToCompare = otherTable.GetPileFromType(9);
             if (!(GetPileFromType(9).GetTopCard() == f2ToCompare.GetTopCard()))
             {
                 return false;
             }
 
             // Check F3
-            Pile f3ToCompare = tableToCompare.GetPileFromType(10);
+            Pile f3ToCompare = otherTable.GetPileFromType(10);
             if (!(GetPileFromType(10).GetTopCard() == f3ToCompare.GetTopCard()))
             {
                 return false;
             }
 
             // Check F4
-            Pile f4ToCompare = tableToCompare.GetPileFromType(11);
+            Pile f4ToCompare = otherTable.GetPileFromType(11);
             if (!(GetPileFromType(11).GetTopCard() == f4ToCompare.GetTopCard()))
             {
                 return false;
             }
 
             return true;
+        }
+
+        public object Clone()
+        {
+            return new Table(this);
         }
     }
 }

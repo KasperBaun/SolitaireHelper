@@ -556,14 +556,14 @@ namespace SolitaireHelper.nUnitTests
         [Test]
         public void TableIsEqualTest()
         {
-            Table testTable = new Table();
-            testTable = TestTable();
+            Table testTable = new Table(table);
+            table.PrintTable();
+            testTable.PrintTable();
 
-            Assert.IsTrue(table.IsEqual(testTable));
+            //Assert.IsTrue(table.IsEqual(testTable));
             Console.WriteLine(table.CardsInStock());
             testTable.GetPileFromType(0).GetCards().RemoveAt(0);
             Console.WriteLine(testTable.CardsInStock());
-
 
             Assert.IsFalse(table.IsEqual(testTable));
         }
