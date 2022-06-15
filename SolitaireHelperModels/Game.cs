@@ -24,6 +24,8 @@ namespace SolitaireHelperModels
         }
         public int PlayGame(Table table)
         {
+            PreviousStates = new List<Table>();
+            int i = 0;
             while (!GameIsFinished)
             {
                 List<Move> allPossibleMoves = table.GetAllPossibleMoves();
@@ -36,6 +38,10 @@ namespace SolitaireHelperModels
                 }
                 
                 Console.WriteLine(move.ToString());
+                if(PreviousStates.Count > i){
+                    PreviousStates.Add(table);
+                }
+                i--;
                 table.MakeMove(move);
                 continue;
             }
@@ -56,15 +62,27 @@ namespace SolitaireHelperModels
             // Find det bedste træk
             // Check om det bedste træk er lavet før (kig i PreviousStates) - hvis ikke, udfør det og gem Table-state i PreviousStates
             // Hvis trækket er lavet før, find et nyt bedste træk.
+            if(allPossibleMoves.Count == 0)
+            {
+                if (table.DrawNewCardsToTalon())
+                {
+                    allPossibleMoves = table.GetAllPossibleMoves();
+                }
+            }
             Move move = GetBestMove(allPossibleMoves);
+            if(move == null)
+            {
+                GameIsFinished = true;
+                return null;
+            }
             // Copy-constructor bliver brugt her og laver en kopi af det nuværende table.
             // Derefter udfører den trækket fra GetBestMove på kopien af vores Table
             Table newState = new Table(table);
             newState.MakeMove(move);
-            Console.WriteLine("Nyt table");
-            newState.PrintTable();
-            Console.WriteLine("Gammelt table");
-            table.PrintTable();
+            //Console.WriteLine("Nyt table");
+            //newState.PrintTable();
+            //Console.WriteLine("Gammelt table");
+            //table.PrintTable();
 
             if (PreviousStates.Exists(t => newState.IsEqual(t)))
             {
@@ -76,6 +94,10 @@ namespace SolitaireHelperModels
         }
         private Move GetBestMove(List<Move> moves)
         {
+            if(moves.Count == 0)
+            {
+                return null;
+            }
             Move bestMove = moves[0];
 
             foreach (Move move in moves)

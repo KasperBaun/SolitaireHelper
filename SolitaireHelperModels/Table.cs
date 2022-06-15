@@ -87,9 +87,9 @@ namespace SolitaireHelperModels
         public Table(Table table)
         {
             // Copy constructor that deep-clones the object
-            Stock = new Pile() { Type = 0 };
             Tableaus = new List<Pile>();
             Foundations = new List<Pile>();
+            Stock = new Pile() { Type = 0 };
             Pile T1 = new Pile() { Type = 1 };
             Pile T2 = new Pile() { Type = 2 };
             Pile T3 = new Pile() { Type = 3 };
@@ -442,6 +442,10 @@ namespace SolitaireHelperModels
         }
         public bool DrawNewCardsToTalon()
         {
+            if(Counter > 5)
+            {
+                return false;
+            }
 
             if (CardsInStock() >= 3)
             {
@@ -644,8 +648,8 @@ namespace SolitaireHelperModels
         {
             // Check Stock is the same
             int stockCardsCount = otherTable.GetPileFromType(0).GetCards().Count;
-            Console.WriteLine(CardsInStock());
-            Console.WriteLine(stockCardsCount);
+            //Console.WriteLine(CardsInStock());
+            //Console.WriteLine(stockCardsCount);
             if(!(CardsInStock() == stockCardsCount))
             {
                 return false;
