@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using SolitaireHelperModels;
-
+using SolitaireHelper.Services;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace SolitaireHelper.ViewModels
 {
     public class NewGameViewModel : BaseViewModel
     {
-        private string player = "Kasper";
+        ReadWriteXML write = new ReadWriteXML();
         private string date = DateTime.Today.Date.ToShortDateString();
         private string gameType = "7-Kabale";
-        private readonly Game game;
         private ImageSource imageURI;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NewGameViewModel()
         {
             Title = "New Game";
-            game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString() };
             CardDeck CardDeck = new CardDeck();
             CardDeck.PrintDeck();
             //Table Table = new Table(CardDeck.Deck);
@@ -35,9 +35,13 @@ namespace SolitaireHelper.ViewModels
         }
         private async void OnSave()
         {
+            string player = NewGamePage.PlayerName;
+            Game game = new Game() { Player = player, Date = date, GameType = gameType, Id = Guid.NewGuid().ToString(), GameIsFinished = false };
             await DataStore.AddGameAsync(game);
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
+            write.WriteXML(game);
+
         }
         private async void OnTakePicture(/*object sender, EventArgs e*/)
         {
@@ -100,16 +104,7 @@ namespace SolitaireHelper.ViewModels
         }
 
 
-        public string Player
-        {
-            get => player;
-            set
-            {
-                player = value;
-                var args = new PropertyChangedEventArgs(nameof(Player));
-                PropertyChanged?.Invoke(this, args);
-            }
-        }
+
 
         public string Date
         {
