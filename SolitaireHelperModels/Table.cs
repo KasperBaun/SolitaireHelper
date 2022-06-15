@@ -332,7 +332,8 @@ namespace SolitaireHelperModels
             Pile fromPile = GetPileFromType(GetPileTypeFromString(move.GetFrom()));
             // We make sure that if there are cards beneath the card to be moved,
             // that these cards move with
-            int cardIndex = fromPile.GetCards().IndexOf(move.GetCard());
+
+            int cardIndex = fromPile.GetCards().FindIndex(c => c.Rank == move.GetCard().Rank && c.Suit == move.GetCard().Suit && c.Visible == move.GetCard().Visible);
             int listCount = fromPile.GetCards().Count;
             CardsToMove.AddRange(fromPile.GetCards().GetRange(cardIndex, (listCount - cardIndex)));
             fromPile.RemoveCards(CardsToMove);

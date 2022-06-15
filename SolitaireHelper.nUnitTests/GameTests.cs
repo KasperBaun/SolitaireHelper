@@ -557,8 +557,8 @@ namespace SolitaireHelper.nUnitTests
         public void TableIsEqualTest()
         {
             Table testTable = new Table(table);
-            table.PrintTable();
-            testTable.PrintTable();
+            //table.PrintTable();
+            //testTable.PrintTable();
 
             //Assert.IsTrue(table.IsEqual(testTable));
             Console.WriteLine(table.CardsInStock());

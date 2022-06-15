@@ -58,7 +58,8 @@ namespace SolitaireHelperModels
             // Check om det bedste træk er lavet før (kig i PreviousStates) - hvis ikke, udfør det og gem Table-state i PreviousStates
             // Hvis trækket er lavet før, find et nyt bedste træk.
             Move move = GetBestMove(allPossibleMoves);
-            Table newState = table.MakeMove(move);
+            Table newState = new Table(table);
+            newState.MakeMove(move);
             Console.WriteLine("Nyt table");
             newState.PrintTable();
             Console.WriteLine("Gammelt table");
