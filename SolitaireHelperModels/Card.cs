@@ -135,7 +135,7 @@
             {
                 vis = 1;
             }
-            return Rank+Suit+vis;
+            return Rank+Suit*100+vis;
             
         }
     }    

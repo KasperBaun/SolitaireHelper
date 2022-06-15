@@ -554,10 +554,18 @@ namespace SolitaireHelper.nUnitTests
 
         }
         [Test]
-        public void TableHashTest()
+        public void TableIsEqualTest()
         {
-            Move move = table.FindNextMove();
-            Console.WriteLine("State hash: " + table.CreateTableStateHash(move));
+            Table testTable = new Table();
+            testTable = TestTable();
+
+            Assert.IsTrue(table.IsEqual(testTable));
+            Console.WriteLine(table.CardsInStock());
+            testTable.GetPileFromType(0).GetCards().RemoveAt(0);
+            Console.WriteLine(testTable.CardsInStock());
+
+
+            Assert.IsFalse(table.IsEqual(testTable));
         }
         public Table TestTable()
         {

@@ -8,14 +8,12 @@ using System.Text;
 
 namespace SolitaireHelperModels
 {
-    [Serializable]
     public class Table
     {
         private readonly List<Pile> Tableaus;
         private readonly List<Pile> Foundations;
         private readonly Pile Talon;
         private readonly Pile Stock;
-        private readonly Hashtable PreviousMovesList;
         private int Counter { get; set; }
 
         public Table(Pile stock, Pile talon, Pile T1, Pile T2, Pile T3, Pile T4, Pile T5, Pile T6, Pile T7, Pile F1, Pile F2, Pile F3, Pile F4)
@@ -36,7 +34,6 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            PreviousMovesList = new Hashtable();
             Counter = 0;
         }
         public Table()
@@ -85,12 +82,10 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            PreviousMovesList = new Hashtable();
             Counter = 0;
         }
         private List<Move> GetPossibleMovesInPile(Pile fromPile)
         {
-            Hashtable possibleMoves = new Hashtable();
             List<Move> moves = new List<Move>();
 
             //Checks if the fromPile is empty
@@ -110,7 +105,7 @@ namespace SolitaireHelperModels
                     {
                         int score = CalculateScore(topCard, fromPile, pile);
                         Move move = new Move(fromPile.PileToString(), pile.PileToString(), topCard, score);
-                        possibleMoves.Add(CreateTableStateHash(move), move);
+                        moves.Add(move);
                     }
                 }
                 return moves;
@@ -129,7 +124,7 @@ namespace SolitaireHelperModels
                         {
                             int score = CalculateScore(card, fromPile, pile);
                             Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
-                            possibleMoves.Add(CreateTableStateHash(move), move);
+                            moves.Add(move);
                         }
                     }
                     // Can the visible card be moved to a foundation?
@@ -139,21 +134,12 @@ namespace SolitaireHelperModels
                         {
                             int score = CalculateScore(card, fromPile, pile);
                             Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
-                            possibleMoves.Add(CreateTableStateHash(move), move);
+                            moves.Add(move);
                         }
                     }
                 }
             }
-            foreach(DictionaryEntry m in possibleMoves)
-            {
-                if (PreviousMovesList.ContainsKey(m.Key)){
-                    if (PreviousMovesList[m.Key] == possibleMoves[m.Key])
-                    {
-                        // Dont add it
-                    }
-                }
-                moves.Add((Move)possibleMoves[m.Key]);
-            }
+            
             return moves;
         }
         public List<Move> GetAllPossibleMoves()
@@ -183,9 +169,7 @@ namespace SolitaireHelperModels
                 DrawNewCardsToTalon();
                 moves.AddRange(GetPossibleMovesInPile(Talon));
             }
-            moves.RemoveAll(move => PreviousMovesList[CreateTableStateHash(move)].Equals(move));
-            moves.RemoveAll(move => move.GetScore() == -1);
-         
+            
             return moves;
         }
         public Move FindNextMove()
@@ -220,82 +204,6 @@ namespace SolitaireHelperModels
 
             return FindNextMove();
         }
-        public int CreateTableStateHash(Move moveToBeMade)
-        {
-            int cardsHashCodeSum = 0;
-            int moveToBeMadeHashCode = moveToBeMade.GetHashCode();
-
-
-            foreach (Card card in Stock.GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode()+Stock.Type;
-            }
-
-            foreach (Card card in Talon.GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Talon.Type;
-            }
-
-            foreach (Card card in Tableaus[0].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Tableaus[0].Type;
-            }
-
-            foreach (Card card in Tableaus[1].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Tableaus[1].Type;
-            }
-
-            foreach (Card card in Tableaus[2].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Tableaus[2].Type;
-            }
-
-            foreach (Card card in Tableaus[3].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Tableaus[3].Type;
-            }
-
-            foreach (Card card in Tableaus[4].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Tableaus[4].Type;
-            }
-
-            foreach (Card card in Tableaus[5].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Tableaus[5].Type;
-            }
-
-            foreach (Card card in Tableaus[6].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Tableaus[6].Type;
-            }
-
-            foreach (Card card in Foundations[0].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Foundations[0].Type;
-            }
-
-            foreach (Card card in Foundations[1].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Foundations[1].Type;
-            }
-
-            foreach (Card card in Foundations[2].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Foundations[2].Type;
-            }
-
-            foreach (Card card in Foundations[3].GetCards())
-            {
-                cardsHashCodeSum += card.GetHashCode() + Foundations[3].Type;
-            }
-
-            //Console.WriteLine("cardsHashCodeSum: " + cardsHashCodeSum);
-            //Console.WriteLine("moveToBeMadeHashCode: " + moveToBeMadeHashCode);
-            //Console.WriteLine("Hashcode Sum: " + cardsHashCodeSum + moveToBeMadeHashCode);
-            return (cardsHashCodeSum * 397)^  moveToBeMadeHashCode;
-        }
         public Move GetBestMove(List<Move> moves)
         {
             Move bestMove = moves[0];
@@ -310,10 +218,9 @@ namespace SolitaireHelperModels
 
             return bestMove;
         }
-        public void MakeMove(Move move)
+        public Table MakeMove(Move move)
         {
             Counter = 0;
-            PreviousMovesList.Add(CreateTableStateHash(move),move);
             List<Card> CardsToMove = new List<Card>();
             // Find the correct pile in the table to make the move from and remove the cards
             Pile fromPile = GetPileFromType(GetPileTypeFromString(move.GetFrom()));
@@ -333,7 +240,7 @@ namespace SolitaireHelperModels
                 fromPile.GetTopCard().Visible = true;
             }
 
-            return;
+            return this;
         }
         private int CalculateScore(Card card, Pile fromPile, Pile toPile)
         {
@@ -625,6 +532,181 @@ namespace SolitaireHelperModels
                 case "Talon": return 12;
                 default: return -1;
             }
+        }
+        public bool IsEqual(Table tableToCompare)
+        {
+            // Check Stock is the same
+            int stockCardsCount = tableToCompare.GetPileFromType(0).GetCards().Count;
+            Console.WriteLine(CardsInStock());
+            Console.WriteLine(stockCardsCount);
+            if(!(CardsInStock() == stockCardsCount))
+            {
+                Console.WriteLine("Virker du");
+                return false;
+            }
+
+            // Check if Talon is the same
+            Pile talonCardsToCompare = tableToCompare.GetPileFromType(12);
+            if(!(CardsInTalon() == talonCardsToCompare.GetCards().Count))
+            {
+                return false;
+            }
+            if(CardsInTalon() > 0)
+            {
+                if(!(GetPileFromType(12).GetTopCard() == talonCardsToCompare.GetTopCard()))
+                {
+                    return false;
+                }
+            }
+
+            // Check T1
+            Pile t1ToCompare = tableToCompare.GetPileFromType(1);
+            if(!(GetPileFromType(1).GetCards().Count == t1ToCompare.GetCards().Count))
+            {
+                return false;
+            }
+            if(GetPileFromType(1).GetCards().Count > 0)
+            {
+                foreach(Card card in GetPileFromType(1).GetCards())
+                {
+                    if(!t1ToCompare.GetCards().Exists(c => c == card))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // Check T2
+            Pile t2ToCompare = tableToCompare.GetPileFromType(2);
+            if (!(GetPileFromType(2).GetCards().Count == t2ToCompare.GetCards().Count))
+            {
+                return false;
+            }
+            if (GetPileFromType(2).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(2).GetCards())
+                {
+                    if (!t2ToCompare.GetCards().Exists(c => c == card))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // Check T3
+            Pile t3ToCompare = tableToCompare.GetPileFromType(3);
+            if (!(GetPileFromType(3).GetCards().Count == t3ToCompare.GetCards().Count))
+            {
+                return false;
+            }
+            if (GetPileFromType(3).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(3).GetCards())
+                {
+                    if (!t3ToCompare.GetCards().Exists(c => c == card))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // Check T4
+            Pile t4ToCompare = tableToCompare.GetPileFromType(4);
+            if (!(GetPileFromType(4).GetCards().Count == t4ToCompare.GetCards().Count))
+            {
+                return false;
+            }
+            if (GetPileFromType(4).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(4).GetCards())
+                {
+                    if (!t4ToCompare.GetCards().Exists(c => c == card))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // Check T5
+            Pile t5ToCompare = tableToCompare.GetPileFromType(5);
+            if (!(GetPileFromType(5).GetCards().Count == t5ToCompare.GetCards().Count))
+            {
+                return false;
+            }
+            if (GetPileFromType(5).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(5).GetCards())
+                {
+                    if (!t5ToCompare.GetCards().Exists(c => c == card))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // Check T6
+            Pile t6ToCompare = tableToCompare.GetPileFromType(6);
+            if (!(GetPileFromType(6).GetCards().Count == t6ToCompare.GetCards().Count))
+            {
+                return false;
+            }
+            if (GetPileFromType(6).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(6).GetCards())
+                {
+                    if (!t6ToCompare.GetCards().Exists(c => c == card))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // Check T7
+            Pile t7ToCompare = tableToCompare.GetPileFromType(7);
+            if (!(GetPileFromType(7).GetCards().Count == t7ToCompare.GetCards().Count))
+            {
+                return false;
+            }
+            if (GetPileFromType(7).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(7).GetCards())
+                {
+                    if (!t7ToCompare.GetCards().Exists(c => c == card))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // Check F1
+            Pile f1ToCompare = tableToCompare.GetPileFromType(8);
+            if (!(GetPileFromType(8).GetTopCard() == f1ToCompare.GetTopCard()))
+            {
+                return false;
+            }
+
+            // Check F2
+            Pile f2ToCompare = tableToCompare.GetPileFromType(9);
+            if (!(GetPileFromType(9).GetTopCard() == f2ToCompare.GetTopCard()))
+            {
+                return false;
+            }
+
+            // Check F3
+            Pile f3ToCompare = tableToCompare.GetPileFromType(10);
+            if (!(GetPileFromType(10).GetTopCard() == f3ToCompare.GetTopCard()))
+            {
+                return false;
+            }
+
+            // Check F4
+            Pile f4ToCompare = tableToCompare.GetPileFromType(11);
+            if (!(GetPileFromType(11).GetTopCard() == f4ToCompare.GetTopCard()))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
