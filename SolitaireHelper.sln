@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32210.308
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32510.428
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireHelper.Android", "SolitaireHelper.Android\SolitaireHelper.Android.csproj", "{E66BEA73-3F4A-4262-950C-3A5958A40AF3}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolitaireHelperModels", "SolitaireHelperModels\SolitaireHelperModels.csproj", "{A6031659-7B93-46C7-8075-5C41084F5020}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolitaireHelperConsole", "SolitaireHelperConsole\SolitaireHelperConsole.csproj", "{3A8B2885-BB32-48C2-BC5B-E2A7EBE57B94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectDetection", "ObjectDetection\ObjectDetection.csproj", "{EE6D6190-269B-4049-B91A-78131E8BBF46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{3A8B2885-BB32-48C2-BC5B-E2A7EBE57B94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A8B2885-BB32-48C2-BC5B-E2A7EBE57B94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A8B2885-BB32-48C2-BC5B-E2A7EBE57B94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE6D6190-269B-4049-B91A-78131E8BBF46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE6D6190-269B-4049-B91A-78131E8BBF46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE6D6190-269B-4049-B91A-78131E8BBF46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE6D6190-269B-4049-B91A-78131E8BBF46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
