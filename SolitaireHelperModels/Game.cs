@@ -28,7 +28,6 @@ namespace SolitaireHelperModels
             {
                 List<Move> allPossibleMoves = table.GetAllPossibleMoves();
                 Move move = FindNextMove(allPossibleMoves, table);
-
             
                 if(move == null)
                 {
@@ -58,6 +57,8 @@ namespace SolitaireHelperModels
             // Check om det bedste træk er lavet før (kig i PreviousStates) - hvis ikke, udfør det og gem Table-state i PreviousStates
             // Hvis trækket er lavet før, find et nyt bedste træk.
             Move move = GetBestMove(allPossibleMoves);
+            // Copy-constructor bliver brugt her og laver en kopi af det nuværende table.
+            // Derefter udfører den trækket fra GetBestMove på kopien af vores Table
             Table newState = new Table(table);
             newState.MakeMove(move);
             Console.WriteLine("Nyt table");

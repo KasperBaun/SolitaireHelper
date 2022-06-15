@@ -8,7 +8,7 @@ using System.Text;
 
 namespace SolitaireHelperModels
 {
-    public class Table : ICloneable
+    public class Table
     {
         private readonly List<Pile> Tableaus;
         private readonly List<Pile> Foundations;
@@ -814,10 +814,6 @@ namespace SolitaireHelperModels
 
             return true;
         }
-
-        public object Clone()
-        {
-            return new Table(this);
-        }
+       
     }
 }
