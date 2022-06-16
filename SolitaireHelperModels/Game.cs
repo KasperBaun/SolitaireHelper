@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace SolitaireHelperModels
 {
-    [Serializable]
     public class Game
     {
         public string Id { get; set; }
@@ -26,12 +25,10 @@ namespace SolitaireHelperModels
         public int PlayGame(Table table)
         {
             PreviousStates = new List<Table>();
-            int i = 0;
+            PreviousStringStates = new List<string>();
             while (!GameIsFinished)
             {
-                Console.WriteLine(table.ToString());
-                List<Move> allPossibleMoves = table.GetAllPossibleMoves();
-                Move move = FindNextMove(allPossibleMoves, table);
+                Move move = FindNextMove(table, 0);
             
                 if(move == null)
                 {
@@ -41,11 +38,9 @@ namespace SolitaireHelperModels
                 
                 Console.WriteLine(move.ToString());
                 table.MakeMove(move);
-                if(PreviousStates.Count > i){
-                    Table stateTable = new Table(table);
-                    PreviousStates.Add(stateTable);
-                }
-                i--;
+                Table stateTable = new Table(table);
+                PreviousStates.Add(stateTable);
+                PreviousStringStates.Add(stateTable.ToString());
                 continue;
             }
 
@@ -60,38 +55,52 @@ namespace SolitaireHelperModels
                 return 0;
             }
         }
-        private Move FindNextMove(List<Move> allPossibleMoves,Table table)
+        private Move FindNextMove(Table table, int StockRefillCounter)
         {
-            // Find det bedste træk
-            // Check om det bedste træk er lavet før (kig i PreviousStates) - hvis ikke, udfør det og gem Table-state i PreviousStates
-            // Hvis trækket er lavet før, find et nyt bedste træk.
+            List<Move> allPossibleMoves = table.GetAllPossibleMoves();
+
             if(allPossibleMoves.Count == 0)
             {
-                if (table.DrawNewCardsToTalon())
+                if (StockRefillCounter < 6)
                 {
-                    allPossibleMoves = table.GetAllPossibleMoves();
-                    FindNextMove(allPossibleMoves, table);
+                    StockRefillCounter += table.DrawNewCardsToTalon();
+                    FindNextMove(table, StockRefillCounter);
+                }
+                if(StockRefillCounter == 6)
+                {
+                    return null;
                 }
             }
-            Move move = GetBestMove(allPossibleMoves);
-            if(move == null)
-            {
-                GameIsFinished = true;
-                return null;
-            }
-            // Copy-constructor bliver brugt her og laver en kopi af det nuværende table.
-            // Derefter udfører den trækket fra GetBestMove på kopien af vores Table
-            Table newState = new Table(table);
-            newState.MakeMove(move);
 
-            if (PreviousStates.Count > 0)
+            List<Move> cleansedMoves = new List<Move>();
+            foreach(Move m in allPossibleMoves)
             {
-                if(PreviousStates.Exists(t => t.IsEqual(newState)))
+                cleansedMoves.Add(m);
+                Table newState = new Table(table);
+                newState.MakeMove(m);
+                if (PreviousStates.Count > 0)
                 {
-                    allPossibleMoves.Remove(move);
-                    FindNextMove(allPossibleMoves, table);
+                    if (PreviousStates.Exists(t => t.IsEqual(newState)))
+                    {
+                        cleansedMoves.Remove(m);
+                    }
                 }
             }
+
+            if (cleansedMoves.Count == 0)
+            {
+                if (StockRefillCounter < 6)
+                {
+                    StockRefillCounter += table.DrawNewCardsToTalon();
+                    FindNextMove(table, StockRefillCounter);
+                }
+                if (StockRefillCounter == 6)
+                {
+                    return null;
+                }
+            }
+
+            Move move = GetBestMove(cleansedMoves);
 
             return move;
         }

@@ -14,8 +14,6 @@ namespace SolitaireHelperModels
         private readonly List<Pile> Foundations;
         private readonly Pile Talon;
         private readonly Pile Stock;
-        private int Counter { get; set; }
-
         public Table(Pile stock, Pile talon, Pile T1, Pile T2, Pile T3, Pile T4, Pile T5, Pile T6, Pile T7, Pile F1, Pile F2, Pile F3, Pile F4)
         {
             // Constructor for a custom table to be used by the image recognitition
@@ -34,7 +32,6 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            Counter = 0;
         }
         public Table()
         {
@@ -82,7 +79,6 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            Counter = 0;
         }
         public Table(Table table)
         {
@@ -188,7 +184,6 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            Counter = table.Counter;
         }
         private List<Move> GetPossibleMovesInPile(Pile fromPile)
         {
@@ -289,7 +284,7 @@ namespace SolitaireHelperModels
              */
 
             // This accounts for the case where all the foundations are full and the solitaire is solved
-            if (IsTableEmpty() || Counter > 5)
+            if (IsTableEmpty())
             {
                 return null;
             }
@@ -326,7 +321,6 @@ namespace SolitaireHelperModels
         }
         public Table MakeMove(Move move)
         {
-            Counter = 0;
             List<Card> CardsToMove = new List<Card>();
             // Find the correct pile in the table to make the move from and remove the cards
             Pile fromPile = GetPileFromType(GetPileTypeFromString(move.GetFrom()));
@@ -407,7 +401,6 @@ namespace SolitaireHelperModels
         }
         private void RefillStock()
         {
-            Counter++;
             Console.WriteLine("## Refilling stock ##");
             foreach (Card card in Talon.GetCards())
             {
@@ -440,13 +433,8 @@ namespace SolitaireHelperModels
         {
             return Talon.GetCards().Count;
         }
-        public bool DrawNewCardsToTalon()
+        public int DrawNewCardsToTalon()
         {
-            if(Counter > 5)
-            {
-                return false;
-            }
-
             if (CardsInStock() >= 3)
             {
                 // Take 3 cards from stock, reverse them (flip) and put in talon
@@ -466,7 +454,7 @@ namespace SolitaireHelperModels
                 // Top card is visible
                 Talon.GetTopCard().Visible = true;
                 Console.WriteLine("Drawing new cards to talon: " + Talon.GetTopCard().ToString());
-                return true;
+                return 0;
             }
 
             // This accounts for algorithm rule ST-2 (Stock minimum rule)
@@ -474,11 +462,9 @@ namespace SolitaireHelperModels
             {
                 // Take the cards from talon and put under stock
                 RefillStock();
-                DrawNewCardsToTalon();
+                return 1;
             }
-
-            return false;
-
+            return 1;
         }
         public int CardsInTable()
         {
