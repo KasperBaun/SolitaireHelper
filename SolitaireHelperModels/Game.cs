@@ -80,20 +80,13 @@ namespace SolitaireHelperModels
             // Derefter udfører den trækket fra GetBestMove på kopien af vores Table
             Table newState = new Table(table);
             newState.MakeMove(move);
-            //Console.WriteLine("Nyt table");
-            //newState.PrintTable();
-            //Console.WriteLine("Gammelt table");
-            //table.PrintTable();
 
             if (PreviousStates.Count > 0)
             {
-                foreach(Table t in PreviousStates)
+                if(PreviousStates.Exists(t => t.IsEqual(newState)))
                 {
-                    if (t.IsEqual(newState))
-                    {
-                        FindNextMove(allPossibleMoves, table);
-                        allPossibleMoves.Remove(move);
-                    }
+                    allPossibleMoves.Remove(move);
+                    FindNextMove(allPossibleMoves, table);
                 }
             }
 
