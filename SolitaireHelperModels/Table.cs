@@ -646,49 +646,59 @@ namespace SolitaireHelperModels
         }
         public bool IsEqual(Table otherTable)
         {
+            Console.WriteLine("Checking if equal");
+            
             // Check Stock is the same
-            int stockCardsCount = otherTable.GetPileFromType(0).GetCards().Count;
-            //Console.WriteLine(CardsInStock());
-            //Console.WriteLine(stockCardsCount);
-            if(!(CardsInStock() == stockCardsCount))
+            if(CardsInStock() != otherTable.CardsInStock())
             {
+                Console.WriteLine("CardsInStock not the same");
                 return false;
             }
 
             // Check if Talon is the same
-            Pile talonCardsToCompare = otherTable.GetPileFromType(12);
-            if(!(CardsInTalon() == talonCardsToCompare.GetCards().Count))
+            
+            //Pile talonCardsToCompare = otherTable.GetPileFromType(12);
+            
+            if(CardsInTalon() != otherTable.CardsInTalon())
             {
+                Console.WriteLine("CardsInTalon not the same");
                 return false;
             }
             if(CardsInTalon() > 0)
             {
-                if(!(GetPileFromType(12).GetTopCard() == talonCardsToCompare.GetTopCard()))
+                if(GetPileFromType(12).GetTopCard() != otherTable.GetPileFromType(12).GetTopCard())
                 {
+                    Console.WriteLine("Topcard in Talon not the same");
                     return false;
                 }
             }
 
             // Check T1
-            Pile t1ToCompare = otherTable.GetPileFromType(1);
-            if(!(GetPileFromType(1).GetCards().Count == t1ToCompare.GetCards().Count))
+           
+            //Pile t1ToCompare = otherTable.GetPileFromType(1);
+            
+            if(!(GetPileFromType(1).GetCards().Count == otherTable.GetPileFromType(1).GetCards().Count))
             {
+                Console.WriteLine("T1 count not the same");
                 return false;
             }
             if(GetPileFromType(1).GetCards().Count > 0)
             {
                 foreach(Card card in GetPileFromType(1).GetCards())
                 {
-                    if(!t1ToCompare.GetCards().Exists(c => c == card))
+                    if(!otherTable.GetPileFromType(1).GetCards().Exists(c => c.IsEqual(card)))
                     {
+                        Console.WriteLine("T1 cards not the same");
                         return false;
                     }
                 }
             }
 
             // Check T2
-            Pile t2ToCompare = otherTable.GetPileFromType(2);
-            if (!(GetPileFromType(2).GetCards().Count == t2ToCompare.GetCards().Count))
+
+            //Pile t2ToCompare = otherTable.GetPileFromType(2);
+            
+            if (!(GetPileFromType(2).GetCards().Count == otherTable.GetPileFromType(2).GetCards().Count))
             {
                 return false;
             }
@@ -696,8 +706,9 @@ namespace SolitaireHelperModels
             {
                 foreach (Card card in GetPileFromType(2).GetCards())
                 {
-                    if (!t2ToCompare.GetCards().Exists(c => c == card))
+                    if (otherTable.GetPileFromType().GetCards().Exists(c => c.IsEqual(card)))
                     {
+                        Console.WriteLine("T2 cards not the same");
                         return false;
                     }
                 }
@@ -741,6 +752,7 @@ namespace SolitaireHelperModels
             Pile t5ToCompare = otherTable.GetPileFromType(5);
             if (!(GetPileFromType(5).GetCards().Count == t5ToCompare.GetCards().Count))
             {
+                Console.WriteLine("T5 count not the same");
                 return false;
             }
             if (GetPileFromType(5).GetCards().Count > 0)
@@ -749,6 +761,8 @@ namespace SolitaireHelperModels
                 {
                     if (!t5ToCompare.GetCards().Exists(c => c == card))
                     {
+
+                        Console.WriteLine("T5 cards not the same");
                         return false;
                     }
                 }
@@ -792,6 +806,7 @@ namespace SolitaireHelperModels
             Pile f1ToCompare = otherTable.GetPileFromType(8);
             if (!(GetPileFromType(8).GetTopCard() == f1ToCompare.GetTopCard()))
             {
+                Console.WriteLine("F1 topcard not the same");
                 return false;
             }
 
@@ -799,6 +814,7 @@ namespace SolitaireHelperModels
             Pile f2ToCompare = otherTable.GetPileFromType(9);
             if (!(GetPileFromType(9).GetTopCard() == f2ToCompare.GetTopCard()))
             {
+                Console.WriteLine("F2 topcard not the same");
                 return false;
             }
 
@@ -806,6 +822,7 @@ namespace SolitaireHelperModels
             Pile f3ToCompare = otherTable.GetPileFromType(10);
             if (!(GetPileFromType(10).GetTopCard() == f3ToCompare.GetTopCard()))
             {
+                Console.WriteLine("F3 topcard not the same");
                 return false;
             }
 
@@ -813,6 +830,7 @@ namespace SolitaireHelperModels
             Pile f4ToCompare = otherTable.GetPileFromType(11);
             if (!(GetPileFromType(11).GetTopCard() == f4ToCompare.GetTopCard()))
             {
+                Console.WriteLine("F4 topcard not the same");
                 return false;
             }
 
