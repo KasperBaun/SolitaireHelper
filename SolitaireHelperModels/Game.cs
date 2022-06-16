@@ -39,7 +39,8 @@ namespace SolitaireHelperModels
                 
                 Console.WriteLine(move.ToString());
                 if(PreviousStates.Count > i){
-                    PreviousStates.Add(table);
+                    Table stateTable = new Table(table);
+                    PreviousStates.Add(stateTable);
                 }
                 i--;
                 table.MakeMove(move);
@@ -84,10 +85,16 @@ namespace SolitaireHelperModels
             //Console.WriteLine("Gammelt table");
             //table.PrintTable();
 
-            if (PreviousStates.Exists(t => newState.IsEqual(t)))
+            if (PreviousStates.Count > 0)
             {
-                allPossibleMoves.Remove(move);
-                FindNextMove(allPossibleMoves, table);
+                foreach(Table t in PreviousStates)
+                {
+                    if (t.IsEqual(newState))
+                    {
+                        FindNextMove(allPossibleMoves, table);
+                        allPossibleMoves.Remove(move);
+                    }
+                }
             }
 
             return move;

@@ -666,7 +666,7 @@ namespace SolitaireHelperModels
             }
             if(CardsInTalon() > 0)
             {
-                if(GetPileFromType(12).GetTopCard() != otherTable.GetPileFromType(12).GetTopCard())
+                if(!GetPileFromType(12).GetTopCard().IsEqual(otherTable.GetPileFromType(12).GetTopCard()))
                 {
                     Console.WriteLine("Topcard in Talon not the same");
                     return false;
@@ -707,7 +707,7 @@ namespace SolitaireHelperModels
             {
                 foreach (Card card in GetPileFromType(2).GetCards())
                 {
-                    if (otherTable.GetPileFromType(2).GetCards().Exists(c => c.IsEqual(card)))
+                    if (!otherTable.GetPileFromType(2).GetCards().Exists(c => c.IsEqual(card)))
                     {
                         Console.WriteLine("T2 cards not the same");
                         return false;
@@ -749,7 +749,7 @@ namespace SolitaireHelperModels
             {
                 foreach (Card card in GetPileFromType(4).GetCards())
                 {
-                    if (!otherTable.GetPileFromType(3).GetCards().Exists(c => c.IsEqual(card)))
+                    if (!otherTable.GetPileFromType(4).GetCards().Exists(c => c.IsEqual(card)))
                     {
                         Console.WriteLine("T4 cards not the same");
                         return false;
@@ -826,7 +826,7 @@ namespace SolitaireHelperModels
             // Check F1
             //Pile f1ToCompare = otherTable.GetPileFromType(8);
             
-            if (GetPileFromType(8).GetTopCard() != otherTable.GetPileFromType(8).GetTopCard())
+            if (!GetPileFromType(8).GetTopCard().IsEqual(otherTable.GetPileFromType(8).GetTopCard()))
             {
                 Console.WriteLine("F1 topcard not the same");
                 return false;
@@ -836,7 +836,7 @@ namespace SolitaireHelperModels
             
             //Pile f2ToCompare = otherTable.GetPileFromType(9);
             
-            if (GetPileFromType(9).GetTopCard() != otherTable.GetPileFromType(9).GetTopCard())
+            if (!GetPileFromType(9).GetTopCard().IsEqual(otherTable.GetPileFromType(9).GetTopCard()))
             {
                 Console.WriteLine("F2 topcard not the same");
                 return false;
@@ -845,7 +845,7 @@ namespace SolitaireHelperModels
             // Check F3
             //Pile f3ToCompare = otherTable.GetPileFromType(10);
            
-            if (GetPileFromType(10).GetTopCard() != otherTable.GetPileFromType(10).GetTopCard())
+            if (!GetPileFromType(10).GetTopCard().IsEqual(otherTable.GetPileFromType(10).GetTopCard()))
             {
                 Console.WriteLine("F3 topcard not the same");
                 return false;
@@ -854,7 +854,7 @@ namespace SolitaireHelperModels
             // Check F4
            // Pile f4ToCompare = otherTable.GetPileFromType(11);
             
-            if (GetPileFromType(11).GetTopCard() != otherTable.GetPileFromType(11).GetTopCard())
+            if (!GetPileFromType(11).GetTopCard().IsEqual(otherTable.GetPileFromType(11).GetTopCard()))
             {
                 Console.WriteLine("F4 topcard not the same");
                 return false;
