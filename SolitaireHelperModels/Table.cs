@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace SolitaireHelperModels
 {
@@ -247,77 +242,22 @@ namespace SolitaireHelperModels
         {
             List<Move> moves = new List<Move>();
 
-            // See if there is any legal moves in talon
+            // Find moves in Talon
             moves.AddRange(GetPossibleMovesInPile(Talon));
 
-            // Find all possible moves in Foundations (only top-cards)
+            // Find moves in Foundations (only top-cards)
             foreach (Pile pile in Foundations)
             {
-                List<Move> pileMoves = GetPossibleMovesInPile(pile);
-                moves.AddRange(pileMoves);
+                moves.AddRange(GetPossibleMovesInPile(pile));
             }
 
-            // Find all possible moves in the visible cards currently in Tableaus
+            // Find moves in Tableaus
             foreach (Pile pile in Tableaus)
             {
-                List<Move> pileMoves = GetPossibleMovesInPile(pile);
-                moves.AddRange(pileMoves);
-            }
-
-            // If no moves, turn 3 cards to Talon and find possible move
-            if(moves.Count == 0)
-            {
-                DrawNewCardsToTalon();
-                moves.AddRange(GetPossibleMovesInPile(Talon));
+                moves.AddRange(GetPossibleMovesInPile(pile));
             }
             
             return moves;
-        }
-        public Move FindNextMove()
-        {
-            /* This function is responsible for the primary logic in the solving of the solitaire game.
-             * This is done as so:
-             * 1. Check that the solitaire on the table is not solved by counting the amount of king-cards in the foundations with the method IsTableEmpty().
-             * 2. Create a list of all possible moves from the current state of the table
-             * 3. If that list contains valid moves, find the move with the highest score (ranked by CalculateScore() method)
-             * 4. Return that move
-             */
-
-            // This accounts for the case where all the foundations are full and the solitaire is solved
-            if (IsTableEmpty())
-            {
-                return null;
-            }
-
-            List<Move> possibleMoves = GetAllPossibleMoves();
-
-            if (possibleMoves.Count > 0)
-            {
-                Move bestMove = GetBestMove(possibleMoves);
-                return bestMove;
-            }
-
-            if(possibleMoves.Count == 0)
-            {
-                DrawNewCardsToTalon();
-                FindNextMove();
-            }
-
-            return FindNextMove();
-        }
-        public Move GetBestMove(List<Move> moves)
-        {
-            Move bestMove = moves[0];
-
-            foreach (Move move in moves)
-            {
-                if (move.GetScore() > bestMove.GetScore())
-                {
-                    bestMove = move;
-                }
-            }
-
-            return bestMove;
         }
         public Table MakeMove(Move move)
         {
@@ -345,55 +285,102 @@ namespace SolitaireHelperModels
         }
         private int CalculateScore(Card card, Pile fromPile, Pile toPile)
         {
+            int score = 0;
             if (card.Visible == false || card == null)
             {
                 return 0;
             }
 
+            if (fromPile.GetCards().Count > 1)
+            {
+                int cardIndex = fromPile.GetCards().FindIndex(c => c.Rank == card.Rank && c.Suit == card.Suit && c.Visible == card.Visible);
+                if (fromPile.Type != 12 && cardIndex >= 1)
+                {
+                    if (fromPile.GetCards()[cardIndex - 1].Visible == false)
+                    {
+                        score += 10;
+                    }
+                }
+            }
+
+          
             // Test if ace can move to any of the Foundations
             if (card.Rank == 1 && toPile.IsFoundation())
             {
-                return 95 + fromPile.GetCards().Count;
+                return score += 95 + fromPile.GetCards().Count;
             }
 
             // Test if 2 can move to any of the Foundations
             if (card.Rank == 2 && fromPile.IsTableau() && toPile.IsFoundation())
             {
-                return 85 + fromPile.GetCards().Count;
+                return score += 85 + fromPile.GetCards().Count;
             }
 
             // Test if king can move to an empty Tableau
             if (card.Rank == 13 && fromPile.IsTableau() && toPile.IsTableau() && toPile.IsEmpty() && !fromPile.IsEmpty())
             {
-                return 75 + fromPile.GetCards().Count;
+                return score += 75 + fromPile.GetCards().Count;
             }
 
             // Test if card can move from Tableau to Foundation
             if (fromPile.IsTableau() && toPile.IsFoundation())
             {
-                return fromPile.GetCards().Count + 40;
+                return score += fromPile.GetCards().Count + 40;
             }
 
 
             // Test if card can move from Tableau to Tableau
             if (card.Rank != 13 && fromPile.IsTableau() && toPile.IsTableau())
             {
-                return fromPile.GetCards().Count + 30;
+                return score += fromPile.GetCards().Count + 30;
             }
 
             // Test if card can move from Talon to Foundation
             if (fromPile.Type == 12 && toPile.IsFoundation())
             {
-                return fromPile.GetCards().Count + 20;
+                return score += fromPile.GetCards().Count + 20;
             }
+
 
             // Test if card can move from Talon to Tableau
             if (fromPile.Type == 12 && toPile.IsTableau())
             {
-                return fromPile.GetCards().Count + 10;
+                return score += fromPile.GetCards().Count + 10;
             }
 
-            return -1;
+            return score;
+        }
+        public int DrawNewCardsToTalon()
+        {
+            if (CardsInStock() >= 3)
+            {
+                // Take 3 cards from stock, reverse them (flip) and put in talon
+                List<Card> newCards = Stock.GetCards().GetRange(0, 3);
+                Talon.AddCards(newCards);
+
+                // Remove the 3 cards from stock
+                Stock.RemoveCards(Stock.GetCards().GetRange(0, 3));
+
+                // All cards in talon are invisible
+                foreach (Card card in Talon.GetCards())
+                {
+                    card.Visible = false;
+                }
+
+                // Top card is visible
+                Talon.GetTopCard().Visible = true;
+                Console.WriteLine("Drawing new cards to talon: " + Talon.GetTopCard().ToString());
+                return 0;
+            }
+
+            // This accounts for algorithm rule ST-2 (Stock minimum rule)
+            if (CardsInStock() < 3 && Talon.GetCards().Count + CardsInStock() >= 3)
+            {
+                // Take the cards from talon and put under stock
+                RefillStock();
+                return 1;
+            }
+            return 1;
         }
         private void RefillStock()
         {
@@ -428,163 +415,6 @@ namespace SolitaireHelperModels
         public int CardsInTalon()
         {
             return Talon.GetCards().Count;
-        }
-        public int DrawNewCardsToTalon()
-        {
-            if (CardsInStock() >= 3)
-            {
-                // Take 3 cards from stock, reverse them (flip) and put in talon
-                List<Card> newCards = Stock.GetCards().GetRange(0, 3);
-                //newCards.Reverse();
-                Talon.AddCards(newCards);
-
-                // Remove the 3 cards from stock
-                Stock.RemoveCards(Stock.GetCards().GetRange(0, 3));
-
-                // All cards in talon are invisible
-                foreach (Card card in Talon.GetCards())
-                {
-                    card.Visible = false;
-                }
-
-                // Top card is visible
-                Talon.GetTopCard().Visible = true;
-                Console.WriteLine("Drawing new cards to talon: " + Talon.GetTopCard().ToString());
-                return 0;
-            }
-
-            // This accounts for algorithm rule ST-2 (Stock minimum rule)
-            if (CardsInStock() < 3 && Talon.GetCards().Count + CardsInStock() >= 3)
-            {
-                // Take the cards from talon and put under stock
-                RefillStock();
-                return 1;
-            }
-            return 1;
-        }
-        public int CardsInTable()
-        {
-            // Returns the amount of cards on the table (in foundations and tableaus - NOT in the stock and talon)
-            int cards = 0;
-            foreach (Pile pile in Foundations)
-            {
-                cards += pile.GetNumberOfCards();
-            }
-            foreach (Pile pile in Tableaus)
-            {
-                cards += pile.GetNumberOfCards();
-            }
-            return cards + Talon.GetNumberOfCards() + Stock.GetNumberOfCards();
-        }
-        public void PrintTable()
-        {
-            Console.WriteLine("Table currently consists of:\n");
-            Console.WriteLine("Talon:");
-            if (Talon.GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Talon.GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nF1:");
-            if (Foundations[0].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Foundations[0].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nF2:");
-            if (Foundations[1].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Foundations[1].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nF3:");
-            if (Foundations[2].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Foundations[2].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nF4:");
-            if (Foundations[3].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Foundations[3].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT1:");
-            if (Tableaus[0].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[0].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT2:");
-            if (Tableaus[1].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            if (Tableaus[1].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[1].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT3:");
-            if (Tableaus[2].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[2].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT4:");
-            if (Tableaus[3].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[3].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT5:");
-            if (Tableaus[4].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[4].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT6:");
-            if (Tableaus[5].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[5].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT7:");
-            if (Tableaus[6].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[6].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nStock");
-            if (Stock.GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Stock.GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-            Console.WriteLine("\n\n");
         }
         public Pile GetPileFromType(int type)
         {
@@ -862,6 +692,116 @@ namespace SolitaireHelperModels
             }
 
             return true;
+        }
+        public void PrintTable()
+        {
+            Console.WriteLine("Table currently consists of:\n");
+            Console.WriteLine("Talon:");
+            if (Talon.GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Talon.GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nF1:");
+            if (Foundations[0].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[0].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nF2:");
+            if (Foundations[1].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[1].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nF3:");
+            if (Foundations[2].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[2].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nF4:");
+            if (Foundations[3].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[3].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nT1:");
+            if (Tableaus[0].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[0].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nT2:");
+            if (Tableaus[1].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            if (Tableaus[1].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[1].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nT3:");
+            if (Tableaus[2].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[2].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nT4:");
+            if (Tableaus[3].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[3].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nT5:");
+            if (Tableaus[4].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[4].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nT6:");
+            if (Tableaus[5].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[5].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nT7:");
+            if (Tableaus[6].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[6].GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+
+            Console.WriteLine("\nStock");
+            if (Stock.GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Stock.GetCards())
+            {
+                Console.WriteLine(card.ToString());
+            }
+            Console.WriteLine("\n\n");
         }
         public override string ToString()
         {

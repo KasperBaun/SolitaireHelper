@@ -10,7 +10,6 @@ namespace SolitaireHelperModels
         public string Date { get; set; }
         public string GameType { get; set; }
         public bool GameIsFinished { get; set; }
-        public List<Table> PreviousStates { get; set; }
         public List<string> PreviousStringStates { get; set; }
 
         public Game(){ }
@@ -24,11 +23,11 @@ namespace SolitaireHelperModels
         }
         public int PlayGame(Table table)
         {
-            PreviousStates = new List<Table>();
             PreviousStringStates = new List<string>();
             while (!GameIsFinished)
             {
-                Move move = FindNextMove(table, 0);
+                List<Move> allPossibleMoves = table.GetAllPossibleMoves();
+                Move move = FindNextMove(allPossibleMoves, table, 0);
             
                 if(move == null)
                 {
@@ -38,9 +37,7 @@ namespace SolitaireHelperModels
                 
                 Console.WriteLine(move.ToString());
                 table.MakeMove(move);
-                Table stateTable = new Table(table);
-                PreviousStates.Add(stateTable);
-                PreviousStringStates.Add(stateTable.ToString());
+                PreviousStringStates.Add(table.ToString());
                 continue;
             }
 
@@ -55,56 +52,37 @@ namespace SolitaireHelperModels
                 return 0;
             }
         }
-        private Move FindNextMove(Table table, int StockRefillCounter)
+        private Move FindNextMove(List<Move> allPossibleMoves, Table table,  int StockRefillCounter)
         {
-            List<Move> allPossibleMoves = table.GetAllPossibleMoves();
+            Move move = GetBestMove(allPossibleMoves);
 
-            if(allPossibleMoves.Count == 0)
+            if(allPossibleMoves.Count == 0 && StockRefillCounter != 3)
             {
-                if (StockRefillCounter < 6)
+                StockRefillCounter =  StockRefillCounter + table.DrawNewCardsToTalon();
+                allPossibleMoves = table.GetAllPossibleMoves();
+                return FindNextMove(allPossibleMoves, table, StockRefillCounter);
+
+                if(StockRefillCounter == 3)
                 {
-                    StockRefillCounter += table.DrawNewCardsToTalon();
-                    FindNextMove(table, StockRefillCounter);
-                }
-                if(StockRefillCounter == 6)
-                {
-                    return null;
+                    return move;
                 }
             }
 
-            List<Move> cleansedMoves = new List<Move>();
-            foreach(Move m in allPossibleMoves)
+            Table newState = new Table(table);
+            newState.MakeMove(move);
+            if (PreviousStringStates.Contains(newState.ToString()))
             {
-                cleansedMoves.Add(m);
-                Table newState = new Table(table);
-                newState.MakeMove(m);
-                if (PreviousStates.Count > 0)
+                allPossibleMoves.Remove(move);
+                FindNextMove(allPossibleMoves,table,  StockRefillCounter);
+                if (PreviousStringStates.Contains(newState.ToString()))
                 {
-                    if (PreviousStates.Exists(t => t.IsEqual(newState)))
-                    {
-                        cleansedMoves.Remove(m);
-                    }
+                    GameIsFinished = true;
                 }
             }
-
-            if (cleansedMoves.Count == 0)
-            {
-                if (StockRefillCounter < 6)
-                {
-                    StockRefillCounter += table.DrawNewCardsToTalon();
-                    FindNextMove(table, StockRefillCounter);
-                }
-                if (StockRefillCounter == 6)
-                {
-                    return null;
-                }
-            }
-
-            Move move = GetBestMove(cleansedMoves);
 
             return move;
         }
-        private Move GetBestMove(List<Move> moves)
+        public Move GetBestMove(List<Move> moves)
         {
             if(moves.Count == 0)
             {
