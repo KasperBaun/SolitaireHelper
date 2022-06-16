@@ -367,17 +367,13 @@ namespace SolitaireHelperModels
             {
                 return 75 + fromPile.GetCards().Count;
             }
+
             // Test if card can move from Tableau to Foundation
             if (fromPile.IsTableau() && toPile.IsFoundation())
             {
                 return fromPile.GetCards().Count + 40;
             }
 
-            // Test if card can move from Talon to Foundation
-            if (fromPile.Type == 12 && toPile.IsFoundation())
-            {
-                return fromPile.GetCards().Count + 40;
-            }
 
             // Test if card can move from Tableau to Tableau
             if (card.Rank != 13 && fromPile.IsTableau() && toPile.IsTableau())
@@ -385,14 +381,14 @@ namespace SolitaireHelperModels
                 return fromPile.GetCards().Count + 30;
             }
 
-            // Test if card can move from Talon to Tableau
-            if (fromPile.Type == 12 && toPile.IsTableau())
+            // Test if card can move from Talon to Foundation
+            if (fromPile.Type == 12 && toPile.IsFoundation())
             {
                 return fromPile.GetCards().Count + 20;
             }
 
-            // Test if card can move from Talon to any of the foundations
-            if (fromPile.Type == 12 && toPile.IsFoundation())
+            // Test if card can move from Talon to Tableau
+            if (fromPile.Type == 12 && toPile.IsTableau())
             {
                 return fromPile.GetCards().Count + 10;
             }
