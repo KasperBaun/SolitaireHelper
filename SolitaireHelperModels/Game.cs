@@ -27,10 +27,31 @@ namespace SolitaireHelperModels
         {
             PreviousStates = new List<Table>();
             int i = 0;
+            int moveCanBeMade = 0;
             while (!GameIsFinished)
             {
                 Console.WriteLine(table.ToString());
                 List<Move> allPossibleMoves = table.GetAllPossibleMoves();
+                if (PreviousStates.Exists(t => t.IsEqual(table)))
+                {
+                    for (int j = 0; j < 20; j++)
+                    {
+                        Console.WriteLine("TALON SHUFFLEH");
+                        table.DrawNewCardsToTalon();
+                        allPossibleMoves = table.GetAllPossibleMoves();
+
+                        if (allPossibleMoves.Count > 0)
+                        {
+                            FindNextMove(allPossibleMoves, table);
+                            if (PreviousStates.Exists(t => t.IsEqual(table)))
+                            {
+                                GameIsFinished = true;
+                            }
+                                
+                        }
+                        GameIsFinished = true;
+                    }
+                }
                 Move move = FindNextMove(allPossibleMoves, table);
             
                 if(move == null)
@@ -84,14 +105,14 @@ namespace SolitaireHelperModels
             Table newState = new Table(table);
             newState.MakeMove(move);
 
-            if (PreviousStates.Count > 0)
-            {
-                if(PreviousStates.Exists(t => t.IsEqual(newState)))
-                {
-                    allPossibleMoves.Remove(move);
-                    FindNextMove(allPossibleMoves, table);
-                }
-            }
+            //if (PreviousStates.Count > 0)
+            //{
+            //    if(PreviousStates.Exists(t => t.IsEqual(newState)))
+            //    {
+            //        allPossibleMoves.Remove(move);
+            //        FindNextMove(allPossibleMoves, table);
+            //    }
+            //}
 
             return move;
         }
