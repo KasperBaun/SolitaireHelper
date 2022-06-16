@@ -11,7 +11,7 @@ namespace SolitaireHelper.nUnitTests
         [SetUp]
         public void Setup()
         {
-            table = TestTableSolvable();
+            table = TestTable();
         }
 
         [Test]
@@ -556,6 +556,36 @@ namespace SolitaireHelper.nUnitTests
 
         }
         [Test]
+        public void PlaySolvableGameTest()
+        {
+            Table solvableTable = new Table(TestTableSolvable());
+
+            /* 1st move expected: Move 5C from T2 --> T6 - Score: [32]  */
+            Game game = new Game();
+            int won = game.PlayGame(solvableTable);
+
+            /* 2nd move expected: Move 6D from T6 --> T2 - Score: [37] */
+
+
+            
+           
+            Assert.IsTrue(won == 1);
+
+
+            //Move bestMove = table.FindNextMove();
+            //Console.WriteLine("1st move:"); 
+            //Console.WriteLine(bestMove.ToString() + "\n");
+            //table.MakeMove(bestMove);
+
+            //// Assert - What do we expect?
+            //// The first move to be: Move AD from T1 --> F3 - Score: [96]
+            //Assert.IsTrue(bestMove.GetCard().Rank == 1 && bestMove.GetCard().Suit == 3);
+            //Assert.IsTrue(table.GetPileFromType(10).GetCards().Contains(bestMove.GetCard()));
+
+
+
+        }
+        [Test]
         public void TableIsEqualTest()
         {
             Table testTable = new Table(table);
@@ -708,7 +738,6 @@ namespace SolitaireHelper.nUnitTests
 
             return table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
         }
-
         public Table TestTableSolvable()
         {
             // Constructor for a table with a specific set of cards
@@ -837,9 +866,6 @@ namespace SolitaireHelper.nUnitTests
             Stock.GetCards().Add(SA);
             Card C10 = new(2, 10, false);
             Stock.GetCards().Add(C10);
-            // Vender Stock pga fejl i manuel indtastning.
-            //Stock.GetCards().Reverse();
-
 
             return table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
         }
