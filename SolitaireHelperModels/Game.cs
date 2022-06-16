@@ -30,7 +30,7 @@ namespace SolitaireHelperModels
             int moveCanBeMade = 0;
             while (!GameIsFinished)
             {
-                Console.WriteLine(table.ToString());
+                //Console.WriteLine(table.ToString());
                 List<Move> allPossibleMoves = table.GetAllPossibleMoves();
                 if (PreviousStates.Exists(t => t.IsEqual(table)))
                 {
@@ -42,18 +42,19 @@ namespace SolitaireHelperModels
 
                         if (allPossibleMoves.Count > 0)
                         {
-                            FindNextMove(allPossibleMoves, table);
+                            Move loopMove = FindNextMove(allPossibleMoves, table);
+                            table.MakeMove(loopMove);
+
                             if (PreviousStates.Exists(t => t.IsEqual(table)))
                             {
                                 GameIsFinished = true;
                             }
-                                
+                            break;
                         }
-                        GameIsFinished = true;
                     }
                 }
-                Move move = FindNextMove(allPossibleMoves, table);
             
+                Move move = FindNextMove(allPossibleMoves, table);
                 if(move == null)
                 {
                     GameIsFinished = true;
