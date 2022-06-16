@@ -646,12 +646,12 @@ namespace SolitaireHelperModels
         }
         public bool IsEqual(Table otherTable)
         {
-            Console.WriteLine("Checking if equal");
+            //Console.WriteLine("Checking if equal");
             
             // Check Stock is the same
             if(CardsInStock() != otherTable.CardsInStock())
             {
-                Console.WriteLine("CardsInStock not the same");
+                //Console.WriteLine("CardsInStock not the same");
                 return false;
             }
 
@@ -661,14 +661,14 @@ namespace SolitaireHelperModels
             
             if(CardsInTalon() != otherTable.CardsInTalon())
             {
-                Console.WriteLine("CardsInTalon not the same");
+                //Console.WriteLine("CardsInTalon not the same");
                 return false;
             }
             if(CardsInTalon() > 0)
             {
                 if(!GetPileFromType(12).GetTopCard().IsEqual(otherTable.GetPileFromType(12).GetTopCard()))
                 {
-                    Console.WriteLine("Topcard in Talon not the same");
+                    //Console.WriteLine("Topcard in Talon not the same");
                     return false;
                 }
             }
@@ -679,7 +679,7 @@ namespace SolitaireHelperModels
             
             if(GetPileFromType(1).GetCards().Count != otherTable.GetPileFromType(1).GetCards().Count)
             {
-                Console.WriteLine("T1 count not the same");
+                //Console.WriteLine("T1 count not the same");
                 return false;
             }
             if(GetPileFromType(1).GetCards().Count > 0)
@@ -688,7 +688,7 @@ namespace SolitaireHelperModels
                 {
                     if(!otherTable.GetPileFromType(1).GetCards().Exists(c => c.IsEqual(card)))
                     {
-                        Console.WriteLine("T1 cards not the same");
+                        //Console.WriteLine("T1 cards not the same");
                         return false;
                     }
                 }
@@ -700,7 +700,7 @@ namespace SolitaireHelperModels
             
             if (GetPileFromType(2).GetCards().Count != otherTable.GetPileFromType(2).GetCards().Count)
             {
-                Console.WriteLine("T2 count not the same");
+                //Console.WriteLine("T2 count not the same");
                 return false;
             }
             if (GetPileFromType(2).GetCards().Count > 0)
@@ -709,7 +709,7 @@ namespace SolitaireHelperModels
                 {
                     if (!otherTable.GetPileFromType(2).GetCards().Exists(c => c.IsEqual(card)))
                     {
-                        Console.WriteLine("T2 cards not the same");
+                        //Console.WriteLine("T2 cards not the same");
                         return false;
                     }
                 }
@@ -721,7 +721,7 @@ namespace SolitaireHelperModels
             
             if (GetPileFromType(3).GetCards().Count != otherTable.GetPileFromType(3).GetCards().Count)
             {
-                Console.WriteLine("T3 count not the same");
+                //Console.WriteLine("T3 count not the same");
                 return false;
             }
             if (GetPileFromType(3).GetCards().Count > 0)
@@ -730,7 +730,7 @@ namespace SolitaireHelperModels
                 {
                     if (!otherTable.GetPileFromType(3).GetCards().Exists(c => c.IsEqual(card)))
                     {
-                        Console.WriteLine("T3 cards not the same");
+                        //Console.WriteLine("T3 cards not the same");
                         return false;
                     }
                 }
@@ -742,7 +742,7 @@ namespace SolitaireHelperModels
             
             if (GetPileFromType(4).GetCards().Count != otherTable.GetPileFromType(4).GetCards().Count)
             {
-                Console.WriteLine("T4 count not the same");
+                //Console.WriteLine("T4 count not the same");
                 return false;
             }
             if (GetPileFromType(4).GetCards().Count > 0)
@@ -751,7 +751,7 @@ namespace SolitaireHelperModels
                 {
                     if (!otherTable.GetPileFromType(4).GetCards().Exists(c => c.IsEqual(card)))
                     {
-                        Console.WriteLine("T4 cards not the same");
+                        //Console.WriteLine("T4 cards not the same");
                         return false;
                     }
                 }
@@ -764,7 +764,7 @@ namespace SolitaireHelperModels
             
             if (!(GetPileFromType(5).GetCards().Count == otherTable.GetPileFromType(5).GetCards().Count))
             {
-                Console.WriteLine("T5 count not the same");
+                //Console.WriteLine("T5 count not the same");
                 return false;
             }
             if (GetPileFromType(5).GetCards().Count > 0)
@@ -774,7 +774,7 @@ namespace SolitaireHelperModels
                     if (!otherTable.GetPileFromType(5).GetCards().Exists(c => c.IsEqual(card)))
                     {
 
-                        Console.WriteLine("T5 cards not the same");
+                        //Console.WriteLine("T5 cards not the same");
                         return false;
                     }
                 }
@@ -786,7 +786,7 @@ namespace SolitaireHelperModels
             
             if (!(GetPileFromType(6).GetCards().Count == otherTable.GetPileFromType(6).GetCards().Count))
             {
-                Console.WriteLine("T6 count not the same");
+                //Console.WriteLine("T6 count not the same");
                 return false;
             }
             if (GetPileFromType(6).GetCards().Count > 0)
@@ -795,7 +795,7 @@ namespace SolitaireHelperModels
                 {
                     if (!otherTable.GetPileFromType(6).GetCards().Exists(c => c.IsEqual(card)))
                     {
-                        Console.WriteLine("T6 cards not the same");
+                        //Console.WriteLine("T6 cards not the same");
                         return false;
                     }
                 }
@@ -808,7 +808,7 @@ namespace SolitaireHelperModels
             
             if (!(GetPileFromType(7).GetCards().Count == otherTable.GetPileFromType(7).GetCards().Count))
             {
-                Console.WriteLine("T7 count not the same");
+                //Console.WriteLine("T7 count not the same");
                 return false;
             }
             if (GetPileFromType(7).GetCards().Count > 0)
@@ -817,7 +817,7 @@ namespace SolitaireHelperModels
                 {
                     if (!otherTable.GetPileFromType(7).GetCards().Exists(c => c.IsEqual(card)))
                     {
-                        Console.WriteLine("T7 cards not the same");
+                        //Console.WriteLine("T7 cards not the same");
                         return false;
                     }
                 }
@@ -831,7 +831,7 @@ namespace SolitaireHelperModels
                 {
                     if (!GetPileFromType(8).GetTopCard().IsEqual(otherTable.GetPileFromType(8).GetTopCard()))
                     {
-                        Console.WriteLine("F1 topcard not the same");
+                        //Console.WriteLine("F1 topcard not the same");
                         return false;
                     }
                 }
@@ -845,7 +845,7 @@ namespace SolitaireHelperModels
                 {
                     if (!GetPileFromType(9).GetTopCard().IsEqual(otherTable.GetPileFromType(9).GetTopCard()))
                     {
-                        Console.WriteLine("F2 topcard not the same");
+                        //Console.WriteLine("F2 topcard not the same");
                         return false;
                     }
                 }
@@ -859,7 +859,7 @@ namespace SolitaireHelperModels
                 {
                     if (!GetPileFromType(10).GetTopCard().IsEqual(otherTable.GetPileFromType(10).GetTopCard()))
                     {
-                        Console.WriteLine("F3 topcard not the same");
+                        //Console.WriteLine("F3 topcard not the same");
                         return false;
                     }
                 }
@@ -873,7 +873,7 @@ namespace SolitaireHelperModels
                 {
                     if (!GetPileFromType(11).GetTopCard().IsEqual(otherTable.GetPileFromType(11).GetTopCard()))
                     {
-                        Console.WriteLine("F4 topcard not the same");
+                        //Console.WriteLine("F4 topcard not the same");
                         return false;
                     }
                 }
@@ -881,6 +881,115 @@ namespace SolitaireHelperModels
 
             return true;
         }
-       
+        public override string ToString()
+        {
+            string tableString = "";
+            if (!(Talon.GetCards().Count == 0))
+            {
+                foreach (Card card in Talon.GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Foundations[0].GetCards().Count == 0))
+            {
+                foreach (Card card in Foundations[0].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Foundations[1].GetCards().Count == 0))
+            {
+                foreach (Card card in Foundations[1].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Foundations[2].GetCards().Count == 0))
+            {
+                foreach (Card card in Foundations[2].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Foundations[3].GetCards().Count == 0))
+            {
+                foreach (Card card in Foundations[3].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+
+
+            if (!(Tableaus[0].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[0].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Tableaus[1].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[1].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Tableaus[2].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[2].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Tableaus[3].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[3].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Tableaus[4].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[4].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Tableaus[5].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[5].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Tableaus[6].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[6].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (!(Stock.GetCards().Count == 0))
+            {
+                foreach (Card card in Stock.GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+            return tableString;
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace SolitaireHelperModels
         public string GameType { get; set; }
         public bool GameIsFinished { get; set; }
         public List<Table> PreviousStates { get; set; }
+        public List<string> PreviousStringStates { get; set; }
 
         public Game(){ }
 
@@ -28,6 +29,7 @@ namespace SolitaireHelperModels
             int i = 0;
             while (!GameIsFinished)
             {
+                Console.WriteLine(table.ToString());
                 List<Move> allPossibleMoves = table.GetAllPossibleMoves();
                 Move move = FindNextMove(allPossibleMoves, table);
             
@@ -38,12 +40,12 @@ namespace SolitaireHelperModels
                 }
                 
                 Console.WriteLine(move.ToString());
+                table.MakeMove(move);
                 if(PreviousStates.Count > i){
                     Table stateTable = new Table(table);
                     PreviousStates.Add(stateTable);
                 }
                 i--;
-                table.MakeMove(move);
                 continue;
             }
 
@@ -68,6 +70,7 @@ namespace SolitaireHelperModels
                 if (table.DrawNewCardsToTalon())
                 {
                     allPossibleMoves = table.GetAllPossibleMoves();
+                    FindNextMove(allPossibleMoves, table);
                 }
             }
             Move move = GetBestMove(allPossibleMoves);

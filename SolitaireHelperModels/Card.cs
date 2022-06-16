@@ -15,8 +15,14 @@
 
         public override string ToString()
         {
-            return "Card: " + RankAsString() +" of " + SuitAsString() + ", Visible: " + Visible; 
+            return RankAsChar()+ SuitAsChar(); 
         }
+
+        public string FullToString()
+        {
+            return "Card: " + RankAsString() + " of " + SuitAsString() + ", Visible: " + Visible;
+        }
+
         public bool IsBlack() {
             return Suit == 2 || Suit == 4;
         }

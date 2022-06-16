@@ -567,6 +567,11 @@ namespace SolitaireHelper.nUnitTests
 
             Assert.IsFalse(table.IsEqual(testTable));
         }
+        [Test]
+        public void TableToStringTest()
+        {
+            Console.WriteLine(table.ToString());
+        }
         public Table TestTable()
         {
             // Constructor for a table with a specific set of cards
