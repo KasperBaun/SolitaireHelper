@@ -190,10 +190,10 @@ namespace SolitaireHelperModels
                 return moves;
             }
 
+            Card topCard = fromPile.GetTopCard();
             // If the fromPile is a foundation, we can only move the topCard
             if(fromPile.IsFoundation())
             {
-                Card topCard = fromPile.GetTopCard();
                 // Can the visible card be moved to a tableau?
                 foreach (Pile pile in Tableaus)
                 {
@@ -205,6 +205,17 @@ namespace SolitaireHelperModels
                     }
                 }
                 return moves;
+            }
+            
+            // Can the top-card be moved to a foundation?
+            foreach (Pile pile in Foundations)
+            {
+                if (pile.IsMovePossible(topCard))
+                {
+                    int score = CalculateScore(topCard, fromPile, pile);
+                    Move move = new Move(fromPile.PileToString(), pile.PileToString(), topCard, score);
+                    moves.Add(move);
+                }
             }
 
             List<Card> cardsInFromPile = fromPile.GetCards();
@@ -222,20 +233,10 @@ namespace SolitaireHelperModels
                             Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
                             moves.Add(move);
                         }
-                    }
-                    // Can the visible card be moved to a foundation?
-                    foreach (Pile pile in Foundations)
-                    {
-                        if (pile.IsMovePossible(card))
-                        {
-                            int score = CalculateScore(card, fromPile, pile);
-                            Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
-                            moves.Add(move);
-                        }
-                    }
+                    }                    
                 }
             }
-            
+
             return moves;
         }
         public List<Move> GetAllPossibleMoves()
@@ -348,7 +349,7 @@ namespace SolitaireHelperModels
             // Test if card can move from Tableau to Tableau
             if (card.Rank != 13 && fromPile.IsTableau() && toPile.IsTableau())
             {
-                return score += fromPile.GetCards().Count + 30;
+                return score += fromPile.GetCards().Count + 20;
             }
 
             // Test if card can move from Talon to Foundation

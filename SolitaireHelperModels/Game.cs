@@ -10,6 +10,7 @@ namespace SolitaireHelperModels
         public string Date { get; set; }
         public string GameType { get; set; }
         public bool GameIsFinished { get; set; }
+        private bool ShowConsoleText { get; set; }
         public List<Table> PreviousStates { get; set; }
         public List<string> PreviousStringStates { get; set; }
 
@@ -28,6 +29,7 @@ namespace SolitaireHelperModels
             PreviousStringStates = new List<string>();
             int stockRefillCounter = 0;
             int totalMovesMade = 0;
+            ShowConsoleText = false;
             while (!GameIsFinished)
             {
                 List<Move> currentPossibleMoves = table.GetAllPossibleMoves();
@@ -56,6 +58,7 @@ namespace SolitaireHelperModels
                     }
                 }
                 Move move = GetBestMove(cleansedMoves);
+                
             
                 if(move == null && stockRefillCounter == 3 || totalMovesMade == 500)
                 {
@@ -69,10 +72,21 @@ namespace SolitaireHelperModels
                     stockRefillCounter += table.DrawNewCardsToTalon();
                     continue;
                 }
-                
-                Console.WriteLine(move.ToString());
+
+                /*
+                if (move.GetScore() < 25 && stockRefillCounter < 3)
+                {
+                    stockRefillCounter += table.DrawNewCardsToTalon();
+                    continue;
+                }
+                */
+                if (ShowConsoleText)
+                {
+                    Console.WriteLine(move.ToString());
+                }
                 table.MakeMove(move);
                 totalMovesMade++;
+                stockRefillCounter = 0;
                 PreviousStates.Add(new Table(table));
                 PreviousStringStates.Add(table.ToString());
             }
