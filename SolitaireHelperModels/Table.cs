@@ -317,9 +317,25 @@ namespace SolitaireHelperModels
             }
 
             // Test if king can move to an empty Tableau
-            if (card.Rank == 13 && fromPile.IsTableau() && toPile.IsTableau() && toPile.IsEmpty() && !fromPile.IsEmpty())
+            if (card.Rank == 13 && fromPile.IsTableau() && toPile.IsTableau() && toPile.IsEmpty())
             {
-                return score += 75 + fromPile.GetCards().Count;
+                if (fromPile.GetCards().Count > 1)
+                {
+                    int cardIndex = fromPile.GetCards().FindIndex(c => c.Rank == card.Rank && c.Suit == card.Suit && c.Visible == card.Visible);
+                    if (cardIndex >= 1)
+                    {
+                        if (fromPile.GetCards()[cardIndex - 1].Visible == true)
+                        {
+                            return score = 20;
+                        }
+
+                        if (fromPile.GetCards()[cardIndex - 1].Visible == false)
+                        {
+                            return score += 75 + fromPile.GetCards().Count;
+                        }
+                    }
+                }
+                return score += 25 + fromPile.GetCards().Count;
             }
 
             // Test if card can move from Tableau to Foundation
@@ -701,7 +717,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Talon.GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nF1:");
@@ -709,7 +725,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Foundations[0].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nF2:");
@@ -717,7 +733,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Foundations[1].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nF3:");
@@ -725,7 +741,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Foundations[2].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nF4:");
@@ -733,7 +749,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Foundations[3].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nT1:");
@@ -741,7 +757,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Tableaus[0].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nT2:");
@@ -751,7 +767,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Tableaus[1].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nT3:");
@@ -759,7 +775,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Tableaus[2].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nT4:");
@@ -767,7 +783,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Tableaus[3].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nT5:");
@@ -775,7 +791,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Tableaus[4].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nT6:");
@@ -783,7 +799,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Tableaus[5].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nT7:");
@@ -791,7 +807,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Tableaus[6].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
 
             Console.WriteLine("\nStock");
@@ -799,7 +815,7 @@ namespace SolitaireHelperModels
                 Console.WriteLine("Empty");
             foreach (Card card in Stock.GetCards())
             {
-                Console.WriteLine(card.ToString());
+                Console.WriteLine(card.FullToString());
             }
             Console.WriteLine("\n\n");
         }

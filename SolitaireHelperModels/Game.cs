@@ -85,10 +85,10 @@ namespace SolitaireHelperModels
             else
             {
                 Console.WriteLine("No possible moves. Solitaire cannot be solved\n");
+                table.PrintTable();
                 return 0;
             }
         }
- 
         public Move GetBestMove(List<Move> moves)
         {
             if(moves.Count == 0)
