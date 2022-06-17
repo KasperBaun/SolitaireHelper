@@ -212,9 +212,11 @@ namespace SolitaireHelperModels
             {
                 if (pile.IsMovePossible(topCard))
                 {
+                    //Console.WriteLine("topCard = " + topCard.FullToString());
                     int score = CalculateScore(topCard, fromPile, pile);
                     Move move = new Move(fromPile.PileToString(), pile.PileToString(), topCard, score);
                     moves.Add(move);
+                    //Console.WriteLine("Fra tableau til foundation score: " + move.GetScore());
                 }
             }
 
@@ -244,7 +246,10 @@ namespace SolitaireHelperModels
             List<Move> moves = new List<Move>();
 
             // Find moves in Talon
-            moves.AddRange(GetPossibleMovesInPile(Talon));
+            if(!(CardsInStock()+CardsInTalon() == 3 && CardsInStock() < 3))
+            {
+                moves.AddRange(GetPossibleMovesInPile(Talon));
+            }
 
             // Find moves in Foundations (only top-cards)
             foreach (Pile pile in Foundations)
@@ -291,15 +296,23 @@ namespace SolitaireHelperModels
             {
                 return 0;
             }
+            int facedownCards = 0;
+            foreach(Card c in fromPile.GetCards())
+            {
+                if (!c.Visible)
+                {
+                    facedownCards++;
+                }
+            }
 
             if (fromPile.GetCards().Count > 1)
             {
                 int cardIndex = fromPile.GetCards().FindIndex(c => c.Rank == card.Rank && c.Suit == card.Suit && c.Visible == card.Visible);
-                if (fromPile.Type != 12 && cardIndex >= 1)
+                if (cardIndex >= 1)
                 {
                     if (fromPile.GetCards()[cardIndex - 1].Visible == false)
                     {
-                        score += 10;
+                        score += 30;
                     }
                 }
             }
@@ -308,17 +321,17 @@ namespace SolitaireHelperModels
             // Test if ace can move to any of the Foundations
             if (card.Rank == 1 && toPile.IsFoundation())
             {
-                return score += 95 + fromPile.GetCards().Count;
+                return score += 95 + facedownCards;
             }
 
-            // Test if 2 can move to any of the Foundations
-            if (card.Rank == 2 && fromPile.IsTableau() && toPile.IsFoundation())
+            // Test if card can move to any of the Foundations
+            if (toPile.IsFoundation())
             {
-                return score += 85 + fromPile.GetCards().Count;
+                return score += 85 + facedownCards;
             }
 
             // Test if king can move to an empty Tableau
-            if (card.Rank == 13 && fromPile.IsTableau() && toPile.IsTableau() && toPile.IsEmpty())
+            if (card.Rank == 13 && toPile.IsTableau() && toPile.IsEmpty())
             {
                 if (fromPile.GetCards().Count > 1)
                 {
@@ -327,42 +340,55 @@ namespace SolitaireHelperModels
                     {
                         if (fromPile.GetCards()[cardIndex - 1].Visible == true)
                         {
+                            if (fromPile.IsFoundation())
+                            {
+                                return score = 5;
+                            }
                             return score = 20;
                         }
 
                         if (fromPile.GetCards()[cardIndex - 1].Visible == false)
                         {
-                            return score += 75 + fromPile.GetCards().Count;
+                            return score += 75 + facedownCards;
                         }
                     }
                 }
-                return score += 25 + fromPile.GetCards().Count;
-            }
-
-            // Test if card can move from Tableau to Foundation
-            if (fromPile.IsTableau() && toPile.IsFoundation())
-            {
-                return score += fromPile.GetCards().Count + 40;
+                return 0;
             }
 
 
             // Test if card can move from Tableau to Tableau
             if (card.Rank != 13 && fromPile.IsTableau() && toPile.IsTableau())
             {
-                return score += fromPile.GetCards().Count + 20;
+                return score += facedownCards + 20;
             }
 
             // Test if card can move from Talon to Foundation
             if (fromPile.Type == 12 && toPile.IsFoundation())
             {
-                return score += fromPile.GetCards().Count + 20;
+                return score += facedownCards + 20;
             }
 
 
             // Test if card can move from Talon to Tableau
             if (fromPile.Type == 12 && toPile.IsTableau())
             {
-                return score += fromPile.GetCards().Count + 10;
+                return score += facedownCards + 15;
+            }
+
+            // Test if card can move from Foundation to Tableau
+            if(fromPile.IsFoundation() && toPile.IsTableau())
+            {
+                if(CardsInFoundations() > 30)
+                {
+                    return 50;
+                }
+                if(CardsInStock() == 0)
+                {
+                    return score += 15;
+                }
+
+                return 15;
             }
 
             return score;
@@ -394,8 +420,11 @@ namespace SolitaireHelperModels
             if (CardsInStock() < 3 && Talon.GetCards().Count + CardsInStock() >= 3)
             {
                 // Take the cards from talon and put under stock
-                RefillStock();
+                if(CardsInStock() == 0 && CardsInTalon() == 3)
+                {
                 return 1;
+                }
+                RefillStock();
             }
             return 1;
         }
@@ -432,6 +461,27 @@ namespace SolitaireHelperModels
         public int CardsInTalon()
         {
             return Talon.GetCards().Count;
+        }
+        private int CardsInFoundations()
+        {
+            int sum = 0;
+            foreach(Card card in Foundations[0].GetCards())
+            {
+                sum++;
+            }
+            foreach (Card card in Foundations[1].GetCards())
+            {
+                sum++;
+            }
+            foreach (Card card in Foundations[2].GetCards())
+            {
+                sum++;
+            }
+            foreach (Card card in Foundations[3].GetCards())
+            {
+                sum++;
+            }
+            return sum;
         }
         public Pile GetPileFromType(int type)
         {
@@ -713,14 +763,7 @@ namespace SolitaireHelperModels
         public void PrintTable()
         {
             Console.WriteLine("Table currently consists of:\n");
-            Console.WriteLine("Talon:");
-            if (Talon.GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Talon.GetCards())
-            {
-                Console.WriteLine(card.FullToString());
-            }
-
+          
             Console.WriteLine("\nF1:");
             if (Foundations[0].GetCards().Count == 0)
                 Console.WriteLine("Empty");
@@ -811,6 +854,14 @@ namespace SolitaireHelperModels
                 Console.WriteLine(card.FullToString());
             }
 
+            Console.WriteLine("\nTalon:");
+            if (Talon.GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Talon.GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
             Console.WriteLine("\nStock");
             if (Stock.GetCards().Count == 0)
                 Console.WriteLine("Empty");
@@ -823,6 +874,10 @@ namespace SolitaireHelperModels
         public override string ToString()
         {
             string tableString = "";
+            if ((Talon.GetCards().Count == 0))
+            {
+                tableString += "T-E,";
+            }
             if (!(Talon.GetCards().Count == 0))
             {
                 foreach (Card card in Talon.GetCards())
@@ -831,12 +886,21 @@ namespace SolitaireHelperModels
                 }
             }
 
+            if (Foundations[0].GetCards().Count == 0)
+            {
+                tableString += "F1-E,";
+            }
             if (!(Foundations[0].GetCards().Count == 0))
             {
                 foreach (Card card in Foundations[0].GetCards())
                 {
                     tableString += card.ToString() + ",";
                 }
+            }
+
+            if (Foundations[1].GetCards().Count == 0)
+            {
+                tableString += "F2-E,";
             }
 
             if (!(Foundations[1].GetCards().Count == 0))
@@ -847,12 +911,22 @@ namespace SolitaireHelperModels
                 }
             }
 
+            if (Foundations[2].GetCards().Count == 0)
+            {
+                tableString += "F3-E,";
+            }
+
             if (!(Foundations[2].GetCards().Count == 0))
             {
                 foreach (Card card in Foundations[2].GetCards())
                 {
                     tableString += card.ToString() + ",";
                 }
+            }
+
+            if (Foundations[3].GetCards().Count == 0)
+            {
+                tableString += "F3-E,";
             }
 
             if (!(Foundations[3].GetCards().Count == 0))
@@ -863,7 +937,10 @@ namespace SolitaireHelperModels
                 }
             }
 
-
+            if (Tableaus[0].GetCards().Count == 0)
+            {
+                tableString += "T1-E,";
+            }
 
             if (!(Tableaus[0].GetCards().Count == 0))
             {
@@ -871,6 +948,11 @@ namespace SolitaireHelperModels
                 {
                     tableString += card.ToString() + ",";
                 }
+            }
+
+            if (Tableaus[1].GetCards().Count == 0)
+            {
+                tableString += "T2-E,";
             }
 
             if (!(Tableaus[1].GetCards().Count == 0))
@@ -881,12 +963,22 @@ namespace SolitaireHelperModels
                 }
             }
 
+            if (Tableaus[2].GetCards().Count == 0)
+            {
+                tableString += "T3-E,";
+            }
+
             if (!(Tableaus[2].GetCards().Count == 0))
             {
                 foreach (Card card in Tableaus[2].GetCards())
                 {
                     tableString += card.ToString() + ",";
                 }
+            }
+
+            if (Tableaus[3].GetCards().Count == 0)
+            {
+                tableString += "T4-E,";
             }
 
             if (!(Tableaus[3].GetCards().Count == 0))
@@ -897,12 +989,22 @@ namespace SolitaireHelperModels
                 }
             }
 
+            if (Tableaus[4].GetCards().Count == 0)
+            {
+                tableString += "T5-E,";
+            }
+
             if (!(Tableaus[4].GetCards().Count == 0))
             {
                 foreach (Card card in Tableaus[4].GetCards())
                 {
                     tableString += card.ToString() + ",";
                 }
+            }
+
+            if (Tableaus[5].GetCards().Count == 0)
+            {
+                tableString += "T6-E,";
             }
 
             if (!(Tableaus[5].GetCards().Count == 0))
@@ -913,12 +1015,22 @@ namespace SolitaireHelperModels
                 }
             }
 
+            if (Tableaus[6].GetCards().Count == 0)
+            {
+                tableString += "T7-E,";
+            }
+
             if (!(Tableaus[6].GetCards().Count == 0))
             {
                 foreach (Card card in Tableaus[6].GetCards())
                 {
                     tableString += card.ToString() + ",";
                 }
+            }
+
+            if (Stock.GetCards().Count == 0)
+            {
+                tableString += "S-E,";
             }
 
             if (!(Stock.GetCards().Count == 0))

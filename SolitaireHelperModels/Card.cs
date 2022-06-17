@@ -15,7 +15,12 @@
 
         public override string ToString()
         {
-            return RankAsChar()+ SuitAsChar(); 
+            char vis = 'f';
+            if (Visible)
+            {
+                vis = 'v';
+            }
+            return RankAsChar() + SuitAsChar() + vis; 
         }
 
         public string FullToString()
