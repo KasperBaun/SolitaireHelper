@@ -33,6 +33,10 @@ namespace SolitaireHelperModels
                 List<Move> currentPossibleMoves = table.GetAllPossibleMoves();
                 currentPossibleMoves.RemoveAll(mv => mv.GetScore() == 0);
                 List<Move> cleansedMoves = new List<Move>();
+                if(totalMovesMade == 95)
+                {
+                    PreviousStringStates = new List<string>();
+                }
                 foreach (Move m in currentPossibleMoves)
                 {
                     Table newState = new Table(table);
