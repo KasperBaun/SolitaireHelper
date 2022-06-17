@@ -10,6 +10,7 @@ namespace SolitaireHelperModels
         public string Date { get; set; }
         public string GameType { get; set; }
         public bool GameIsFinished { get; set; }
+        public List<Table> PreviousStates { get; set; }
         public List<string> PreviousStringStates { get; set; }
 
         public Game(){ }
@@ -23,22 +24,57 @@ namespace SolitaireHelperModels
         }
         public int PlayGame(Table table)
         {
+            PreviousStates = new List<Table>();
             PreviousStringStates = new List<string>();
+            int stockRefillCounter = 0;
+            int totalMovesMade = 0;
             while (!GameIsFinished)
             {
-                List<Move> allPossibleMoves = table.GetAllPossibleMoves();
-                Move move = FindNextMove(allPossibleMoves, table, 0);
-            
-                if(move == null)
+                List<Move> currentPossibleMoves = table.GetAllPossibleMoves();
+                currentPossibleMoves.RemoveAll(mv => mv.GetScore() == 0);
+                List<Move> cleansedMoves = new List<Move>();
+                foreach (Move m in currentPossibleMoves)
                 {
+                    cleansedMoves.Add(m);
+                    Table mState = new Table(table);
+                    mState.MakeMove(m);
+                    if (PreviousStates.Exists(t => t.IsEqual(mState)))
+                    {
+                        // We have been in this state before - discard this move
+                        cleansedMoves.Remove(m);
+                    }
+                }
+
+                foreach (Move m in currentPossibleMoves)
+                {
+                    Table mState = new Table(table);
+                    mState.MakeMove(m);
+                    if (PreviousStringStates.Exists(t => t == mState.ToString()))
+                    {
+                        // We have been in this state before - discard this move
+                        cleansedMoves.Remove(m);
+                    }
+                }
+                Move move = GetBestMove(cleansedMoves);
+            
+                if(move == null && stockRefillCounter == 3 || totalMovesMade == 500)
+                {
+                    Console.WriteLine("Total moves made: {0}", totalMovesMade);
                     GameIsFinished = true;
                     break;
+                }
+
+                if(move == null)
+                {
+                    stockRefillCounter += table.DrawNewCardsToTalon();
+                    continue;
                 }
                 
                 Console.WriteLine(move.ToString());
                 table.MakeMove(move);
+                totalMovesMade++;
+                PreviousStates.Add(new Table(table));
                 PreviousStringStates.Add(table.ToString());
-                continue;
             }
 
             if(GameIsFinished && table.IsTableEmpty())
@@ -52,36 +88,7 @@ namespace SolitaireHelperModels
                 return 0;
             }
         }
-        private Move FindNextMove(List<Move> allPossibleMoves, Table table,  int StockRefillCounter)
-        {
-            Move move = GetBestMove(allPossibleMoves);
-
-            if(allPossibleMoves.Count == 0 && StockRefillCounter != 3)
-            {
-                StockRefillCounter =  StockRefillCounter + table.DrawNewCardsToTalon();
-                allPossibleMoves = table.GetAllPossibleMoves();
-                return FindNextMove(allPossibleMoves, table, StockRefillCounter);
-
-                if(StockRefillCounter == 3)
-                {
-                    return move;
-                }
-            }
-
-            Table newState = new Table(table);
-            newState.MakeMove(move);
-            if (PreviousStringStates.Contains(newState.ToString()))
-            {
-                allPossibleMoves.Remove(move);
-                FindNextMove(allPossibleMoves,table,  StockRefillCounter);
-                if (PreviousStringStates.Contains(newState.ToString()))
-                {
-                    GameIsFinished = true;
-                }
-            }
-
-            return move;
-        }
+ 
         public Move GetBestMove(List<Move> moves)
         {
             if(moves.Count == 0)
