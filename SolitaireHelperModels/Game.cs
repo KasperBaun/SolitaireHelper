@@ -31,18 +31,16 @@ namespace SolitaireHelperModels
             while (!GameIsFinished)
             {
                 List<Move> currentPossibleMoves = table.GetAllPossibleMoves();
+               
                 currentPossibleMoves.RemoveAll(mv => mv.GetScore() == 0);
                 List<Move> cleansedMoves = new List<Move>();
-                if(totalMovesMade == 95)
-                {
-                    PreviousStringStates = new List<string>();
-                }
+             
                 foreach (Move m in currentPossibleMoves)
                 {
                     Table newState = new Table(table);
                     newState.MakeMove(m);
                     cleansedMoves.Add(m);
-                    if (PreviousStringStates.Exists(t => t == table.ToString()))
+                    if (PreviousStringStates.Exists(t => t == newState.ToString()))
                     {
                         // We have been in this state before - discard this move
                         cleansedMoves.Remove(m);

@@ -874,7 +874,7 @@ namespace SolitaireHelperModels
         public override string ToString()
         {
             string tableString = "";
-            if ((Talon.GetCards().Count == 0))
+            if (Talon.GetCards().Count == 0)
             {
                 tableString += "T-E,";
             }
