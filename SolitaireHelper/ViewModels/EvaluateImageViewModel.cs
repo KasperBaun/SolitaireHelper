@@ -2,40 +2,23 @@
 using System.Diagnostics;
 using Xamarin.Forms;
 using SolitaireHelper.Services;
+using System.IO;
 
 namespace SolitaireHelper.ViewModels
 {
-    [QueryProperty(nameof(Source), nameof(Source))]
+
     public class EvaluateImageViewModel : BaseViewModel
     {
-        private ImageStore ImageStore { get; set; }
-        public Image Photo { get; set; } = new Image() { Source = "template.png" };
+     
 
 
-        public string Source
+        public string ToBase64(string path)
         {
-            get
-            {
-                return Source;
-            }
-            set
-            {
-                Source = value;
-                LoadPhoto(value);
-            }
-        }
-
-        public async void LoadPhoto(string path)
-        {
-            try
-            {
-                // Fetch photo
-                Photo = await ImageStore.GetImageAsync(path);
-            }
-            catch (Exception)
-            {
-                Debug.WriteLine("Failed to Load Image");
-            }
+            var fileStream = File.OpenRead(path);
+            MemoryStream memoryStream = new MemoryStream();
+            fileStream.CopyTo(memoryStream);
+            Byte[] bytes = memoryStream.ToArray();
+            return Convert.ToBase64String(bytes);
         }
     }
 }

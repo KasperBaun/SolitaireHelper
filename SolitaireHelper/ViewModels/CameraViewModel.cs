@@ -68,17 +68,15 @@ namespace SolitaireHelper.ViewModels
                 return;
             }
 
-            var savedPhotoPath = await SavePhotoFileAsync(photoData, Guid.NewGuid().ToString() + ".jpg");
+            string savedPhotoPath = await SavePhotoFileAsync(photoData, Guid.NewGuid().ToString() + ".jpg");
             //Console.WriteLine(savedPhotoPath);
-            //await ImageStore.AddImageAsync(savedPhotoPath);
-            //await Shell.Current.GoToAsync($"{nameof(EvaluateImagePage)}?{nameof(EvaluateImageViewModel.Photo)}={savedPhotoPath}");
+            await Shell.Current.GoToAsync($"{nameof(EvaluateImagePage)}?savedPhotoPath={savedPhotoPath}");
         }
-
         private async Task<string> SavePhotoFileAsync(byte[] photoData, string fileName)
         {
             var dirPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             Directory.CreateDirectory(dirPath);
-
+          
             var savedPhotoPath = Path.Combine(dirPath, fileName);
 
             using (var fs = new FileStream(savedPhotoPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
@@ -87,7 +85,6 @@ namespace SolitaireHelper.ViewModels
                 return savedPhotoPath;
             }
         }
-
         public async Task<PermissionStatus> CheckAndRequestPermissionAsync<T>(T permission) where T : BasePermission
         {
             var status = await permission.CheckStatusAsync();

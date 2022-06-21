@@ -12,15 +12,14 @@
 
     <ContentPage.Content>
         <Grid>
-            <Image
-                Margin="10"
-                Aspect="AspectFill"
-                HeightRequest="500"
-                HorizontalOptions="Center"
-                Source="{Binding Photo}"
-                VerticalOptions="Start"
-                WidthRequest="500" />
-         
+            <!--<Label Text="{Binding path}" 
+                            LineBreakMode="NoWrap"
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            FontSize="Medium"
+            
+                
+            />-->
         </Grid>
     </ContentPage.Content>
 </ContentPage>
