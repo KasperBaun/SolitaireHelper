@@ -24,20 +24,5 @@ namespace SolitaireHelper.Views
         {
             playerName = entry_field.Text;
         }
-        async void Button_Clicked(System.Object sender, System.EventArgs e)
-        {
-            
-            var pickResult = await FilePicker.PickAsync(new PickOptions
-            {
-                FileTypes = FilePickerFileType.Images,
-                PickerTitle = "Pick an image"
-            });
-
-            if (pickResult != null)
-            {
-                var stream = await pickResult.OpenReadAsync();
-                resultImage.Source = ImageSource.FromStream(() => stream);
-            }
-        }
     }
 }

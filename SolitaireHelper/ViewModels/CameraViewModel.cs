@@ -12,25 +12,13 @@ namespace SolitaireHelper.ViewModels
 {
     public class CameraViewModel : BaseViewModel
     {
-        #region Properties
-        private ImageStore ImageStore { get; set; }
-        private ImageSource _lastPhoto;
-        public ImageSource LastPhoto
-        {
-            get => _lastPhoto;
-            set => SetProperty(ref _lastPhoto, value);
-        }
-
         private bool _canTakePhoto;
+        public string PhotoPath { get; set; }
         public bool CanTakePhoto
         {
             get => _canTakePhoto;
             set => SetProperty(ref _canTakePhoto, value);
         }
-
-        #endregion
-
-        #region Public methods
 
         public void OnAvailableChanged(bool cameraAvailable)
         {
@@ -39,18 +27,14 @@ namespace SolitaireHelper.ViewModels
 
         public async Task OnPhotoCapturedAsync(byte[] photoData, ImageSource photoPreview)
         {
-            LastPhoto = photoPreview;
             await TrySavePhotoAsync(photoData);
+            await Shell.Current.GoToAsync($"{nameof(EvaluateImagePage)}?path={PhotoPath}");
         }
 
         public void OnPhotoCaptureFailed(string message)
         {
             Debug.WriteLine("Photo capture failed: " + message);
         }
-
-        #endregion
-
-        #region Private methods
 
         private async Task TrySavePhotoAsync(byte[] photoData)
         {
@@ -68,9 +52,9 @@ namespace SolitaireHelper.ViewModels
                 return;
             }
 
-            string savedPhotoPath = await SavePhotoFileAsync(photoData, Guid.NewGuid().ToString() + ".jpg");
-            //Console.WriteLine(savedPhotoPath);
-            await Shell.Current.GoToAsync($"{nameof(EvaluateImagePage)}?savedPhotoPath={savedPhotoPath}");
+            PhotoPath = await SavePhotoFileAsync(photoData, Guid.NewGuid().ToString() + ".jpg");
+            Console.WriteLine(PhotoPath);
+            //await Shell.Current.GoToAsync($"{nameof(EvaluateImagePage)}?savedPhotoPath={savedPhotoPath}");
         }
         private async Task<string> SavePhotoFileAsync(byte[] photoData, string fileName)
         {
@@ -95,7 +79,5 @@ namespace SolitaireHelper.ViewModels
 
             return status;
         }
-
-        #endregion
     }
 }

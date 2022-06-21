@@ -1,32 +1,20 @@
 ﻿using SolitaireHelper.Views;
 using System;
 using System.ComponentModel;
-using System.IO;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 using SolitaireHelperModels;
-using SolitaireHelper.Services;
-using System.Xml.Serialization;
-using System.Xml;
 
 namespace SolitaireHelper.ViewModels
 {
     public class NewGameViewModel : BaseViewModel
     {
-        ReadWriteXML write = new ReadWriteXML();
         private string date = DateTime.Today.Date.ToShortDateString();
         private string gameType = "7-Kabale";
-        private ImageSource imageURI;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NewGameViewModel()
         {
             Title = "New Game";
-            CardDeck CardDeck = new CardDeck();
-            CardDeck.PrintDeck();
-            //Table Table = new Table(CardDeck.Deck);
-            //Table.PrintDeck();
             SaveCommand = new Command(OnSave);
             CancelCommand = new Command(OnCancel);
             TakePictureCommand = new Command(OnTakePicture);
@@ -40,72 +28,11 @@ namespace SolitaireHelper.ViewModels
             await DataStore.AddGameAsync(game);
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
-            write.WriteXML(game);
-
         }
         private async void OnTakePicture(/*object sender, EventArgs e*/)
         {
-            //await TakePhotoAsync();
             await Shell.Current.GoToAsync($"{nameof(CameraPage)}");
         }
-
-        private async Task TakePhotoAsync()
-        {
-            try
-            {
-                var photo = await MediaPicker.CapturePhotoAsync();
-                await LoadPhotoAsync(photo);
-                Console.WriteLine($"CapturePhotoAsync COMPLETED: {imageURI}");
-                //await Shell.Current.GoToAsync("PictureConfirmationPage");
-
-            }
-            catch (FeatureNotSupportedException fnsEx)
-            {
-                // Feature is not supported on the device
-                Console.WriteLine($"CapturePhotoAsync THREW: {fnsEx.Message}");
-            }
-            catch (PermissionException pEx)
-            {
-                // Permissions not granted
-                Console.WriteLine($"CapturePhotoAsync THREW: {pEx.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"CapturePhotoAsync THREW: {ex.Message}");
-            }
-        }
-
-        private async Task LoadPhotoAsync(FileResult photo)
-        {
-            // Cancelled
-            if (photo == null)
-            {
-                imageURI = null;
-                return;
-            }
-            // Save the file into local storage
-            var newFile = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
-            using (var stream = await photo.OpenReadAsync())
-            using (var newStream = File.OpenWrite(newFile))
-                await stream.CopyToAsync(newStream);
-
-            imageURI = newFile;
-        }
-
-        public ImageSource PhotoPath
-        {
-            get => imageURI;
-            set
-            {
-                imageURI = value;
-                var args = new PropertyChangedEventArgs(nameof(PhotoPath));
-                PropertyChanged?.Invoke(this, args);
-            }
-        }
-
-
-
-
         public string Date
         {
             get => date;
@@ -116,7 +43,6 @@ namespace SolitaireHelper.ViewModels
                 PropertyChanged?.Invoke(this, args);
             }
         }
-
         public string GameType
         {
             get => gameType;
@@ -137,8 +63,5 @@ namespace SolitaireHelper.ViewModels
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
         }
-
-
-
     }
 }

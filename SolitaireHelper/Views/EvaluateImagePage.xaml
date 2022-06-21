@@ -2,24 +2,21 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SolitaireHelper.ViewModels" 
-             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:DataType="vm:EvaluateImageViewModel"
              x:Class="SolitaireHelper.Views.EvaluateImagePage"
+             Shell.PresentationMode="ModalAnimated"
+             Title="{Binding Title}"
              Shell.NavBarIsVisible="False"
              >
-<ContentPage.BindingContext>
-    <vm:EvaluateImageViewModel />
-</ContentPage.BindingContext>
 
-    <ContentPage.Content>
-        <Grid>
-            <!--<Label Text="{Binding path}" 
-                            LineBreakMode="NoWrap"
-                            TextColor="Black"
-                            FontAttributes="Bold"
-                            FontSize="Medium"
-            
-                
-            />-->
-        </Grid>
-    </ContentPage.Content>
+
+            <StackLayout Orientation="Horizontal">
+                <Label Text="{Binding Photo}" 
+                                LineBreakMode="NoWrap"
+                                TextColor="Black"
+                                FontAttributes="Bold"
+                                FontSize="Medium"
+                />
+        <Button Text="Save" Command="{Binding SendImageCommand}" HorizontalOptions="FillAndExpand" CornerRadius="10"/>
+    </StackLayout>
 </ContentPage>
