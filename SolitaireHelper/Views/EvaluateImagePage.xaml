@@ -10,13 +10,22 @@
              >
 
 
-            <StackLayout Orientation="Horizontal">
-                <Label Text="{Binding Photo}" 
-                                LineBreakMode="NoWrap"
-                                TextColor="Black"
-                                FontAttributes="Bold"
-                                FontSize="Medium"
+            <StackLayout Orientation="Vertical">
+                <Label  Text="{Binding BestMove}" 
+                        LineBreakMode="NoWrap"
+                        TextColor="Black"
+                        FontAttributes="Bold"
+                        FontSize="Medium"
+                        Margin="20"
+                        Padding="10"
                 />
-        <Button Text="Save" Command="{Binding SendImageCommand}" HorizontalOptions="FillAndExpand" CornerRadius="10"/>
-    </StackLayout>
+            
+                <Button Text="Tilbage" 
+                        Command="{Binding BackToNewPictureCommand}" 
+                        HorizontalOptions="FillAndExpand" 
+                        CornerRadius="10"
+                        Margin="20"
+                        Padding="10"
+                        />
+            </StackLayout>
 </ContentPage>
