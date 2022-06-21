@@ -15,8 +15,19 @@
 
         public override string ToString()
         {
-            return "Card: " + RankAsString() +" of " + SuitAsString() + ", Visible: " + Visible; 
+            char vis = 'f';
+            if (Visible)
+            {
+                vis = 'v';
+            }
+            return RankAsChar() + SuitAsChar() + vis; 
         }
+
+        public string FullToString()
+        {
+            return "Card: " + RankAsString() + " of " + SuitAsString() + ", Visible: " + Visible;
+        }
+
         public bool IsBlack() {
             return Suit == 2 || Suit == 4;
         }
@@ -127,6 +138,16 @@
                 default:
                     return "Something went wrong";
             }
+        }
+        public override int GetHashCode()
+        {
+            int vis = 0;
+            if (Visible)
+            {
+                vis = 1;
+            }
+            return Rank+Suit*100+vis;
+            
         }
     }    
 }

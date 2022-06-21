@@ -7,9 +7,11 @@ namespace SolitaireHelper.nUnitTests
 {
     public class GameTests
     {
+        Table table;
         [SetUp]
         public void Setup()
         {
+            table = TestTable();
         }
 
         [Test]
@@ -30,7 +32,7 @@ namespace SolitaireHelper.nUnitTests
             int totalCards = 0;
 
             /* Count black, red and total cards */
-            foreach(Card card in cardDeck.Deck)
+            foreach (Card card in cardDeck.Deck)
             {
                 totalCards++;
                 if (card.IsRed())
@@ -42,6 +44,8 @@ namespace SolitaireHelper.nUnitTests
                     black++;
                 }
             }
+
+            table.PrintTable();
 
             /* Test if the set of cards have one of each rank in all 4 suits */
             for (int j = 1; j <= 4; j++)
@@ -108,9 +112,9 @@ namespace SolitaireHelper.nUnitTests
 
             // All piles only have the top card visible
             int n = 0;
-            foreach(Card card in stockCards)
+            foreach (Card card in stockCards)
             {
-                if(card.Visible)
+                if (card.Visible)
                     n++;
             }
             Assert.IsTrue(n == 0);
@@ -168,9 +172,9 @@ namespace SolitaireHelper.nUnitTests
             // No cards are visible in stock
 
             int visibleInStock = 0;
-            foreach(Card card in stockCards)
+            foreach (Card card in stockCards)
             {
-                if(card.Visible)
+                if (card.Visible)
                     visibleInStock++;
             }
 
@@ -186,7 +190,7 @@ namespace SolitaireHelper.nUnitTests
 
             // Act
             table.PrintTable();
-            table.NewCardsInTalon();
+            table.DrawNewCardsToTalon();
             table.PrintTable();
             int numberOfCardsInTalon = table.GetPileFromType(12).GetNumberOfCards();
             bool firstCard = table.GetPileFromType(12).GetCards()[0].Visible;
@@ -210,9 +214,9 @@ namespace SolitaireHelper.nUnitTests
 
             // Act
             table.PrintTable();
-            table.NewCardsInTalon();
+            table.DrawNewCardsToTalon();
             table.PrintTable();
-            table.NewCardsInTalon();
+            table.DrawNewCardsToTalon();
             table.PrintTable();
             int numberOfCardsInTalon = table.GetPileFromType(12).GetNumberOfCards();
             bool firstCard = table.GetPileFromType(12).GetCards()[0].Visible;
@@ -243,18 +247,18 @@ namespace SolitaireHelper.nUnitTests
             // Act
             Console.WriteLine("Before doing anything");
             table.PrintTable();
-            table.NewCardsInTalon();
-            table.NewCardsInTalon();
-            table.NewCardsInTalon();
-            table.NewCardsInTalon();
-            table.NewCardsInTalon();
-            table.NewCardsInTalon();
-            table.NewCardsInTalon();
+            table.DrawNewCardsToTalon();
+            table.DrawNewCardsToTalon();
+            table.DrawNewCardsToTalon();
+            table.DrawNewCardsToTalon();
+            table.DrawNewCardsToTalon();
+            table.DrawNewCardsToTalon();
+            table.DrawNewCardsToTalon();
             // This should cause stock to have 2 cards only
             table.GetPileFromType(0).GetCards().RemoveAt(0);
             // This method should handle the edge case where stock only has 2 cards by taking 1 card from Talon,
             // and putting under stock then taking the cards from stock and putting it in talon.
-            table.NewCardsInTalon();
+            table.DrawNewCardsToTalon();
             Console.WriteLine("After emptying all the cards in stock");
             table.PrintTable();
 
@@ -262,22 +266,387 @@ namespace SolitaireHelper.nUnitTests
             int numberOfCardsInStock = table.GetPileFromType(0).GetCards().Count;
 
             // Assert
-            Assert.IsTrue(numberOfCardsInStock == 0);
-            Assert.IsTrue(numberOfCardsInTalon == 23);
+            Assert.IsTrue(numberOfCardsInStock == 23);
+            Assert.IsTrue(numberOfCardsInTalon == 0);
 
         }
         [Test]
-        public void MoveTest()
+        public void GetAllPossibleMovesTest()
         {
-            /* Test that the move is correctly done and behaves as expected */
+            /* Test that the function correctly extracts all the possible moves in the current table */
 
             // Arrange
 
             // Act
+            table.PrintTable();
+            table.GetPileFromType(0).PrintPile();
+            List<Move> moves = table.GetAllPossibleMoves();
+
+            // Moves that are possible in the current state of the table if all talon is checked (got these moves from doing the solitaire on my table):
+            // AD from T1 -> F3
+            // D7 from Talon -> T5
+            // H4 from Talon -> T2
+            // D10 from Talon -> T6
+            // D4 from Talon -> T2
+            // SA from Talon -> F4
+
+            Console.WriteLine("# of moves in allPossibleMoves list:" + moves.Count);
+            Console.WriteLine("Moves in allPossibleMoves list:");
+            foreach (Move move in moves)
+            {
+                Console.WriteLine(move.ToString());
+            }
 
             // Assert
+            Assert.IsTrue(moves.Count == 1);
+        }
+        [Test]
+        public void MakeMoveTest()
+        {
+            /* Tests that the move is made correctly on the table */
+            Game game = new();
+
+            // Arrange
+            List<Move> moves = table.GetAllPossibleMoves();
+            Move bestMove = game.GetBestMove(moves);
+            Console.WriteLine(bestMove.ToString());
+
+            // Act
+            table.MakeMove(bestMove);
+            table.PrintTable();
+            // Ace of Spades from Talon -> F4 has a score of 119
+
+
+
+            // Assert - What do we expect?
+            // 1. The move score is 119
+            Assert.IsTrue(bestMove.GetScore() == 96);
+
+            // 2. The card is moved from fromPile to toPile and the state of the piles is correct (hidden topCards set to visible etc.)
+            Assert.IsFalse(table.GetPileFromType(0).GetCards().Contains(bestMove.GetCard()));
+            Assert.IsTrue(table.GetPileFromType(10).GetCards().Contains(bestMove.GetCard()));
+
+            // 3. Stock is refilled and Talon is empty
+            Assert.IsTrue(table.GetPileFromType(0).IsEmpty() != true);
+            Assert.IsTrue(table.GetPileFromType(12).IsEmpty() == true);
+            Assert.IsTrue(table.CardsInStock() == 24);
 
         }
+        [Test]
+        public void PlaySolvableGameTest()
+        {
+            Table solvableTable = new(TestTableSolvable());
+
+            /* 1st move expected: Move 5C from T2 --> T6 - Score: [32]  */
+            Game game = new();
+            int won = game.PlayGame(solvableTable);
+
+            /* 2nd move expected: Move 6D from T6 --> T2 - Score: [37] */
+
+
+
+
+            Assert.IsTrue(won == 1);
+
+
+            //Move bestMove = table.FindNextMove();
+            //Console.WriteLine("1st move:"); 
+            //Console.WriteLine(bestMove.ToString() + "\n");
+            //table.MakeMove(bestMove);
+
+            //// Assert - What do we expect?
+            //// The first move to be: Move AD from T1 --> F3 - Score: [96]
+            //Assert.IsTrue(bestMove.GetCard().Rank == 1 && bestMove.GetCard().Suit == 3);
+            //Assert.IsTrue(table.GetPileFromType(10).GetCards().Contains(bestMove.GetCard()));
+
+
+
+        }
+        [Test]
+        public void TableIsEqualTest()
+        {
+            Table testTable = new(table);
+            //table.PrintTable();
+            //testTable.PrintTable();
+
+            //Assert.IsTrue(table.IsEqual(testTable));
+            Console.WriteLine(table.CardsInStock());
+            testTable.GetPileFromType(0).GetCards().RemoveAt(0);
+            Console.WriteLine(testTable.CardsInStock());
+
+            Assert.IsFalse(table.IsEqual(testTable));
+        }
+        [Test]
+        public void TableToStringTest()
+        {
+            Console.WriteLine(table.ToString());
+        }
+        public Table TestTable()
+        {
+            // Constructor for a table with a specific set of cards
+            Pile Stock = new() { Type = 0 };
+            Pile T1 = new() { Type = 1 };
+            Pile T2 = new() { Type = 2 };
+            Pile T3 = new() { Type = 3 };
+            Pile T4 = new() { Type = 4 };
+            Pile T5 = new() { Type = 5 };
+            Pile T6 = new() { Type = 6 };
+            Pile T7 = new() { Type = 7 };
+            Pile F1 = new() { Type = 8 };
+            Pile F2 = new() { Type = 9 };
+            Pile F3 = new() { Type = 10 };
+            Pile F4 = new() { Type = 11 };
+            Pile Talon = new() { Type = 12 };
+
+            Card D1 = new(3, 1, true);
+            T1.GetCards().Add(D1);
+
+            Card H7 = new(1, 7, false);
+            Card S5 = new(4, 5, true);
+            T2.GetCards().Add(H7);
+            T2.GetCards().Add(S5);
+
+            Card H8 = new(1, 8, false);
+            Card HJ = new(1, 11, false);
+            Card HK = new(1, 13, true);
+            T3.GetCards().Add(H8);
+            T3.GetCards().Add(HJ);
+            T3.GetCards().Add(HK);
+
+            Card H9 = new(1, 9, false);
+            Card H6 = new(1, 6, false);
+            Card DQ = new(3, 12, false);
+            Card S7 = new(4, 7, true);
+            T4.GetCards().Add(H9);
+            T4.GetCards().Add(H6);
+            T4.GetCards().Add(DQ);
+            T4.GetCards().Add(S7);
+
+            Card S9 = new(4, 9, false);
+            Card HQ = new(1, 12, false);
+            Card DK = new(3, 13, false);
+            Card H10 = new(1, 10, false);
+            Card C8 = new(2, 8, true);
+            T5.GetCards().Add(S9);
+            T5.GetCards().Add(HQ);
+            T5.GetCards().Add(DK);
+            T5.GetCards().Add(H10);
+            T5.GetCards().Add(C8);
+
+            Card S10 = new(4, 10, false);
+            Card H2 = new(1, 2, false);
+            Card SK = new(4, 13, false);
+            Card CA = new(2, 1, false);
+            Card C9 = new(2, 9, false);
+            Card CJ = new(2, 11, true);
+            T6.GetCards().Add(S10);
+            T6.GetCards().Add(H2);
+            T6.GetCards().Add(SK);
+            T6.GetCards().Add(CA);
+            T6.GetCards().Add(C9);
+            T6.GetCards().Add(CJ);
+
+            Card D5 = new(3, 5, false);
+            Card DJ = new(3, 11, false);
+            Card SJ = new(4, 11, false);
+            Card SQ = new(4, 12, false);
+            Card C10 = new(2, 10, false);
+            Card CQ = new(2, 12, false);
+            Card CK = new(2, 13, true);
+            T7.GetCards().Add(D5);
+            T7.GetCards().Add(DJ);
+            T7.GetCards().Add(SJ);
+            T7.GetCards().Add(SQ);
+            T7.GetCards().Add(C10);
+            T7.GetCards().Add(CQ);
+            T7.GetCards().Add(CK);
+
+            Card SA = new(4, 1, false);
+            Stock.GetCards().Add(SA);
+            Card S2 = new(4, 2, false);
+            Stock.GetCards().Add(S2);
+            Card S4 = new(4, 4, false);
+            Stock.GetCards().Add(S4);
+            Card D4 = new(3, 4, false);
+            Stock.GetCards().Add(D4);
+            Card D6 = new(3, 6, false);
+            Stock.GetCards().Add(D6);
+            Card D8 = new(3, 8, false);
+            Stock.GetCards().Add(D8);
+            Card D10 = new(3, 10, false);
+            Stock.GetCards().Add(D10);
+            Card C2 = new(2, 2, false);
+            Stock.GetCards().Add(C2);
+            Card C4 = new(2, 4, false);
+            Stock.GetCards().Add(C4);
+            Card C6 = new(2, 6, false);
+            Stock.GetCards().Add(C6);
+            Card HA = new(1, 1, false);
+            Stock.GetCards().Add(HA);
+            Card H3 = new(1, 3, false);
+            Stock.GetCards().Add(H3);
+            Card H4 = new(1, 4, false);
+            Stock.GetCards().Add(H4);
+            Card H5 = new(1, 5, false);
+            Stock.GetCards().Add(H5);
+            Card C7 = new(2, 7, false);
+            Stock.GetCards().Add(C7);
+            Card S3 = new(4, 3, false);
+            Stock.GetCards().Add(S3);
+            Card S6 = new(4, 6, false);
+            Stock.GetCards().Add(S6);
+            Card S8 = new(4, 8, false);
+            Stock.GetCards().Add(S8);
+            Card D7 = new(3, 7, false);
+            Stock.GetCards().Add(D7);
+            Card D9 = new(3, 9, false);
+            Stock.GetCards().Add(D9);
+            Card D3 = new(3, 3, false);
+            Stock.GetCards().Add(D3);
+            Card C3 = new(2, 3, false);
+            Stock.GetCards().Add(C3);
+            Card C5 = new(2, 5, false);
+            Stock.GetCards().Add(C5);
+            Card D2 = new(3, 2, false);
+            Stock.GetCards().Add(D2);
+            // Vender Stock pga fejl i manuel indtastning.
+            Stock.GetCards().Reverse();
+
+
+            return table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
+        }
+        public Table TestTableSolvable()
+        {
+            // Constructor for a table with a specific set of cards
+            Pile Stock = new() { Type = 0 };
+            Pile T1 = new() { Type = 1 };
+            Pile T2 = new() { Type = 2 };
+            Pile T3 = new() { Type = 3 };
+            Pile T4 = new() { Type = 4 };
+            Pile T5 = new() { Type = 5 };
+            Pile T6 = new() { Type = 6 };
+            Pile T7 = new() { Type = 7 };
+            Pile F1 = new() { Type = 8 };
+            Pile F2 = new() { Type = 9 };
+            Pile F3 = new() { Type = 10 };
+            Pile F4 = new() { Type = 11 };
+            Pile Talon = new() { Type = 12 };
+
+            Card S3 = new(4, 3, true);
+            T1.GetCards().Add(S3);
+
+            Card S7 = new(4, 7, false);
+            Card C5 = new(2, 5, true);
+            T2.GetCards().Add(S7);
+            T2.GetCards().Add(C5);
+
+            Card C8 = new(2, 8, false);
+            Card DQ = new(3, 12, false);
+            Card D8 = new(3, 8, true);
+            T3.GetCards().Add(C8);
+            T3.GetCards().Add(DQ);
+            T3.GetCards().Add(D8);
+
+            Card CK = new(2, 13, false);
+            Card H10 = new(1, 10, false);
+            Card SJ = new(4, 11, false);
+            Card H9 = new(1, 9, true);
+            T4.GetCards().Add(CK);
+            T4.GetCards().Add(H10);
+            T4.GetCards().Add(SJ);
+            T4.GetCards().Add(H9);
+
+            Card D9 = new(3, 9, false);
+            Card C9 = new(2, 9, false);
+            Card H7 = new(1, 7, false);
+            Card S6 = new(4, 6, false);
+            Card HJ = new(1, 11, true);
+            T5.GetCards().Add(D9);
+            T5.GetCards().Add(C9);
+            T5.GetCards().Add(H7);
+            T5.GetCards().Add(S6);
+            T5.GetCards().Add(HJ);
+
+            Card H5 = new(1, 5, false);
+            Card S9 = new(4, 9, false);
+            Card D4 = new(3, 4, false);
+            Card S8 = new(4, 8, false);
+            Card S10 = new(4, 10, false);
+            Card D6 = new(3, 6, true);
+            T6.GetCards().Add(H5);
+            T6.GetCards().Add(S9);
+            T6.GetCards().Add(D4);
+            T6.GetCards().Add(S8);
+            T6.GetCards().Add(S10);
+            T6.GetCards().Add(D6);
+
+            Card C6 = new(2, 6, false);
+            Card S2 = new(4, 2, false);
+            Card H2 = new(1, 2, false);
+            Card SK = new(4, 13, false);
+            Card DA = new(3, 1, false);
+            Card C3 = new(2, 3, false);
+            Card D7 = new(3, 7, true);
+            T7.GetCards().Add(C6);
+            T7.GetCards().Add(S2);
+            T7.GetCards().Add(H2);
+            T7.GetCards().Add(SK);
+            T7.GetCards().Add(DA);
+            T7.GetCards().Add(C3);
+            T7.GetCards().Add(D7);
+
+            Card CA = new(2, 1, false);
+            Stock.GetCards().Add(CA);
+            Card DK = new(3, 13, false);
+            Stock.GetCards().Add(DK);
+            Card HK = new(1, 13, false);
+            Stock.GetCards().Add(HK);
+            Card CJ = new(2, 11, false);
+            Stock.GetCards().Add(CJ);
+            Card H8 = new(1, 8, false);
+            Stock.GetCards().Add(H8);
+            Card HQ = new(1, 12, false);
+            Stock.GetCards().Add(HQ);
+            Card D2 = new(3, 2, false);
+            Stock.GetCards().Add(D2);
+            Card H6 = new(1, 6, false);
+            Stock.GetCards().Add(H6);
+            Card DJ = new(3, 11, false);
+            Stock.GetCards().Add(DJ);
+            Card H4 = new(1, 4, false);
+            Stock.GetCards().Add(H4);
+            Card S4 = new(4, 4, false);
+            Stock.GetCards().Add(S4);
+            Card C7 = new(2, 7, false);
+            Stock.GetCards().Add(C7);
+            Card S5 = new(4, 5, false);
+            Stock.GetCards().Add(S5);
+            Card D5 = new(3, 5, false);
+            Stock.GetCards().Add(D5);
+            Card D3 = new(3, 3, false);
+            Stock.GetCards().Add(D3);
+            Card H3 = new(1, 3, false);
+            Stock.GetCards().Add(H3);
+            Card CQ = new(2, 12, false);
+            Stock.GetCards().Add(CQ);
+            Card HA = new(1, 1, false);
+            Stock.GetCards().Add(HA);
+            Card D10 = new(3, 10, false);
+            Stock.GetCards().Add(D10);
+            Card C4 = new(2, 4, false);
+            Stock.GetCards().Add(C4);
+            Card SQ = new(4, 12, false);
+            Stock.GetCards().Add(SQ);
+            Card C2 = new(2, 2, false);
+            Stock.GetCards().Add(C2);
+            Card SA = new(4, 1, false);
+            Stock.GetCards().Add(SA);
+            Card C10 = new(2, 10, false);
+            Stock.GetCards().Add(C10);
+
+            return table = new Table(Stock, Talon, T1, T2, T3, T4, T5, T6, T7, F1, F2, F3, F4);
+        }
+
 
     }
 }

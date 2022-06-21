@@ -9,8 +9,6 @@ namespace SolitaireHelperModels
         private readonly List<Pile> Foundations;
         private readonly Pile Talon;
         private readonly Pile Stock;
-        private readonly List<Move> PreviousMovesList;
-
         public Table(Pile stock, Pile talon, Pile T1, Pile T2, Pile T3, Pile T4, Pile T5, Pile T6, Pile T7, Pile F1, Pile F2, Pile F3, Pile F4)
         {
             // Constructor for a custom table to be used by the image recognitition
@@ -29,7 +27,6 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            PreviousMovesList = new List<Move>();
         }
         public Table()
         {
@@ -77,308 +74,414 @@ namespace SolitaireHelperModels
             Foundations.Add(F2);
             Foundations.Add(F3);
             Foundations.Add(F4);
-            PreviousMovesList = new List<Move>();
         }
-        public List<Move> GetPossibleMovesInPile (Pile from)
+        public Table(Table table)
+        {
+            // Copy constructor that deep-clones the object
+            Tableaus = new List<Pile>();
+            Foundations = new List<Pile>();
+            Stock = new Pile() { Type = 0 };
+            Pile T1 = new Pile() { Type = 1 };
+            Pile T2 = new Pile() { Type = 2 };
+            Pile T3 = new Pile() { Type = 3 };
+            Pile T4 = new Pile() { Type = 4 };
+            Pile T5 = new Pile() { Type = 5 };
+            Pile T6 = new Pile() { Type = 6 };
+            Pile T7 = new Pile() { Type = 7 };
+            Pile F1 = new Pile() { Type = 8 };
+            Pile F2 = new Pile() { Type = 9 };
+            Pile F3 = new Pile() { Type = 10 };
+            Pile F4 = new Pile() { Type = 11 };
+            Talon = new Pile() { Type = 12 };
+            foreach(Card c in table.GetPileFromType(0).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                Stock.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(1).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T1.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(2).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T2.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(3).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T3.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(4).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T4.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(5).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T5.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(6).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T6.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(7).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                T7.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(8).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                F1.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(9).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                F2.GetCards().Add(card);
+            }
+            foreach (Card c in table.GetPileFromType(10).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                F3.GetCards().Add(card);
+            }
+            foreach (Card c in table.GetPileFromType(11).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                F4.GetCards().Add(card);
+            }
+
+            foreach (Card c in table.GetPileFromType(12).GetCards())
+            {
+                Card card = new Card(c.Suit, c.Rank, c.Visible);
+                Talon.GetCards().Add(card);
+            }
+            Tableaus.Add(T1);
+            Tableaus.Add(T2);
+            Tableaus.Add(T3);
+            Tableaus.Add(T4);
+            Tableaus.Add(T5);
+            Tableaus.Add(T6);
+            Tableaus.Add(T7);
+            Foundations.Add(F1);
+            Foundations.Add(F2);
+            Foundations.Add(F3);
+            Foundations.Add(F4);
+        }
+        private List<Move> GetPossibleMovesInPile(Pile fromPile)
         {
             List<Move> moves = new List<Move>();
-            
-            //Checks all cards for possible moves if the pile is not empty and add them to the list of possible moves. 
-            if(!from.IsEmpty())
+
+            //Checks if the fromPile is empty
+            if (fromPile.IsEmpty())
             {
-                foreach(Card card in from.GetCards())
+                return moves;
+            }
+
+            Card topCard = fromPile.GetTopCard();
+            // If the fromPile is a foundation, we can only move the topCard
+            if(fromPile.IsFoundation())
+            {
+                // Can the visible card be moved to a tableau?
+                foreach (Pile pile in Tableaus)
                 {
-                    if(card.Visible == true)
+                    if (pile.IsMovePossible(topCard))
                     {
-                        // Can the visible card be moved to a tableau?
-                        foreach(Pile pile in Tableaus)
-                        {
-                            if (pile.IsMovePossible(card))
-                            {
-                                Move move = new Move(from, pile, card);
-                                if (!PreviousMovesList.Exists(m => m.GetFrom() == move.GetFrom() && m.GetTo() == move.GetTo() && m.GetCard() == move.GetCard()))
-                                {
-                                    moves.Add(move);
-                                }
-                            }
-                        }
-                        // Can the visible card be moved to a foundation?
-                        foreach (Pile pile in Foundations)
-                        {
-                            if (pile.IsMovePossible(card))
-                            {
-                                Move move = new Move(from, pile, card);
-                                if (!PreviousMovesList.Contains(move))
-                                {
-                                    moves.Add(move);
-                                }
-                            }
-                        }
+                        int score = CalculateScore(topCard, fromPile, pile);
+                        Move move = new Move(fromPile.PileToString(), pile.PileToString(), topCard, score);
+                        moves.Add(move);
                     }
                 }
+                return moves;
             }
+            
+            // Can the top-card be moved to a foundation?
+            foreach (Pile pile in Foundations)
+            {
+                if (pile.IsMovePossible(topCard))
+                {
+                    //Console.WriteLine("topCard = " + topCard.FullToString());
+                    int score = CalculateScore(topCard, fromPile, pile);
+                    Move move = new Move(fromPile.PileToString(), pile.PileToString(), topCard, score);
+                    moves.Add(move);
+                    //Console.WriteLine("Fra tableau til foundation score: " + move.GetScore());
+                }
+            }
+
+            List<Card> cardsInFromPile = fromPile.GetCards();
+            foreach (Card card in cardsInFromPile)
+            {
+                if (card.Visible == true)
+                {
+
+                    // Can the visible card be moved to a tableau?
+                    foreach (Pile pile in Tableaus)
+                    {
+                        if (pile.IsMovePossible(card))
+                        {
+                            int score = CalculateScore(card, fromPile, pile);
+                            Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
+                            moves.Add(move);
+                        }
+                    }                    
+                }
+            }
+
             return moves;
         }
         public List<Move> GetAllPossibleMoves()
         {
-            List<Move> allMoves = new List<Move> ();
+            List<Move> moves = new List<Move>();
 
-            // Find all possible moves in Talon
-            if (CardsInStock() >= 3)
+            // Find moves in Talon
+            if(!(CardsInStock()+CardsInTalon() == 3 && CardsInStock() < 3))
             {
-                List<Move> talonMoves = GetPossibleMovesInPile(Talon);
-                allMoves.AddRange(talonMoves);
+                moves.AddRange(GetPossibleMovesInPile(Talon));
             }
 
-            // Find all possible moves in Foundations
+            // Find moves in Foundations (only top-cards)
             foreach (Pile pile in Foundations)
             {
-                if (!pile.IsEmpty())
-                {
-                    List<Move> pileMoves = GetPossibleMovesInPile(pile);
-                    allMoves.AddRange(pileMoves);
-                }
+                moves.AddRange(GetPossibleMovesInPile(pile));
             }
 
-            // Find all possible moves in Tableaus
+            // Find moves in Tableaus
             foreach (Pile pile in Tableaus)
             {
-                if (!pile.IsEmpty())
-                {
-                    List<Move> pileMoves = GetPossibleMovesInPile(pile);
-                    allMoves.AddRange(pileMoves);
-                    continue;
-                }
+                moves.AddRange(GetPossibleMovesInPile(pile));
             }
-                
-            // Remove all moves that are on the infinite-moves list and uneligible moves
-            allMoves.RemoveAll(move => move.GetCard() == null || move.GetTo() == null || move.GetFrom() == null);
-            //allMoves.RemoveAll(move => MoveIsInfiniteLoop(move));
-
-            return allMoves;
+            
+            return moves;
         }
-        public Move GetBestMove(List<Move> allPossibleMoves)
+        public Table MakeMove(Move move)
         {
-            Move bestMove = null;
-            if (allPossibleMoves.Count == 0)
-            {
-                return new Move(null, null, null);
-            }
-
-            foreach (Move move in allPossibleMoves)
-            {
-                bool addToList = true;
-                
-                if (bestMove == null && addToList)
-                {
-                    bestMove = move;
-                }
-                else if (addToList && (move.GetScore() > bestMove.GetScore()))
-                {
-                    bestMove = move;
-                }
-
-            }
-            return bestMove;
-        }
-        public void MakeMove(Move move)
-        {
-            PreviousMovesList.Add(move);    
             List<Card> CardsToMove = new List<Card>();
-            foreach (Card c in move.GetFrom().GetCards())
-            {
-                // We found the card in the list of cards in the from pile that we want to move
-                if (c.Rank == move.GetCard().Rank && c.Suit == move.GetCard().Suit)
-                {
-                    // We make sure that if there are cards beneath the card to be moved,
-                    // that these cards move with
-                    int cardIndex = move.GetFrom().GetCards().IndexOf(c);
-                    int listCount = move.GetFrom().GetCards().Count;
-                    CardsToMove.AddRange(move.GetFrom().GetCards().GetRange(cardIndex,(listCount - cardIndex)));
-                }
-            }
-
             // Find the correct pile in the table to make the move from and remove the cards
-            Pile fromPile = GetPileFromType(move.GetFrom().Type);
+            Pile fromPile = GetPileFromType(GetPileTypeFromString(move.GetFrom()));
+            // We make sure that if there are cards beneath the card to be moved,
+            // that these cards move with
+
+            int cardIndex = fromPile.GetCards().FindIndex(c => c.Rank == move.GetCard().Rank && c.Suit == move.GetCard().Suit && c.Visible == move.GetCard().Visible);
+            int listCount = fromPile.GetCards().Count;
+            CardsToMove.AddRange(fromPile.GetCards().GetRange(cardIndex, (listCount - cardIndex)));
             fromPile.RemoveCards(CardsToMove);
+            
             // Add the cards to the pile we are moving to
-            Pile toPile = GetPileFromType(move.GetTo().Type);
+            Pile toPile = GetPileFromType(GetPileTypeFromString(move.GetTo()));
             toPile.AddCards(CardsToMove);
             // If there are cards left in the from pile, and the top card is not visible, set it to visible
-            if(fromPile.GetCards().Count > 0)
+            if (fromPile.GetCards().Count > 0)
             {
                 fromPile.GetTopCard().Visible = true;
             }
-            return;
+
+            return this;
         }
-        public bool MoveIsInfiniteLoop(Move move)
+        private int CalculateScore(Card card, Pile fromPile, Pile toPile)
         {
-            foreach(Move m in PreviousMovesList)
+            int score = 0;
+            if (card.Visible == false || card == null)
             {
-                if(m.GetCard().Rank == move.GetCard().Rank && m.GetCard().Suit == move.GetCard().Suit && m.GetFrom().Type == move.GetFrom().Type && m.GetTo().Type == move.GetTo().Type)
+                return 0;
+            }
+            int facedownCards = 0;
+            foreach(Card c in fromPile.GetCards())
+            {
+                if (!c.Visible)
                 {
-                    return true;
+                    facedownCards++;
                 }
             }
-            if(PreviousMovesList.Count >= 5)
-                PreviousMovesList.RemoveAt(0);
-            return false;
+
+            if (fromPile.GetCards().Count > 1)
+            {
+                int cardIndex = fromPile.GetCards().FindIndex(c => c.Rank == card.Rank && c.Suit == card.Suit && c.Visible == card.Visible);
+                if (cardIndex >= 1)
+                {
+                    if (fromPile.GetCards()[cardIndex - 1].Visible == false)
+                    {
+                        score += 30;
+                    }
+                }
+            }
+
+          
+            // Test if ace can move to any of the Foundations
+            if (card.Rank == 1 && toPile.IsFoundation())
+            {
+                return score += 95 + facedownCards;
+            }
+
+            // Test if card can move to any of the Foundations
+            if (toPile.IsFoundation())
+            {
+                return score += 85 + facedownCards;
+            }
+
+            // Test if king can move to an empty Tableau
+            if (card.Rank == 13 && toPile.IsTableau() && toPile.IsEmpty())
+            {
+                if (fromPile.GetCards().Count > 1)
+                {
+                    int cardIndex = fromPile.GetCards().FindIndex(c => c.Rank == card.Rank && c.Suit == card.Suit && c.Visible == card.Visible);
+                    if (cardIndex >= 1)
+                    {
+                        if (fromPile.GetCards()[cardIndex - 1].Visible == true)
+                        {
+                            if (fromPile.IsFoundation())
+                            {
+                                return score = 5;
+                            }
+                            return score = 20;
+                        }
+
+                        if (fromPile.GetCards()[cardIndex - 1].Visible == false)
+                        {
+                            return score += 75 + facedownCards;
+                        }
+                    }
+                }
+                return 0;
+            }
+
+
+            // Test if card can move from Tableau to Tableau
+            if (card.Rank != 13 && fromPile.IsTableau() && toPile.IsTableau())
+            {
+                return score += facedownCards + 20;
+            }
+
+            // Test if card can move from Talon to Foundation
+            if (fromPile.Type == 12 && toPile.IsFoundation())
+            {
+                return score += facedownCards + 20;
+            }
+
+
+            // Test if card can move from Talon to Tableau
+            if (fromPile.Type == 12 && toPile.IsTableau())
+            {
+                return score += facedownCards + 15;
+            }
+
+            // Test if card can move from Foundation to Tableau
+            if(fromPile.IsFoundation() && toPile.IsTableau())
+            {
+                if(CardsInFoundations() > 30)
+                {
+                    return 50;
+                }
+                if(CardsInStock() == 0)
+                {
+                    return score += 15;
+                }
+
+                return 15;
+            }
+
+            return score;
+        }
+        public int DrawNewCardsToTalon()
+        {
+            if (CardsInStock() >= 3)
+            {
+                // Take 3 cards from stock, reverse them (flip) and put in talon
+                List<Card> newCards = Stock.GetCards().GetRange(0, 3);
+                Talon.AddCards(newCards);
+
+                // Remove the 3 cards from stock
+                Stock.RemoveCards(Stock.GetCards().GetRange(0, 3));
+
+                // All cards in talon are invisible
+                foreach (Card card in Talon.GetCards())
+                {
+                    card.Visible = false;
+                }
+
+                // Top card is visible
+                Talon.GetTopCard().Visible = true;
+                Console.WriteLine("Drawing new cards to talon: " + Talon.GetTopCard().ToString());
+                return 0;
+            }
+
+            // This accounts for algorithm rule ST-2 (Stock minimum rule)
+            if (CardsInStock() < 3 && Talon.GetCards().Count + CardsInStock() >= 3)
+            {
+                // Take the cards from talon and put under stock
+                if(CardsInStock() == 0 && CardsInTalon() == 3)
+                {
+                return 1;
+                }
+                RefillStock();
+            }
+            return 1;
+        }
+        private void RefillStock()
+        {
+            Console.WriteLine("## Refilling stock ##");
+            foreach (Card card in Talon.GetCards())
+            {
+                card.Visible = false;
+            }
+            Stock.AddCards(Talon.GetCards());
+            Talon.GetCards().Clear();
         }
         public bool IsTableEmpty()
         {
-            int cardsInFoundations = 0;
-            foreach(Pile pile in Foundations)
+            int kingsInFoundations = 0;
+            foreach (Pile pile in Foundations)
             {
-                cardsInFoundations += pile.GetCards().Count;
+                if (pile.GetCards().Count > 0 && pile.GetTopCard().Rank == 13)
+                {
+                    kingsInFoundations++;
+                }
             }
-            
-            if(cardsInFoundations == 52) 
-                return true; 
-            else 
+
+            if (kingsInFoundations == 4)
+                return true;
+            else
                 return false;
         }
         public int CardsInStock()
         {
             return Stock.GetCards().Count;
         }
-        public bool NewCardsInTalon()
+        public int CardsInTalon()
         {
-            // No cards in stock but more than 3 in Talon
-            if(CardsInStock() == 0 && Talon.GetCards().Count > 3)
-            {
-                Talon.GetCards().Reverse();
-                foreach (Card card in Talon.GetCards())
-                {
-                    card.Visible = false;
-                }
-                Stock.AddCards(Talon.GetCards());
-                Talon.GetCards().Clear();
-            }
-            // This accounts for algorithm rule ST-2 (Stock minimum rule)
-            if (CardsInStock() < 3 && Talon.GetCards().Count+CardsInStock() >= 3)
-            {
-                // Take the cards from talon and put under stock
-                int cardsToTakeFromTalon = 3-CardsInStock();
-                Stock.AddCards(Talon.GetCards().GetRange(0,cardsToTakeFromTalon));
-                Talon.GetCards().RemoveRange(0, cardsToTakeFromTalon);
-                NewCardsInTalon();
-            }
-
-            if (CardsInStock() >= 3)
-            {
-                // Take 3 cards from stock, reverse them (flip) and put in talon
-                List<Card> newCards = Stock.GetCards().GetRange(Stock.GetCards().Count - 3, 3);
-                newCards.Reverse();
-                Talon.AddCards(newCards);
-
-                // Remove the 3 cards from stock
-                Stock.RemoveCards(Stock.GetCards().GetRange(Stock.GetCards().Count - 3, 3));
-
-                // All cards in talon are invisible
-                foreach(Card card in Talon.GetCards())
-                {
-                    card.Visible = false;
-                }
-
-                // Top card is visible
-                Talon.GetCards()[Talon.GetCards().Count-1].Visible = true;
-                return true;
-            }
-            
-            return false;
-            
+            return Talon.GetCards().Count;
         }
-        public int CardsInTable()
+        private int CardsInFoundations()
         {
-            // Returns the amount of cards on the table (in foundations and tableaus - NOT in the stock and talon)
-            int cards = 0;
-            foreach (Pile pile in Foundations)
+            int sum = 0;
+            foreach(Card card in Foundations[0].GetCards())
             {
-                cards += pile.GetNumberOfCards();
+                sum++;
             }
-            foreach (Pile pile in Tableaus)
+            foreach (Card card in Foundations[1].GetCards())
             {
-                cards += pile.GetNumberOfCards();
+                sum++;
             }
-            return cards+ Talon.GetNumberOfCards() + Stock.GetNumberOfCards();
-        }
-        public void PrintTable()
-        {
-            Console.WriteLine("Table currently consists of:\n");
-            Console.WriteLine("Talon:");
-            if (Talon.GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach(Card card in Talon.GetCards())
+            foreach (Card card in Foundations[2].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                sum++;
             }
-
-            Console.WriteLine("\nT1:");
-            if (Tableaus[0].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[0].GetCards())
+            foreach (Card card in Foundations[3].GetCards())
             {
-                Console.WriteLine(card.ToString());
+                sum++;
             }
-
-            Console.WriteLine("\nT2:");
-            if (Tableaus[1].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            if (Tableaus[1].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[1].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT3:");
-            if (Tableaus[2].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[2].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT4:");
-            if (Tableaus[3].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[3].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT5:");
-            if (Tableaus[4].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[4].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT6:");
-            if (Tableaus[5].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[5].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nT7:");
-            if (Tableaus[6].GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Tableaus[6].GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-
-            Console.WriteLine("\nStock");
-            if (Stock.GetCards().Count == 0)
-                Console.WriteLine("Empty");
-            foreach (Card card in Stock.GetCards())
-            {
-                Console.WriteLine(card.ToString());
-            }
-            Console.WriteLine("\n\n");
+            return sum;
         }
         public Pile GetPileFromType(int type)
         {
@@ -399,6 +502,545 @@ namespace SolitaireHelperModels
                 case 12: return Talon;
                 default: return null;
             }
+        }
+        public int GetPileTypeFromString(string pile)
+        {
+            switch (pile)
+            {
+                case "Stock": return 0;
+                case "T1": return 1;
+                case "T2": return 2;
+                case "T3": return 3;
+                case "T4": return 4;
+                case "T5": return 5;
+                case "T6": return 6;
+                case "T7": return 7;
+                case "F1": return 8;
+                case "F2": return 9;
+                case "F3": return 10;
+                case "F4": return 11;
+                case "Talon": return 12;
+                default: return -1;
+            }
+        }
+        public bool IsEqual(Table otherTable)
+        {
+            //Console.WriteLine("Checking if equal");
+            
+            // Check Stock is the same
+            if(CardsInStock() != otherTable.CardsInStock())
+            {
+                //Console.WriteLine("CardsInStock not the same");
+                return false;
+            }
+
+            // Check if Talon is the same
+            
+            //Pile talonCardsToCompare = otherTable.GetPileFromType(12);
+            
+            if(CardsInTalon() != otherTable.CardsInTalon())
+            {
+                //Console.WriteLine("CardsInTalon not the same");
+                return false;
+            }
+            if(CardsInTalon() > 0)
+            {
+                if(!GetPileFromType(12).GetTopCard().IsEqual(otherTable.GetPileFromType(12).GetTopCard()))
+                {
+                    //Console.WriteLine("Topcard in Talon not the same");
+                    return false;
+                }
+            }
+
+            // Check T1
+           
+            //Pile t1ToCompare = otherTable.GetPileFromType(1);
+            
+            if(GetPileFromType(1).GetCards().Count != otherTable.GetPileFromType(1).GetCards().Count)
+            {
+                //Console.WriteLine("T1 count not the same");
+                return false;
+            }
+            if(GetPileFromType(1).GetCards().Count > 0)
+            {
+                foreach(Card card in GetPileFromType(1).GetCards())
+                {
+                    if(!otherTable.GetPileFromType(1).GetCards().Exists(c => c.IsEqual(card)))
+                    {
+                        //Console.WriteLine("T1 cards not the same");
+                        return false;
+                    }
+                }
+            }
+
+            // Check T2
+
+            //Pile t2ToCompare = otherTable.GetPileFromType(2);
+            
+            if (GetPileFromType(2).GetCards().Count != otherTable.GetPileFromType(2).GetCards().Count)
+            {
+                //Console.WriteLine("T2 count not the same");
+                return false;
+            }
+            if (GetPileFromType(2).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(2).GetCards())
+                {
+                    if (!otherTable.GetPileFromType(2).GetCards().Exists(c => c.IsEqual(card)))
+                    {
+                        //Console.WriteLine("T2 cards not the same");
+                        return false;
+                    }
+                }
+            }
+
+            // Check T3
+            
+            //Pile t3ToCompare = otherTable.GetPileFromType(3);
+            
+            if (GetPileFromType(3).GetCards().Count != otherTable.GetPileFromType(3).GetCards().Count)
+            {
+                //Console.WriteLine("T3 count not the same");
+                return false;
+            }
+            if (GetPileFromType(3).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(3).GetCards())
+                {
+                    if (!otherTable.GetPileFromType(3).GetCards().Exists(c => c.IsEqual(card)))
+                    {
+                        //Console.WriteLine("T3 cards not the same");
+                        return false;
+                    }
+                }
+            }
+
+            // Check T4
+
+            //Pile t4ToCompare = otherTable.GetPileFromType(4);
+            
+            if (GetPileFromType(4).GetCards().Count != otherTable.GetPileFromType(4).GetCards().Count)
+            {
+                //Console.WriteLine("T4 count not the same");
+                return false;
+            }
+            if (GetPileFromType(4).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(4).GetCards())
+                {
+                    if (!otherTable.GetPileFromType(4).GetCards().Exists(c => c.IsEqual(card)))
+                    {
+                        //Console.WriteLine("T4 cards not the same");
+                        return false;
+                    }
+                }
+            }
+
+            // Check T5
+            
+            
+            //Pile t5ToCompare = otherTable.GetPileFromType(5);
+            
+            if (!(GetPileFromType(5).GetCards().Count == otherTable.GetPileFromType(5).GetCards().Count))
+            {
+                //Console.WriteLine("T5 count not the same");
+                return false;
+            }
+            if (GetPileFromType(5).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(5).GetCards())
+                {
+                    if (!otherTable.GetPileFromType(5).GetCards().Exists(c => c.IsEqual(card)))
+                    {
+
+                        //Console.WriteLine("T5 cards not the same");
+                        return false;
+                    }
+                }
+            }
+
+            // Check T6
+            
+            //Pile t6ToCompare = otherTable.GetPileFromType(6);
+            
+            if (!(GetPileFromType(6).GetCards().Count == otherTable.GetPileFromType(6).GetCards().Count))
+            {
+                //Console.WriteLine("T6 count not the same");
+                return false;
+            }
+            if (GetPileFromType(6).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(6).GetCards())
+                {
+                    if (!otherTable.GetPileFromType(6).GetCards().Exists(c => c.IsEqual(card)))
+                    {
+                        //Console.WriteLine("T6 cards not the same");
+                        return false;
+                    }
+                }
+            }
+
+            // Check T7
+            
+            //Pile t7ToCompare = otherTable.GetPileFromType(7);
+            
+            
+            if (!(GetPileFromType(7).GetCards().Count == otherTable.GetPileFromType(7).GetCards().Count))
+            {
+                //Console.WriteLine("T7 count not the same");
+                return false;
+            }
+            if (GetPileFromType(7).GetCards().Count > 0)
+            {
+                foreach (Card card in GetPileFromType(7).GetCards())
+                {
+                    if (!otherTable.GetPileFromType(7).GetCards().Exists(c => c.IsEqual(card)))
+                    {
+                        //Console.WriteLine("T7 cards not the same");
+                        return false;
+                    }
+                }
+            }
+
+            // Check F1
+            //Pile f1ToCompare = otherTable.GetPileFromType(8);
+            if (!GetPileFromType(8).IsEmpty())
+            {
+                if (!otherTable.GetPileFromType(8).IsEmpty())
+                {
+                    if (!GetPileFromType(8).GetTopCard().IsEqual(otherTable.GetPileFromType(8).GetTopCard()))
+                    {
+                        //Console.WriteLine("F1 topcard not the same");
+                        return false;
+                    }
+                }
+            }
+
+            // Check F2
+            //Pile f2ToCompare = otherTable.GetPileFromType(9);
+            if (!GetPileFromType(9).IsEmpty())
+            {
+                if (!otherTable.GetPileFromType(9).IsEmpty())
+                {
+                    if (!GetPileFromType(9).GetTopCard().IsEqual(otherTable.GetPileFromType(9).GetTopCard()))
+                    {
+                        //Console.WriteLine("F2 topcard not the same");
+                        return false;
+                    }
+                }
+            }
+
+            // Check F3
+            //Pile f3ToCompare = otherTable.GetPileFromType(10);
+            if (!GetPileFromType(10).IsEmpty())
+            {
+                if (!otherTable.GetPileFromType(10).IsEmpty())
+                {
+                    if (!GetPileFromType(10).GetTopCard().IsEqual(otherTable.GetPileFromType(10).GetTopCard()))
+                    {
+                        //Console.WriteLine("F3 topcard not the same");
+                        return false;
+                    }
+                }
+            }
+
+            // Check F4
+            // Pile f4ToCompare = otherTable.GetPileFromType(11);
+            if (!GetPileFromType(11).IsEmpty())
+            {
+                if (!otherTable.GetPileFromType(11).IsEmpty())
+                {
+                    if (!GetPileFromType(11).GetTopCard().IsEqual(otherTable.GetPileFromType(11).GetTopCard()))
+                    {
+                        //Console.WriteLine("F4 topcard not the same");
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+        public void PrintTable()
+        {
+            Console.WriteLine("Table currently consists of:\n");
+          
+            Console.WriteLine("\nF1:");
+            if (Foundations[0].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[0].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nF2:");
+            if (Foundations[1].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[1].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nF3:");
+            if (Foundations[2].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[2].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nF4:");
+            if (Foundations[3].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Foundations[3].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nT1:");
+            if (Tableaus[0].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[0].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nT2:");
+            if (Tableaus[1].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            if (Tableaus[1].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[1].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nT3:");
+            if (Tableaus[2].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[2].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nT4:");
+            if (Tableaus[3].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[3].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nT5:");
+            if (Tableaus[4].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[4].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nT6:");
+            if (Tableaus[5].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[5].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nT7:");
+            if (Tableaus[6].GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Tableaus[6].GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nTalon:");
+            if (Talon.GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Talon.GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+
+            Console.WriteLine("\nStock");
+            if (Stock.GetCards().Count == 0)
+                Console.WriteLine("Empty");
+            foreach (Card card in Stock.GetCards())
+            {
+                Console.WriteLine(card.FullToString());
+            }
+            Console.WriteLine("\n\n");
+        }
+        public override string ToString()
+        {
+            string tableString = "";
+            if (Talon.GetCards().Count == 0)
+            {
+                tableString += "T-E,";
+            }
+            if (!(Talon.GetCards().Count == 0))
+            {
+                foreach (Card card in Talon.GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Foundations[0].GetCards().Count == 0)
+            {
+                tableString += "F1-E,";
+            }
+            if (!(Foundations[0].GetCards().Count == 0))
+            {
+                foreach (Card card in Foundations[0].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Foundations[1].GetCards().Count == 0)
+            {
+                tableString += "F2-E,";
+            }
+
+            if (!(Foundations[1].GetCards().Count == 0))
+            {
+                foreach (Card card in Foundations[1].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Foundations[2].GetCards().Count == 0)
+            {
+                tableString += "F3-E,";
+            }
+
+            if (!(Foundations[2].GetCards().Count == 0))
+            {
+                foreach (Card card in Foundations[2].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Foundations[3].GetCards().Count == 0)
+            {
+                tableString += "F3-E,";
+            }
+
+            if (!(Foundations[3].GetCards().Count == 0))
+            {
+                foreach (Card card in Foundations[3].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Tableaus[0].GetCards().Count == 0)
+            {
+                tableString += "T1-E,";
+            }
+
+            if (!(Tableaus[0].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[0].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Tableaus[1].GetCards().Count == 0)
+            {
+                tableString += "T2-E,";
+            }
+
+            if (!(Tableaus[1].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[1].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Tableaus[2].GetCards().Count == 0)
+            {
+                tableString += "T3-E,";
+            }
+
+            if (!(Tableaus[2].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[2].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Tableaus[3].GetCards().Count == 0)
+            {
+                tableString += "T4-E,";
+            }
+
+            if (!(Tableaus[3].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[3].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Tableaus[4].GetCards().Count == 0)
+            {
+                tableString += "T5-E,";
+            }
+
+            if (!(Tableaus[4].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[4].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Tableaus[5].GetCards().Count == 0)
+            {
+                tableString += "T6-E,";
+            }
+
+            if (!(Tableaus[5].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[5].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Tableaus[6].GetCards().Count == 0)
+            {
+                tableString += "T7-E,";
+            }
+
+            if (!(Tableaus[6].GetCards().Count == 0))
+            {
+                foreach (Card card in Tableaus[6].GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+
+            if (Stock.GetCards().Count == 0)
+            {
+                tableString += "S-E,";
+            }
+
+            if (!(Stock.GetCards().Count == 0))
+            {
+                foreach (Card card in Stock.GetCards())
+                {
+                    tableString += card.ToString() + ",";
+                }
+            }
+            return tableString;
         }
     }
 }
