@@ -19,7 +19,7 @@ namespace SolitaireHelperModels
         {
             Console.WriteLine("### New Test Game ###");
             GameIsFinished = false;
-            Table Table = TestTableSolvable();
+            Table Table = new Table();
             return PlayGame(Table);
         }
         public int PlayGame(Table table)
@@ -46,11 +46,12 @@ namespace SolitaireHelperModels
                         cleansedMoves.Remove(m);
                     }
                 }
+                cleansedMoves.RemoveAll(m => m.GetScore() == -1);
 
                 Move move = GetBestMove(cleansedMoves);
                 
             
-                if(move == null && stockRefillCounter == 3 || totalMovesMade == 500)
+                if(move == null && stockRefillCounter == 3 || totalMovesMade == 500 || table.IsTableEmpty())
                 {
                     Console.WriteLine("Total moves made: {0}", totalMovesMade);
                     GameIsFinished = true;

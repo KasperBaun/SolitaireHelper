@@ -212,11 +212,9 @@ namespace SolitaireHelperModels
             {
                 if (pile.IsMovePossible(topCard))
                 {
-                    //Console.WriteLine("topCard = " + topCard.FullToString());
                     int score = CalculateScore(topCard, fromPile, pile);
                     Move move = new Move(fromPile.PileToString(), pile.PileToString(), topCard, score);
                     moves.Add(move);
-                    //Console.WriteLine("Fra tableau til foundation score: " + move.GetScore());
                 }
             }
 
@@ -291,107 +289,26 @@ namespace SolitaireHelperModels
         }
         private int CalculateScore(Card card, Pile fromPile, Pile toPile)
         {
-            int score = 0;
-            if (card.Visible == false || card == null)
-            {
-                return 0;
-            }
-            int facedownCards = 0;
-            foreach(Card c in fromPile.GetCards())
-            {
-                if (!c.Visible)
-                {
-                    facedownCards++;
-                }
-            }
-
-            if (fromPile.GetCards().Count > 1)
-            {
-                int cardIndex = fromPile.GetCards().FindIndex(c => c.Rank == card.Rank && c.Suit == card.Suit && c.Visible == card.Visible);
-                if (cardIndex >= 1)
-                {
-                    if (fromPile.GetCards()[cardIndex - 1].Visible == false)
-                    {
-                        score += 30;
-                    }
-                }
-            }
-
-          
-            // Test if ace can move to any of the Foundations
-            if (card.Rank == 1 && toPile.IsFoundation())
-            {
-                return score += 95 + facedownCards;
-            }
-
-            // Test if card can move to any of the Foundations
-            if (toPile.IsFoundation())
-            {
-                return score += 85 + facedownCards;
-            }
-
-            // Test if king can move to an empty Tableau
-            if (card.Rank == 13 && toPile.IsTableau() && toPile.IsEmpty())
-            {
-                if (fromPile.GetCards().Count > 1)
-                {
-                    int cardIndex = fromPile.GetCards().FindIndex(c => c.Rank == card.Rank && c.Suit == card.Suit && c.Visible == card.Visible);
-                    if (cardIndex >= 1)
-                    {
-                        if (fromPile.GetCards()[cardIndex - 1].Visible == true)
-                        {
-                            if (fromPile.IsFoundation())
-                            {
-                                return score = 5;
-                            }
-                            return score = 20;
-                        }
-
-                        if (fromPile.GetCards()[cardIndex - 1].Visible == false)
-                        {
-                            return score += 75 + facedownCards;
-                        }
-                    }
-                }
-                return 0;
-            }
-
-
-            // Test if card can move from Tableau to Tableau
+            if(card.Rank == 1 && fromPile.IsTableau() && toPile.IsFoundation())
+                return 95 + fromPile.GetNumberOfCards();
+            if(card.Rank == 2 && fromPile.IsTableau() && toPile.IsFoundation())
+                return 85 + fromPile.GetNumberOfCards();
+            if (card.Rank == 13 && fromPile.IsTableau() && toPile.IsTableau() && toPile.IsEmpty() && !fromPile.IsEmpty() && fromPile.GetTopCard().Visible == false)
+                return 75 + fromPile.GetNumberOfCards();
+            if (fromPile.IsTableau() && toPile.IsFoundation())
+                return 40 + fromPile.GetNumberOfCards();
             if (card.Rank != 13 && fromPile.IsTableau() && toPile.IsTableau())
-            {
-                return score += facedownCards + 20;
-            }
-
-            // Test if card can move from Talon to Foundation
+                return 30 + fromPile.GetNumberOfCards();
             if (fromPile.Type == 12 && toPile.IsFoundation())
-            {
-                return score += facedownCards + 20;
-            }
-
-
-            // Test if card can move from Talon to Tableau
-            if (fromPile.Type == 12 && toPile.IsTableau())
-            {
-                return score += facedownCards + 15;
-            }
-
-            // Test if card can move from Foundation to Tableau
-            if(fromPile.IsFoundation() && toPile.IsTableau())
-            {
-                if(CardsInFoundations() > 30)
-                {
-                    return 50;
-                }
-                if(CardsInStock() == 0)
-                {
-                    return score += 15;
-                }
-
-                return 15;
-            }
-
-            return score;
+                return 20 + fromPile.GetNumberOfCards();
+            if(fromPile.Type == 12 && toPile.IsTableau())
+                return 10 + fromPile.GetNumberOfCards();
+            return -1;
+        }
+        private int RandomScore()
+        {
+            Random rng = new Random();
+            return rng.Next(100);
         }
         public int DrawNewCardsToTalon()
         {
