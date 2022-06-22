@@ -8,7 +8,8 @@ void TestGame(int AmountOfTests)
     {
         Won += RunGame();
     }
-    Console.WriteLine("Test finished! \nGames played: {0}\nGames won: {1}\nWin ratio: {2}%\n", AmountOfTests, Won, (Won / AmountOfTests) * 100);
+    int winRatio = Won / AmountOfTests * 100;
+    Console.WriteLine("Test finished! \nGames played: {0}\nGames won: {1}\nWin ratio: {2}%\n", AmountOfTests, Won, winRatio);
 }
 
 int RunGame()

@@ -226,7 +226,6 @@ namespace SolitaireHelperModels
                 if (card.Visible == true)
                 {
 
-                    // Can the visible card be moved to a tableau?
                     foreach (Pile pile in Tableaus)
                     {
                         if (pile.IsMovePossible(card))
@@ -235,7 +234,7 @@ namespace SolitaireHelperModels
                             Move move = new Move(fromPile.PileToString(), pile.PileToString(), card, score);
                             moves.Add(move);
                         }
-                    }                    
+                    }
                 }
             }
 
@@ -246,9 +245,16 @@ namespace SolitaireHelperModels
             List<Move> moves = new List<Move>();
 
             // Find moves in Talon
-            if(!(CardsInStock()+CardsInTalon() == 3 && CardsInStock() < 3))
+            List<Move> talonMoves = new List<Move>();
+            talonMoves = GetPossibleMovesInPile(Talon);
+            moves.AddRange(talonMoves);
+            if(CardsInStock()+CardsInTalon() == 3)
             {
-                moves.AddRange(GetPossibleMovesInPile(Talon));
+                if(CardsInStock() >= 1)
+                {
+                    moves.RemoveAll(mv => talonMoves.Contains(mv));
+                    DrawNewCardsToTalon();
+                }
             }
 
             // Find moves in Foundations (only top-cards)
@@ -342,7 +348,7 @@ namespace SolitaireHelperModels
                         {
                             if (fromPile.IsFoundation())
                             {
-                                return score = 5;
+                                return score = 0;
                             }
                             return score = 20;
                         }
@@ -381,7 +387,7 @@ namespace SolitaireHelperModels
             {
                 if(CardsInFoundations() > 30)
                 {
-                    return 50;
+                    return 0;
                 }
                 if(CardsInStock() == 0)
                 {

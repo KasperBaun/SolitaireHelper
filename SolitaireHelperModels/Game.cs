@@ -10,7 +10,6 @@ namespace SolitaireHelperModels
         public string Date { get; set; }
         public string GameType { get; set; }
         public bool GameIsFinished { get; set; }
-        private bool ShowConsoleText { get; set; }
         public List<string> PreviousStringStates { get; set; }
 
         public Game(){ }
@@ -19,7 +18,7 @@ namespace SolitaireHelperModels
         {
             Console.WriteLine("### New Test Game ###");
             GameIsFinished = false;
-            Table Table = TestTableSolvable();
+            Table Table = new Table();
             return PlayGame(Table);
         }
         public int PlayGame(Table table)
@@ -27,20 +26,20 @@ namespace SolitaireHelperModels
             PreviousStringStates = new List<string>();
             int stockRefillCounter = 0;
             int totalMovesMade = 0;
-            ShowConsoleText = true;
             while (!GameIsFinished)
             {
                 List<Move> currentPossibleMoves = table.GetAllPossibleMoves();
                
                 currentPossibleMoves.RemoveAll(mv => mv.GetScore() == 0);
                 List<Move> cleansedMoves = new List<Move>();
-             
+
+   
                 foreach (Move m in currentPossibleMoves)
                 {
+                    cleansedMoves.Add(m);
                     Table newState = new Table(table);
                     newState.MakeMove(m);
-                    cleansedMoves.Add(m);
-                    if (PreviousStringStates.Exists(t => t == newState.ToString()))
+                    if (PreviousStringStates.Exists(s => s == newState.ToString()))
                     {
                         // We have been in this state before - discard this move
                         cleansedMoves.Remove(m);
@@ -48,9 +47,8 @@ namespace SolitaireHelperModels
                 }
 
                 Move move = GetBestMove(cleansedMoves);
-                
             
-                if(move == null && stockRefillCounter == 3 || totalMovesMade == 500)
+                if(stockRefillCounter == 3 || totalMovesMade == 1000)
                 {
                     Console.WriteLine("Total moves made: {0}", totalMovesMade);
                     GameIsFinished = true;
@@ -63,17 +61,15 @@ namespace SolitaireHelperModels
                     continue;
                 }
 
-                
-                if (move.GetScore() < 11 && stockRefillCounter < 3)
+                if(move.GetScore() < 20 && stockRefillCounter < 2)
                 {
                     stockRefillCounter += table.DrawNewCardsToTalon();
                     continue;
                 }
+
                 
-                if (ShowConsoleText)
-                {
-                    Console.WriteLine(move.ToString());
-                }
+              
+                Console.WriteLine(move.ToString());
                 table.MakeMove(move);
                 totalMovesMade++;
                 stockRefillCounter = 0;
