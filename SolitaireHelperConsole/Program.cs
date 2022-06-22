@@ -1,14 +1,14 @@
 ﻿using SolitaireHelperModels;
 
-int Won = 0;
+double Won = 0;
 
-void TestGame(int AmountOfTests)
+void TestGame(double AmountOfTests)
 {
     for (int i = 0; i < AmountOfTests; i++)
     {
         Won += RunGame();
     }
-    int winRatio = Won / AmountOfTests * 100;
+    double winRatio = Won / AmountOfTests * 100.0;
     Console.WriteLine("Test finished! \nGames played: {0}\nGames won: {1}\nWin ratio: {2}%\n", AmountOfTests, Won, winRatio);
 }
 
