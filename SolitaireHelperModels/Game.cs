@@ -29,10 +29,8 @@ namespace SolitaireHelperModels
             while (!GameIsFinished)
             {
                 List<Move> currentPossibleMoves = table.GetAllPossibleMoves();
-               
                 currentPossibleMoves.RemoveAll(mv => mv.GetScore() == 0);
                 List<Move> cleansedMoves = new List<Move>();
-
    
                 foreach (Move m in currentPossibleMoves)
                 {
@@ -61,14 +59,6 @@ namespace SolitaireHelperModels
                     continue;
                 }
 
-                if(move.GetScore() < 20 && stockRefillCounter < 2)
-                {
-                    stockRefillCounter += table.DrawNewCardsToTalon();
-                    continue;
-                }
-
-                
-              
                 Console.WriteLine(move.ToString());
                 table.MakeMove(move);
                 totalMovesMade++;
@@ -79,6 +69,7 @@ namespace SolitaireHelperModels
             if(GameIsFinished && table.IsTableEmpty())
             {
                 Console.WriteLine("Solitaire succesfully solved!\n");
+                table.PrintTable();
                 return 1;
             }
             else

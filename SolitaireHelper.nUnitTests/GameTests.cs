@@ -320,7 +320,7 @@ namespace SolitaireHelper.nUnitTests
 
             // Assert - What do we expect?
             // 1. The move score is 119
-            Assert.IsTrue(bestMove.GetScore() == 96);
+            Assert.IsTrue(bestMove.GetScore() == 95);
 
             // 2. The card is moved from fromPile to toPile and the state of the piles is correct (hidden topCards set to visible etc.)
             Assert.IsFalse(table.GetPileFromType(0).GetCards().Contains(bestMove.GetCard()));
